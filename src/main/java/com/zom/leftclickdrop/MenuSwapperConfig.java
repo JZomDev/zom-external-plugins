@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.red_leftclick_drop;
+package com.zom.leftclickdrop;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;

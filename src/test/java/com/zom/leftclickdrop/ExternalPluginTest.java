@@ -1,4 +1,4 @@
-package com.red_leftclick_drop;
+package com.zom.leftclickdrop;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
