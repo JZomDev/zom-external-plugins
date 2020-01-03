@@ -35,7 +35,7 @@ public interface MenuSwapperConfig extends Config
 	@ConfigItem(
 		keyName = "itemList",
 		name = "Item list to left click drop",
-		description = "Coma delimited list of items you want to left click drop.<br>Only supports full matching names and non equipable items."
+		description = "Coma delimited list of items you want to left click drop.<br>Only supports full matching names and only with items that have only have use,drop,examine and cancel options."
 	)
 	default String itemList()
 	{
