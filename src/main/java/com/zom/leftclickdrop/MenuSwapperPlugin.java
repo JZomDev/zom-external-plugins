@@ -23,11 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package com.zom.leftclickdrop;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.inject.Provides;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -36,6 +36,7 @@ import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ClientTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.Text;
@@ -53,6 +54,8 @@ public class MenuSwapperPlugin extends Plugin
 	private MenuSwapperConfig config;
 
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
+
+	private List<String> itemList;
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
@@ -85,18 +88,15 @@ public class MenuSwapperPlugin extends Plugin
 
 	private void swapMenuEntry(int index, MenuEntry menuEntry)
 	{
-		final String option = Text.removeTags(menuEntry.getOption()).toLowerCase();
-		final String target = Text.removeTags(menuEntry.getTarget()).toLowerCase();
-
-		if (config.itemList().length() == 0)
+		if (itemList == null || itemList.size() == 0)
 		{
 			return;
 		}
 
-		// lowercase the list for compare because target is also lowercase
-		String items[] = config.itemList().toLowerCase().split(",");
+		final String option = Text.removeTags(menuEntry.getOption()).toLowerCase();
+		final String target = Text.removeTags(menuEntry.getTarget()).toLowerCase();
 
-		for (String item : items)
+		for (String item : itemList)
 		{
 			// swap use with drop, only on items that are a generic item (not equipment, food, teleport tab, etc)
 			if (isGenericItem() && item.equals(target) && option.equals("use"))
@@ -153,7 +153,6 @@ public class MenuSwapperPlugin extends Plugin
 				}
 			}
 		}
-
 		return -1;
 	}
 
@@ -161,5 +160,26 @@ public class MenuSwapperPlugin extends Plugin
 	MenuSwapperConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(MenuSwapperConfig.class);
+	}
+
+	@Override
+	protected void startUp()
+	{
+		itemList = Text.fromCSV(config.itemList().toLowerCase());
+	}
+
+	@Override
+	protected void shutDown()
+	{
+		itemList.clear();
+	}
+
+	@Subscribe
+	private void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals("leftclickdrop"))
+		{
+			itemList = Text.fromCSV(config.itemList().toLowerCase());
+		}
 	}
 }
