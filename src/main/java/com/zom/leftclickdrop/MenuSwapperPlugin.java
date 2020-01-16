@@ -34,9 +34,13 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ClientTick;
+import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.Text;
@@ -53,10 +57,15 @@ public class MenuSwapperPlugin extends Plugin
 	@Inject
 	private MenuSwapperConfig config;
 
+	@Inject
+	private ItemManager itemManager;
+
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
-
 	private List<String> itemList;
+	private static final int DEFAULT_DELAY = 5;
 
+	// [0] is always cancel and no target. [1 - 3] is the item.
+	private static final int NOT_CANCEL = 2;
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
 	{
@@ -78,39 +87,85 @@ public class MenuSwapperPlugin extends Plugin
 			optionIndexes.put(option, idx++);
 		}
 
-		// Perform swaps
-		idx = 0;
-		for (MenuEntry entry : menuEntries)
-		{
-			swapMenuEntry(idx++, entry);
-		}
+		swapMenuEntry(menuEntries);
 	}
 
-	private void swapMenuEntry(int index, MenuEntry menuEntry)
+	private void swapMenuEntry(MenuEntry[] menuEntry)
 	{
-		if (itemList == null || itemList.size() == 0)
+		try
 		{
-			return;
-		}
+			final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+			final int if1DraggedItemIndex = client.getIf1DraggedItemIndex();
+			final WidgetItem draggedItem = inventoryWidget.getWidgetItem(if1DraggedItemIndex);
 
-		final String option = Text.removeTags(menuEntry.getOption()).toLowerCase();
-		final String target = Text.removeTags(menuEntry.getTarget()).toLowerCase();
-
-		for (String item : itemList)
-		{
-			// swap use with drop, only on items that are a generic item (not equipment, food, teleport tab, etc)
-			if (isGenericItem() && item.equals(target) && option.equals("use"))
+			if (itemList == null || itemList.size() == 0)
 			{
-				swap("drop", option, target, true);
+				client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay
+				return;
 			}
+
+			if (menuEntry == null || menuEntry.length != 4)
+			{
+				if (draggedItem.getId() != -1)
+				{
+					if (!itemList.contains(getItemName(draggedItem.getId())))
+					{
+						// ensure default delay only if not currently dragging an item
+						// you would set default delay if you dragged an item over top of a non left click droppable item
+						client.setInventoryDragDelay(DEFAULT_DELAY);
+					}
+				}
+				return;
+			}
+
+			final String option = Text.removeTags(menuEntry[NOT_CANCEL].getOption()).toLowerCase();
+			final String target = Text.removeTags(menuEntry[NOT_CANCEL].getTarget()).toLowerCase();
+
+			for (String item : itemList)
+			{
+				if (item.equals(target) && isGenericItem())
+				{
+					if (config.antiDragEnable())
+					{
+						client.setInventoryDragDelay(config.antiDragDelay());
+					}
+
+					// swap use with drop, only on items that are a generic item (not equipment, food, teleport tab, etc)
+					if (option.equals("use"))
+					{
+						swap("drop", option, target, true);
+					}
+				}
+			}
+
+			if (draggedItem.getId() == -1)
+			{
+				if (!itemList.contains(getItemName(draggedItem.getId())))
+				{
+					client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay only if not currently dragging an item
+				}
+
+			}
+		} catch (Exception e) {
+			client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay
 		}
 	}
 
 	// returns true if the item is a generic item, generic items only have use, drop, examine, cancel.
 	private boolean isGenericItem()
 	{
+
 		MenuEntry[] entries = client.getMenuEntries();
-		return entries.length == 4;
+		boolean destroyAble = true;
+		for (MenuEntry entry : entries)
+		{
+			if (Text.removeTags(entry.getOption().toLowerCase()).equals("drop"))
+			{
+				destroyAble = false;
+			}
+		}
+
+		return !destroyAble && entries.length == 4;
 	}
 
 	private void swap(String optionA, String optionB, String target, boolean strict)
@@ -128,6 +183,11 @@ public class MenuSwapperPlugin extends Plugin
 
 			client.setMenuEntries(entries);
 		}
+	}
+
+	private String getItemName(int id)
+	{
+		return itemManager.getItemComposition(id).getName().toLowerCase().trim();
 	}
 
 	private int searchIndex(MenuEntry[] entries, String option, String target, boolean strict)
