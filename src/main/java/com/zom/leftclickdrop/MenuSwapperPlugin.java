@@ -27,6 +27,7 @@ package com.zom.leftclickdrop;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.inject.Provides;
+import java.util.HashSet;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +65,8 @@ public class MenuSwapperPlugin extends Plugin
 	private List<String> itemList;
 	private static final int DEFAULT_DELAY = 5;
 
-	// [0] is always cancel and no target. [1 - 3] is the item.
-	private static final int NOT_CANCEL = 2;
+	private HashSet<String> releaseItems = new HashSet<>();
+
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
 	{
@@ -104,7 +105,7 @@ public class MenuSwapperPlugin extends Plugin
 				return;
 			}
 
-			if (menuEntry == null || menuEntry.length != 4)
+			if (menuEntry == null || !(menuEntry.length == 4 || menuEntry.length == 5))
 			{
 				if (draggedItem.getId() != -1)
 				{
@@ -118,20 +119,27 @@ public class MenuSwapperPlugin extends Plugin
 				return;
 			}
 
-			final String option = Text.removeTags(menuEntry[NOT_CANCEL].getOption()).toLowerCase();
-			final String target = Text.removeTags(menuEntry[NOT_CANCEL].getTarget()).toLowerCase();
+			// menuEntry.length - 2 is the default left click option. Use,Wear,Wield,Break, etc.
+			final String option = Text.removeTags(menuEntry[menuEntry.length - 2].getOption()).toLowerCase();
+			final String target = Text.removeTags(menuEntry[menuEntry.length - 2].getTarget()).toLowerCase();
 
 			for (String item : itemList)
 			{
 				if (item.equals(target) && isGenericItem())
 				{
+
 					if (config.antiDragEnable())
 					{
 						client.setInventoryDragDelay(config.antiDragDelay());
 					}
 
+					// salamanders are the exception to the rule below
+					if (option.equals("wield") && releaseItems.contains(target))
+					{
+						swap("release", option, target, true);
+					}
 					// swap use with drop, only on items that are a generic item (not equipment, food, teleport tab, etc)
-					if (option.equals("use"))
+					else if (option.equals("use"))
 					{
 						swap("drop", option, target, true);
 					}
@@ -154,18 +162,23 @@ public class MenuSwapperPlugin extends Plugin
 	// returns true if the item is a generic item, generic items only have use, drop, examine, cancel.
 	private boolean isGenericItem()
 	{
-
 		MenuEntry[] entries = client.getMenuEntries();
 		boolean destroyAble = true;
+		boolean release = false;
 		for (MenuEntry entry : entries)
 		{
 			if (Text.removeTags(entry.getOption().toLowerCase()).equals("drop"))
 			{
 				destroyAble = false;
 			}
+
+			if (Text.removeTags(entry.getOption().toLowerCase()).equals("release"))
+			{
+				release = true;
+			}
 		}
 
-		return !destroyAble && entries.length == 4;
+		return !destroyAble && entries.length == 4 || release;
 	}
 
 	private void swap(String optionA, String optionB, String target, boolean strict)
@@ -226,11 +239,16 @@ public class MenuSwapperPlugin extends Plugin
 	protected void startUp()
 	{
 		itemList = Text.fromCSV(config.itemList().toLowerCase());
+		releaseItems.add("black salamander");
+		releaseItems.add("orange salamander");
+		releaseItems.add("red salamander");
+		releaseItems.add("swamp lizard");
 	}
 
 	@Override
 	protected void shutDown()
 	{
+		releaseItems.clear();
 		itemList.clear();
 	}
 
