@@ -42,26 +42,4 @@ public interface MenuSwapperConfig extends Config
 	{
 		return "";
 	}
-
-	@ConfigItem(
-		keyName = "dragDelayEnable",
-		name = "Anti Drag",
-		description = "Enable anti drag on items listed above",
-		position = 2
-	)
-	default boolean antiDragEnable()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "dragDelayTicks",
-		name = "Ticks of delay",
-		description = "Game ticks until the item is able to be dragged (20ms/tick)",
-		position = 3
-	)
-	default int antiDragDelay()
-	{
-		return 5;
-	}
 }

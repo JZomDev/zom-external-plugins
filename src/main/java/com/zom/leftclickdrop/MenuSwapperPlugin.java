@@ -58,12 +58,8 @@ public class MenuSwapperPlugin extends Plugin
 	@Inject
 	private MenuSwapperConfig config;
 
-	@Inject
-	private ItemManager itemManager;
-
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
 	private List<String> itemList;
-	private static final int DEFAULT_DELAY = 5;
 
 	private HashSet<String> releaseItems = new HashSet<>();
 
@@ -95,27 +91,13 @@ public class MenuSwapperPlugin extends Plugin
 	{
 		try
 		{
-			final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-			final int if1DraggedItemIndex = client.getIf1DraggedItemIndex();
-			final WidgetItem draggedItem = inventoryWidget.getWidgetItem(if1DraggedItemIndex);
-
 			if (itemList == null || itemList.size() == 0)
 			{
-				client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay
 				return;
 			}
 
 			if (menuEntry == null || !(menuEntry.length == 4 || menuEntry.length == 5))
 			{
-				if (draggedItem.getId() != -1)
-				{
-					if (!itemList.contains(getItemName(draggedItem.getId())))
-					{
-						// ensure default delay only if not currently dragging an item
-						// you would set default delay if you dragged an item over top of a non left click droppable item
-						client.setInventoryDragDelay(DEFAULT_DELAY);
-					}
-				}
 				return;
 			}
 
@@ -127,11 +109,6 @@ public class MenuSwapperPlugin extends Plugin
 			{
 				if (item.equals(target) && isGenericItem())
 				{
-
-					if (config.antiDragEnable())
-					{
-						client.setInventoryDragDelay(config.antiDragDelay());
-					}
 
 					// salamanders are the exception to the rule below
 					if (option.equals("wield") && releaseItems.contains(target))
@@ -146,16 +123,8 @@ public class MenuSwapperPlugin extends Plugin
 				}
 			}
 
-			if (draggedItem.getId() == -1)
-			{
-				if (!itemList.contains(getItemName(draggedItem.getId())))
-				{
-					client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay only if not currently dragging an item
-				}
-
-			}
-		} catch (Exception e) {
-			client.setInventoryDragDelay(DEFAULT_DELAY); // ensure default delay
+		} catch (Exception ignored) {
+			// ignored
 		}
 	}
 
@@ -196,11 +165,6 @@ public class MenuSwapperPlugin extends Plugin
 
 			client.setMenuEntries(entries);
 		}
-	}
-
-	private String getItemName(int id)
-	{
-		return itemManager.getItemComposition(id).getName().toLowerCase().trim();
 	}
 
 	private int searchIndex(MenuEntry[] entries, String option, String target, boolean strict)
