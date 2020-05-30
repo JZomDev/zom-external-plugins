@@ -22,7 +22,7 @@ public interface NMZUtilConfig extends Config
 	@ConfigItem(
 		keyName = "hitpointThreshold",
 		name = "Hitpoint threshold",
-		description = "The amount of hitpoints to be above to send a notification",
+		description = "Send notification when hitpoints exceed set value",
 		position = 2
 	)
 	default int hitPointThreshold()
