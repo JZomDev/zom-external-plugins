@@ -40,4 +40,15 @@ public interface NMZUtilConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+		keyName = "swapBarrel",
+		name = "Barrel Menu Swap",
+		description = "Swap 'Check' with 'Take' on potion storage barrels",
+		position = 4
+	)
+	default boolean swapBarrels()
+	{
+		return false;
+	}
 }
