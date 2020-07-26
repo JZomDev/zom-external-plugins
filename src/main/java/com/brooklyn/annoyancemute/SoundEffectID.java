@@ -61,4 +61,11 @@ public final class SoundEffectID
 
 	// ACB
 	public final static int ACB_REEEE = 3892;
+
+	// Sire
+	public final static int SIRE_SPAWNS = 236;
+	public final static int SIRE_SPAWNS_DEATH = 237;
+
+	// Wilderness Obelisk
+	public final static int WILDY_OBELISK = 204;
 }

@@ -85,6 +85,15 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.ACB_REEEE
 	);
 
+	private static final Set<Integer> SIRE_SOUNDS = ImmutableSet.of(
+		SoundEffectID.SIRE_SPAWNS,
+		SoundEffectID.SIRE_SPAWNS_DEATH
+	);
+
+	private static final Set<Integer> OBELISK_SOUNDS = ImmutableSet.of(
+		SoundEffectID.WILDY_OBELISK
+	);
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -147,6 +156,14 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (ACB_REEEE.contains(soundId) && annoyanceMuteConfig.muteREEEE())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (SIRE_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteSire())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (OBELISK_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteObelisk())
 		{
 			soundEffectPlayed.consume();
 		}

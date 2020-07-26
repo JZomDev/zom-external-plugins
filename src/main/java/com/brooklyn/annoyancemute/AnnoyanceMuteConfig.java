@@ -108,4 +108,25 @@ public interface AnnoyanceMuteConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "muteSire",
+		name = "Mute Sire spawns",
+		description = "Mutes the sounds of the Abyssal Sire's spawns",
+		position = 8
+	)
+	default boolean muteSire()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "muteObelisk",
+		name = "Mute Wilderness Obelisk",
+		description = "Mutes the sounds of the Wilderness Obelisk",
+		position = 9
+	)
+	default boolean muteObelisk()
+	{
+		return true;
+	}
 }
