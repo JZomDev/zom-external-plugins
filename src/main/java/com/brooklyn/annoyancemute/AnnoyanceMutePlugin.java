@@ -94,6 +94,12 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.WILDY_OBELISK
 	);
 
+	private static final Set<Integer> RANDOM_EVENT_SOUNDS = ImmutableSet.of(
+		SoundEffectID.NPC_TELEPORT_WOOSH,
+		SoundEffectID.DRUNKEN_DWARF,
+		SoundEffectID.EVIL_BOB
+	);
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -121,6 +127,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 		else if (source == null)
 		{
@@ -144,6 +154,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 	}
 
@@ -164,6 +178,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (OBELISK_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteObelisk())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
 		{
 			soundEffectPlayed.consume();
 		}

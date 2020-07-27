@@ -68,4 +68,10 @@ public final class SoundEffectID
 
 	// Wilderness Obelisk
 	public final static int WILDY_OBELISK = 204;
+
+	// Random Events
+	public final static int NPC_TELEPORT_WOOSH = 1930;
+	public final static int DRUNKEN_DWARF = 2297;
+	public final static int EVIL_BOB = 333;
+
 }

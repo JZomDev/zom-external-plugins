@@ -129,4 +129,15 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "muteRandoms",
+		name = "Mute random events",
+		description = "Mutes the sounds produced by random events",
+		position = 10
+	)
+	default boolean muteRandoms()
+	{
+		return true;
+	}
 }
