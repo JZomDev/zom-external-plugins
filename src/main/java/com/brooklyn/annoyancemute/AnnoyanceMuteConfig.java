@@ -33,9 +33,8 @@ public interface AnnoyanceMuteConfig extends Config
 {
 	@ConfigItem(
 		keyName = "mutePetSounds",
-		name = "Mute pet sounds",
-		description = "Mutes the sounds of noise-making pets",
-		position = 1
+		name = "Pet sounds",
+		description = "Mutes the sounds of noise-making pets"
 	)
 	default boolean mutePetSounds()
 	{
@@ -44,9 +43,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteAreaOfEffectSpells",
-		name = "Mute Humidify",
-		description = "Mutes humidify spell sound",
-		position = 2
+		name = "Humidify",
+		description = "Mutes humidify spell sound"
 	)
 	default boolean muteAOESounds()
 	{
@@ -55,9 +53,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteSnowballs",
-		name = "Mute snowballs",
-		description = "Mutes the sounds of snowballs being thrown",
-		position = 3
+		name = "Snowballs",
+		description = "Mutes the sounds of snowballs being thrown"
 	)
 	default boolean muteSnowballSounds()
 	{
@@ -66,9 +63,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteWhack",
-		name = "Mute whack",
-		description = "Mutes the Rubber chicken and Stale baguette whack sound",
-		position = 4
+		name = "Whack",
+		description = "Mutes the Rubber chicken and Stale baguette whack sound"
 	)
 	default boolean muteRubberChickenSounds()
 	{
@@ -77,9 +73,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteCrier",
-		name = "Mute Town Crier",
-		description = "Mutes the sounds of Town Crier",
-		position = 5
+		name = "Town Crier",
+		description = "Mutes the sounds of the Town Crier"
 	)
 	default boolean muteTownCrierSounds()
 	{
@@ -88,9 +83,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteCannon",
-		name = "Mute Cannon spin",
-		description = "Mutes the sounds of a cannon spinning",
-		position = 6
+		name = "Cannon spin",
+		description = "Mutes the sounds of a cannon spinning"
 	)
 	default boolean muteCannon()
 	{
@@ -99,9 +93,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteREEEE",
-		name = "Mute Armadyl Crossbow",
-		description = "Mutes the REEEEE from the ACB spec",
-		position = 7
+		name = "Armadyl Crossbow",
+		description = "Mutes the REEEEE of the ACB spec"
 	)
 	default boolean muteREEEE()
 	{
@@ -110,9 +103,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteSire",
-		name = "Mute Sire spawns",
-		description = "Mutes the sounds of the Abyssal Sire's spawns",
-		position = 8
+		name = "Sire Spawns",
+		description = "Mutes the sounds of the Abyssal Sire's spawns"
 	)
 	default boolean muteSire()
 	{
@@ -121,9 +113,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteObelisk",
-		name = "Mute Wilderness Obelisk",
-		description = "Mutes the sounds of the Wilderness Obelisk",
-		position = 9
+		name = "Wilderness Obelisk",
+		description = "Mutes the sounds of the Wilderness Obelisk"
 	)
 	default boolean muteObelisk()
 	{
@@ -132,9 +123,8 @@ public interface AnnoyanceMuteConfig extends Config
 
 	@ConfigItem(
 		keyName = "muteRandoms",
-		name = "Mute random events",
-		description = "Mutes the sounds produced by random events",
-		position = 10
+		name = "Random Events",
+		description = "Mutes the sounds produced by random events"
 	)
 	default boolean muteRandoms()
 	{
