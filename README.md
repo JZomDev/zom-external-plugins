@@ -37,5 +37,14 @@ Mutes the sound of the cannon spinning.
 ### Mute Armadyl Crossbow
 Mutes the sound of the Armadyl Crossbow's _REEEEE_.
 
+### Mute Sire Spawns
+Mutes the sound of Abyssal Sire's spawns.
+
+### Mute Wilderness Obelisk
+Mutes the sound of the Wilderness Obelisk's teleport _EEEEEEE_.
+
+### Mute Random Events
+Mutes the sound of random events' poof as well as Evil Bob's meow and the Drunken Dwarf's whistle.
+
 ***
 If you have any suggestions for other sounds to mute, open an issue above.
