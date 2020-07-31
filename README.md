@@ -6,6 +6,8 @@ There's always that one guy who brings a Bandos pet to Chambers of Xeric.. _thum
 
 To remedy that, this plugin mutes some annoying sounds without needing to disable area sounds altogether.
 
+It is recommended to enable `Mute other players' area sounds` in the `Music` plugin.
+
 ## Annoyance Mute Configuration
 
 ### Pet sounds
@@ -48,6 +50,9 @@ Mutes the sound of random events' poof as well as Evil Bob's meow and the Drunke
 
 ### Tekon Meteors
 Mutes the sound of Tekton's meteor attack. 
+
+### Dense Essence
+Mutes the sound of chiseling Dense Essence blocks.
 
 ***
 If you have any suggestions for other sounds to mute, open an issue above.
