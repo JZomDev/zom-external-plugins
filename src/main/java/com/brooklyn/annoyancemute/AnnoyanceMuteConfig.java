@@ -130,4 +130,14 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "muteTekton",
+		name = "Tekton meteors",
+		description = "Mutes the sound of Tekton's meteor attack"
+	)
+	default boolean muteTekton()
+	{
+		return false;
+	}
 }

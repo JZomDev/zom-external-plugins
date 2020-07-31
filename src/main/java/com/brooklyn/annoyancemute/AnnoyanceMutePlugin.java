@@ -100,6 +100,10 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.EVIL_BOB
 	);
 
+	private static final Set<Integer> TEKTON_SOUNDS = ImmutableSet.of(
+		SoundEffectID.METEOR
+	);
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -155,6 +159,10 @@ public class AnnoyanceMutePlugin extends Plugin
 				areaSoundEffectPlayed.consume();
 			}
 			else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+			else if (TEKTON_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteTekton())
 			{
 				areaSoundEffectPlayed.consume();
 			}

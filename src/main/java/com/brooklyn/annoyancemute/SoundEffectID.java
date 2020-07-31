@@ -74,4 +74,7 @@ public final class SoundEffectID
 	public final static int DRUNKEN_DWARF = 2297;
 	public final static int EVIL_BOB = 333;
 
+	// Tekton
+	public final static int METEOR = 156;
+
 }
