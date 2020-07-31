@@ -140,4 +140,14 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+		keyName = "muteDenseEssence",
+		name = "Dense Essence",
+		description = "Mutes the sound of chiseling Dense Essence"
+	)
+	default boolean muteDenseEssence()
+	{
+		return true;
+	}
 }

@@ -29,6 +29,7 @@ import com.google.inject.Provides;
 import java.util.Set;
 import javax.inject.Inject;
 import net.runelite.api.Actor;
+import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.AreaSoundEffectPlayed;
 import net.runelite.api.events.SoundEffectPlayed;
@@ -104,6 +105,13 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.METEOR
 	);
 
+	private static final Set<Integer> DENSE_ESSENCE_SOUNDS = ImmutableSet.of(
+		SoundEffectID.CHISEL
+	);
+
+	@Inject
+	private Client client;
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -128,6 +136,13 @@ public class AnnoyanceMutePlugin extends Plugin
 				areaSoundEffectPlayed.consume();
 			}
 			else if (TOWN_CRIER_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteTownCrierSounds())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+		}
+		else if (source == client.getLocalPlayer())
+		{
+			if (DENSE_ESSENCE_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteDenseEssence())
 			{
 				areaSoundEffectPlayed.consume();
 			}

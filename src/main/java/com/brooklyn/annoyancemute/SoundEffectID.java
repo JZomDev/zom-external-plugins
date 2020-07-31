@@ -77,4 +77,7 @@ public final class SoundEffectID
 	// Tekton
 	public final static int METEOR = 156;
 
+	// Dense Essence Mine
+	public final static int CHISEL = 1553;
+
 }
