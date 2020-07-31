@@ -131,10 +131,6 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
-			{
-				areaSoundEffectPlayed.consume();
-			}
 		}
 		else if (source == null)
 		{
