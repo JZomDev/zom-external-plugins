@@ -109,6 +109,10 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.CHISEL
 	);
 
+	private static final Set<Integer> CHOP_CHOP_SOUNDS = ImmutableSet.of(
+		SoundEffectID.CHOP_CHOP
+	);
+
 	@Inject
 	private Client client;
 
@@ -174,6 +178,10 @@ public class AnnoyanceMutePlugin extends Plugin
 				areaSoundEffectPlayed.consume();
 			}
 			else if (TEKTON_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteTekton())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+			else if (CHOP_CHOP_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteChopChop())
 			{
 				areaSoundEffectPlayed.consume();
 			}

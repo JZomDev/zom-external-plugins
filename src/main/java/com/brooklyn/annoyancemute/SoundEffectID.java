@@ -80,4 +80,7 @@ public final class SoundEffectID
 	// Dense Essence Mine
 	public final static int CHISEL = 1553;
 
+	// Chop Chop
+	public final static int CHOP_CHOP = 2531;
+
 }

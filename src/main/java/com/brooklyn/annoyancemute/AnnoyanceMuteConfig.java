@@ -150,4 +150,14 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "muteChopChop",
+		name = "Chop Chop!",
+		description = "Mutes the sound of the Dragon axe special"
+	)
+	default boolean muteChopChop()
+	{
+		return true;
+	}
 }

@@ -54,5 +54,8 @@ Mutes the sound of Tekton's meteor attack.
 ### Dense Essence
 Mutes the sound of chiseling Dense Essence blocks.
 
+### Chop Chop!
+Mutes the sound of the Dragon axe special attack.
+
 ***
 If you have any suggestions for other sounds to mute, open an issue above.
