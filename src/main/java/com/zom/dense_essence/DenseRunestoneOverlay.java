@@ -70,7 +70,7 @@ public class DenseRunestoneOverlay extends Overlay
 
 		if (southStone != null)
 		{
-			if (plugin.getLocalPointRunestoneNorth().distanceTo(playerLocation) < MAX_DISTANCE)
+			if (plugin.getLocalPointRunestoneSouth().distanceTo(playerLocation) < MAX_DISTANCE)
 			{
 				renderStone(graphics, southStone, southStoneMineable);
 			}
