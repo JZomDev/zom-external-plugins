@@ -21,18 +21,6 @@ public class DenseRunestoneOverlay extends Overlay
 	private static final int Z_OFFSET = 200;
 	private static final int MAX_DISTANCE = 2550;
 
-	private static final Color CLICKBOX_BORDER_COLOR_MINABLE = Color.GREEN;
-	private static final Color CLICKBOX_FILL_COLOR_MINABLE = new Color(
-		CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
-		CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
-	private static final Color CLICKBOX_BORDER_HOVER_COLOR_MINABLE = CLICKBOX_BORDER_COLOR_MINABLE.darker();
-
-	private static final Color CLICKBOX_BORDER_COLOR_DEPLETED = Color.RED;
-	private static final Color CLICKBOX_FILL_COLOR_DEPLETED = new Color(
-		CLICKBOX_BORDER_COLOR_DEPLETED.getRed(), CLICKBOX_BORDER_COLOR_DEPLETED.getGreen(),
-		CLICKBOX_BORDER_COLOR_DEPLETED.getBlue(), 50);
-	private static final Color CLICKBOX_BORDER_HOVER_COLOR_DEPLETED = CLICKBOX_BORDER_COLOR_DEPLETED.darker();
-
 	private final Client client;
 	private final DenseEssencePlugin plugin;
 	private final DenseEssenceConfig config;
@@ -84,19 +72,18 @@ public class DenseRunestoneOverlay extends Overlay
 		if (config.showDenseRunestoneClickbox())
 		{
 			Shape clickbox = gameObject.getClickbox();
-
 			Point mousePosition = client.getMouseCanvasPosition();
 			if (minable)
 			{
 				OverlayUtil.renderHoverableArea(
 					graphics, clickbox, mousePosition,
-					CLICKBOX_FILL_COLOR_MINABLE, CLICKBOX_BORDER_COLOR_MINABLE, CLICKBOX_BORDER_HOVER_COLOR_MINABLE);
+					plugin.getCLICKBOX_FILL_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_HOVER_COLOR_MINABLE());
 			}
 			else
 			{
 				OverlayUtil.renderHoverableArea(
 					graphics, clickbox, mousePosition,
-					CLICKBOX_FILL_COLOR_DEPLETED, CLICKBOX_BORDER_COLOR_DEPLETED, CLICKBOX_BORDER_HOVER_COLOR_DEPLETED);
+					plugin.getCLICKBOX_FILL_COLOR_DEPLETED(), plugin.getCLICKBOX_BORDER_COLOR_DEPLETED(), plugin.getCLICKBOX_BORDER_HOVER_COLOR_DEPLETED());
 			}
 		}
 		if (config.showDenseRunestoneIndicator() && minable)

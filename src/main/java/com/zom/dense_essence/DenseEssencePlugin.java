@@ -1,6 +1,7 @@
 package com.zom.dense_essence;
 
 import com.google.inject.Provides;
+import java.awt.Color;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -52,10 +54,54 @@ public class DenseEssencePlugin extends Plugin
 	@Getter(AccessLevel.PACKAGE)
 	private LocalPoint localPointRunestoneNorth;
 
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_BORDER_COLOR_MINABLE;
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_FILL_COLOR_MINABLE;
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_BORDER_HOVER_COLOR_MINABLE;
+
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_BORDER_COLOR_DEPLETED;
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_FILL_COLOR_DEPLETED;
+	@Getter(AccessLevel.PACKAGE)
+	private Color CLICKBOX_BORDER_HOVER_COLOR_DEPLETED;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(denseRunestoneOverlay);
+		CLICKBOX_BORDER_COLOR_MINABLE = config.showDenseRunestoneClickboxAvailable();
+		CLICKBOX_FILL_COLOR_MINABLE = new Color(CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
+			CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
+		CLICKBOX_BORDER_HOVER_COLOR_MINABLE = CLICKBOX_BORDER_COLOR_MINABLE.darker();
+
+		CLICKBOX_BORDER_COLOR_DEPLETED = config.showDenseRunestoneClickboxUnavailable();
+		CLICKBOX_FILL_COLOR_DEPLETED = new Color(
+			CLICKBOX_BORDER_COLOR_DEPLETED.getRed(),
+			CLICKBOX_BORDER_COLOR_DEPLETED.getGreen(),
+			CLICKBOX_BORDER_COLOR_DEPLETED.getBlue(), 50);
+		CLICKBOX_BORDER_HOVER_COLOR_DEPLETED = CLICKBOX_BORDER_COLOR_DEPLETED.darker();
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals("zomDenseEssence"))
+		{
+			CLICKBOX_BORDER_COLOR_MINABLE = config.showDenseRunestoneClickboxAvailable();
+			CLICKBOX_FILL_COLOR_MINABLE = new Color(CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
+				CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
+			CLICKBOX_BORDER_HOVER_COLOR_MINABLE = CLICKBOX_BORDER_COLOR_MINABLE.darker();
+
+			CLICKBOX_BORDER_COLOR_DEPLETED = config.showDenseRunestoneClickboxUnavailable();
+			CLICKBOX_FILL_COLOR_DEPLETED = new Color(
+				CLICKBOX_BORDER_COLOR_DEPLETED.getRed(),
+				CLICKBOX_BORDER_COLOR_DEPLETED.getGreen(),
+				CLICKBOX_BORDER_COLOR_DEPLETED.getBlue(), 50);
+			CLICKBOX_BORDER_HOVER_COLOR_DEPLETED = CLICKBOX_BORDER_COLOR_DEPLETED.darker();
+		}
 	}
 
 	@Override
@@ -64,6 +110,9 @@ public class DenseEssencePlugin extends Plugin
 		overlayManager.remove(denseRunestoneOverlay);
 		denseRunestoneNorth = null;
 		denseRunestoneSouth = null;
+		CLICKBOX_FILL_COLOR_MINABLE = new Color(
+			CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
+			CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
 	}
 
 	@Subscribe

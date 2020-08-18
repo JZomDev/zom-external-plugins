@@ -1,5 +1,6 @@
 package com.zom.dense_essence;
 
+import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -27,5 +28,27 @@ public interface DenseEssenceConfig extends Config
 	default boolean showDenseRunestoneClickbox()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "showDenseRunestoneClickboxAvailable",
+		name = "Available Color",
+		description = "Configures Color of available dense runestone",
+		position = 3
+	)
+	default Color showDenseRunestoneClickboxAvailable()
+	{
+		return Color.GREEN;
+	}
+
+	@ConfigItem(
+		keyName = "showDenseRunestoneClickboxUnavailable",
+		name = "Unavailable Color",
+		description = "Configures color of unavailable dense runestone",
+		position = 4
+	)
+	default Color showDenseRunestoneClickboxUnavailable()
+	{
+		return Color.RED;
 	}
 }
