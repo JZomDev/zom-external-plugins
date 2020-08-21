@@ -160,4 +160,24 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "plankMake",
+		name = "Plank Make",
+		description = "Mutes the sound of Plank Make"
+	)
+	default boolean mutePlankMake()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "nightmareParry",
+		name = "Nightmare",
+		description = "Mutes the sound of the Nightmare's parry"
+	)
+	default boolean muteNightmare()
+	{
+		return true;
+	}
 }

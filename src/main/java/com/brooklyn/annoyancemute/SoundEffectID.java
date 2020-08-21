@@ -83,4 +83,10 @@ public final class SoundEffectID
 	// Chop Chop
 	public final static int CHOP_CHOP = 2531;
 
+	// Plank Make
+	public final static int PLANK_MAKE = 3617;
+
+	// Nightmare
+	public final static int NIGHTMARE_SOUND = 4281;
+
 }

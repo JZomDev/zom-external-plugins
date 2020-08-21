@@ -57,5 +57,11 @@ Mutes the sound of chiseling Dense Essence blocks.
 ### Chop Chop!
 Mutes the sound of the Dragon axe special attack.
 
+### Plank Make
+Mutes the sound oif the Plank Make spell.
+
+### Nightmare
+Mutes the sound of the Nightmare's parry (when it gets hit; does not affect the attack sounds).
+
 ***
 If you have any suggestions for other sounds to mute, open an issue above.
