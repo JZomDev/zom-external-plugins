@@ -180,4 +180,14 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "pyramidScarabs",
+		name = "Scarab Swarm",
+		description = "Mutes the sound of the Scarab swarm in Pyramid Plunder"
+	)
+	default boolean muteScarabs()
+	{
+		return true;
+	}
 }

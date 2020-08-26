@@ -89,4 +89,8 @@ public final class SoundEffectID
 	// Nightmare
 	public final static int NIGHTMARE_SOUND = 4281;
 
+	// Pyramid Plunder Scarabs
+	public final static int SCARAB_SPAWN_SOUND = 1478;
+	public final static int SCARAB_ATTACK_SOUND = 1481;
+
 }

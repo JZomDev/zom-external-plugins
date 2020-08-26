@@ -121,6 +121,11 @@ public class AnnoyanceMutePlugin extends Plugin
 		SoundEffectID.NIGHTMARE_SOUND
 	);
 
+	private static final Set<Integer> SCARAB_SOUNDS = ImmutableSet.of(
+		SoundEffectID.SCARAB_ATTACK_SOUND,
+		SoundEffectID.SCARAB_SPAWN_SOUND
+	);
+
 	@Inject
 	private Client client;
 
@@ -225,6 +230,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (PLANK_MAKE_SOUNDS.contains(soundId) && annoyanceMuteConfig.mutePlankMake())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (SCARAB_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteScarabs())
 		{
 			soundEffectPlayed.consume();
 		}
