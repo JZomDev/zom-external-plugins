@@ -25,72 +25,76 @@
  */
 package com.brooklyn.annoyancemute;
 
-/**
- * Utility class used for mapping sound effect IDs.
- */
 public final class SoundEffectID
 {
 	// Pet sounds
-	public final static int CAT_HISS = 333;
-	public final static int SNAKELING_METAMORPHOSIS = 794;
-	public final static int CLOCKWORK_CAT_CLICK_CLICK = 941;
-	public final static int PET_WALKING_THUMP = 3834;
-	public final static int PET_KREEARRA_WING_FLAP = 3882;
-	public final static int ELECTRIC_HYDRA_IN = 4118;
-	public final static int ELECTRIC_HYDRA_OUT = 4132;
-	public final static int IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP = 4112;
-	public final static int IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP = 4134;
+	protected final static int CAT_HISS = 333;
+	protected final static int SNAKELING_METAMORPHOSIS = 794;
+	protected final static int CLOCKWORK_CAT_CLICK_CLICK = 941;
+	protected final static int PET_WALKING_THUMP = 3834;
+	protected final static int PET_KREEARRA_WING_FLAP = 3882;
+	protected final static int ELECTRIC_HYDRA_IN = 4118;
+	protected final static int ELECTRIC_HYDRA_OUT = 4132;
+	protected final static int IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP = 4112;
+	protected final static int IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP = 4134;
 
 	// Town Crier
-	public final static int TOWN_CRIER_BELL_DING = 3813;
-	public final static int TOWN_CRIER_BELL_DONG = 3817;
-	public final static int TOWN_CRIER_SHOUT_SQUEAK = 3816;
+	protected final static int TOWN_CRIER_BELL_DING = 3813;
+	protected final static int TOWN_CRIER_BELL_DONG = 3817;
+	protected final static int TOWN_CRIER_SHOUT_SQUEAK = 3816;
 
 	// AOE Spells
-	public final static int HUMIDIFY_SOUND = 3614;
+	protected final static int HUMIDIFY_SOUND = 3614;
 
 	// Chicken
-	public final static int WHACK = 2257;
+	protected final static int WHACK = 2257;
 
 	// Snowball
-	public final static int SNOWBALL_HIT = 3292;
-	public final static int SNOWBALL_THROW = 2708;
+	protected final static int SNOWBALL_HIT = 3292;
+	protected final static int SNOWBALL_THROW = 2708;
 
 	// Cannon
-	public final static int CANNON_SPIN = 2877;
+	protected final static int CANNON_SPIN = 2877;
 
 	// ACB
-	public final static int ACB_REEEE = 3892;
+	protected final static int ACB_REEEE = 3892;
 
 	// Sire
-	public final static int SIRE_SPAWNS = 236;
-	public final static int SIRE_SPAWNS_DEATH = 237;
+	protected final static int SIRE_SPAWNS = 236;
+	protected final static int SIRE_SPAWNS_DEATH = 237;
 
 	// Wilderness Obelisk
-	public final static int WILDY_OBELISK = 204;
+	protected final static int WILDY_OBELISK = 204;
 
 	// Random Events
-	public final static int NPC_TELEPORT_WOOSH = 1930;
-	public final static int DRUNKEN_DWARF = 2297;
-	public final static int EVIL_BOB = 333;
+	protected final static int NPC_TELEPORT_WOOSH = 1930;
+	protected final static int DRUNKEN_DWARF = 2297;
+	protected final static int EVIL_BOB = 333;
 
 	// Tekton
-	public final static int METEOR = 156;
+	protected final static int METEOR = 156;
 
 	// Dense Essence Mine
-	public final static int CHISEL = 1553;
+	protected final static int CHISEL = 1553;
 
 	// Chop Chop
-	public final static int CHOP_CHOP = 2531;
+	protected final static int CHOP_CHOP = 2531;
 
 	// Plank Make
-	public final static int PLANK_MAKE = 3617;
+	protected final static int PLANK_MAKE = 3617;
 
 	// Nightmare
-	public final static int NIGHTMARE_SOUND = 4281;
+	protected final static int NIGHTMARE_SOUND = 4281;
 
 	// Pyramid Plunder Scarabs
-	public final static int SCARAB_SPAWN_SOUND = 1478;
-	public final static int SCARAB_ATTACK_SOUND = 1481;
+	protected final static int SCARAB_SPAWN_SOUND = 1478;
+	protected final static int SCARAB_ATTACK_SOUND = 1481;
+
+	// Fishing
+	protected final static int FISHING_SOUND = 2600;
+
+	// Alchemy
+	protected final static int LOW_ALCHEMY = 98;
+	protected final static int HIGH_ALCHEMY = 97;
 
 }
