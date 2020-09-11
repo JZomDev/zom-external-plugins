@@ -24,9 +24,7 @@
  */
 package com.brooklyn.annoyancemute;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
-import java.util.Set;
 import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
@@ -46,86 +44,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 )
 public class AnnoyanceMutePlugin extends Plugin
 {
-	private static final Set<Integer> PET_SOUNDS = ImmutableSet.of(
-		SoundEffectID.CAT_HISS,
-		SoundEffectID.SNAKELING_METAMORPHOSIS,
-		SoundEffectID.CLOCKWORK_CAT_CLICK_CLICK,
-		SoundEffectID.PET_WALKING_THUMP,
-		SoundEffectID.PET_KREEARRA_WING_FLAP,
-		SoundEffectID.ELECTRIC_HYDRA_IN,
-		SoundEffectID.ELECTRIC_HYDRA_OUT,
-		SoundEffectID.IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP,
-		SoundEffectID.IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP
-	);
-
-	private static final Set<Integer> WHACK_SOUNDS = ImmutableSet.of(
-		SoundEffectID.HUMIDIFY_SOUND,
-		SoundEffectID.WHACK
-	);
-
-	private static final Set<Integer> SNOWBALL_SOUNDS = ImmutableSet.of(
-		SoundEffectID.SNOWBALL_HIT,
-		SoundEffectID.SNOWBALL_THROW
-	);
-
-	private static final Set<Integer> TOWN_CRIER_SOUNDS = ImmutableSet.of(
-		SoundEffectID.TOWN_CRIER_BELL_DING,
-		SoundEffectID.TOWN_CRIER_BELL_DONG,
-		SoundEffectID.TOWN_CRIER_SHOUT_SQUEAK
-	);
-
-	private static final Set<Integer> AOE_SPELL_SOUNDS = ImmutableSet.of(
-		SoundEffectID.HUMIDIFY_SOUND
-	);
-
-	private static final Set<Integer> CANNON_SOUNDS = ImmutableSet.of(
-		SoundEffectID.CANNON_SPIN
-	);
-
-	private static final Set<Integer> ACB_REEEE = ImmutableSet.of(
-		SoundEffectID.ACB_REEEE
-	);
-
-	private static final Set<Integer> SIRE_SOUNDS = ImmutableSet.of(
-		SoundEffectID.SIRE_SPAWNS,
-		SoundEffectID.SIRE_SPAWNS_DEATH
-	);
-
-	private static final Set<Integer> OBELISK_SOUNDS = ImmutableSet.of(
-		SoundEffectID.WILDY_OBELISK
-	);
-
-	private static final Set<Integer> RANDOM_EVENT_SOUNDS = ImmutableSet.of(
-		SoundEffectID.NPC_TELEPORT_WOOSH,
-		SoundEffectID.DRUNKEN_DWARF,
-		SoundEffectID.EVIL_BOB
-	);
-
-	private static final Set<Integer> TEKTON_SOUNDS = ImmutableSet.of(
-		SoundEffectID.METEOR
-	);
-
-	private static final Set<Integer> DENSE_ESSENCE_SOUNDS = ImmutableSet.of(
-		SoundEffectID.CHISEL
-	);
-
-	private static final Set<Integer> CHOP_CHOP_SOUNDS = ImmutableSet.of(
-		SoundEffectID.CHOP_CHOP
-	);
-
-	private static final Set<Integer> PLANK_MAKE_SOUNDS = ImmutableSet.of(
-		SoundEffectID.PLANK_MAKE
-	);
-
-	private static final Set<Integer> NIGHTMARE_SOUNDS = ImmutableSet.of(
-		SoundEffectID.NIGHTMARE_SOUND
-	);
-
-	private static final Set<Integer> SCARAB_SOUNDS = ImmutableSet.of(
-		SoundEffectID.SCARAB_ATTACK_SOUND,
-		SoundEffectID.SCARAB_SPAWN_SOUND
-	);
-
 	@Inject
 	private Client client;
 
@@ -148,57 +66,61 @@ public class AnnoyanceMutePlugin extends Plugin
 		int soundId = areaSoundEffectPlayed.getSoundId();
 		if (source instanceof NPC)
 		{
-			if (PET_SOUNDS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			if (Sounds.PETS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (TOWN_CRIER_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteTownCrierSounds())
+			else if (Sounds.TOWN_CRIER.contains(soundId) && annoyanceMuteConfig.muteTownCrierSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
 		}
 		else if (source == client.getLocalPlayer())
 		{
-			if (DENSE_ESSENCE_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteDenseEssence())
+			if (Sounds.DENSE_ESSENCE.contains(soundId) && annoyanceMuteConfig.muteDenseEssence())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+			else if (Sounds.FISHING.contains(soundId) && annoyanceMuteConfig.muteFishing())
 			{
 				areaSoundEffectPlayed.consume();
 			}
 		}
 		else if (source == null)
 		{
-			if (PET_SOUNDS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			if (Sounds.PETS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (SNOWBALL_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
+			else if (Sounds.SNOWBALL.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (WHACK_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRubberChickenSounds())
+			else if (Sounds.WHACK.contains(soundId) && annoyanceMuteConfig.muteRubberChickenSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (AOE_SPELL_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteAOESounds())
+			else if (Sounds.AOE_SPELL.contains(soundId) && annoyanceMuteConfig.muteAOESounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (CANNON_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteCannon())
+			else if (Sounds.CANNON.contains(soundId) && annoyanceMuteConfig.muteCannon())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
+			else if (Sounds.RANDOM_EVENTS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (TEKTON_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteTekton())
+			else if (Sounds.TEKTON.contains(soundId) && annoyanceMuteConfig.muteTekton())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (CHOP_CHOP_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteChopChop())
+			else if (Sounds.CHOP_CHOP.contains(soundId) && annoyanceMuteConfig.muteChopChop())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (NIGHTMARE_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteNightmare())
+			else if (Sounds.NIGHTMARE.contains(soundId) && annoyanceMuteConfig.muteNightmare())
 			{
 				areaSoundEffectPlayed.consume();
 			}
@@ -209,31 +131,35 @@ public class AnnoyanceMutePlugin extends Plugin
 	public void onSoundEffectPlayed(SoundEffectPlayed soundEffectPlayed)
 	{
 		int soundId = soundEffectPlayed.getSoundId();
-		if (SNOWBALL_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
+		if (Sounds.SNOWBALL.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (ACB_REEEE.contains(soundId) && annoyanceMuteConfig.muteREEEE())
+		else if (Sounds.ACB_REEEE.contains(soundId) && annoyanceMuteConfig.muteREEEE())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (SIRE_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteSire())
+		else if (Sounds.SIRE.contains(soundId) && annoyanceMuteConfig.muteSire())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (OBELISK_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteObelisk())
+		else if (Sounds.OBELISK.contains(soundId) && annoyanceMuteConfig.muteObelisk())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (RANDOM_EVENT_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
+		else if (Sounds.RANDOM_EVENTS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (PLANK_MAKE_SOUNDS.contains(soundId) && annoyanceMuteConfig.mutePlankMake())
+		else if (Sounds.PLANK_MAKE.contains(soundId) && annoyanceMuteConfig.mutePlankMake())
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (SCARAB_SOUNDS.contains(soundId) && annoyanceMuteConfig.muteScarabs())
+		else if (Sounds.SCARABS.contains(soundId) && annoyanceMuteConfig.muteScarabs())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.ALCHEMY.contains(soundId) && annoyanceMuteConfig.muteAlchemy())
 		{
 			soundEffectPlayed.consume();
 		}
