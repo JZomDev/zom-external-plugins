@@ -64,6 +64,14 @@ Mutes the Humidify spell sound.
 #### Plank Make
 Mutes the sound of the Plank Make spell.
 
+## Prayer
+
+#### Activation Sounds
+Mutes the sounds of various prayer activations.
+
+#### Deactivate Prayer
+Mutes the sound of prayer deactivation.
+
 ## Miscellaneous
 
 #### Snowballs
