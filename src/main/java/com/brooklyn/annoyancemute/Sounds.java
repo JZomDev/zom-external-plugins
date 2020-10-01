@@ -117,4 +117,113 @@ public final class Sounds
 		SoundEffectID.LOW_ALCHEMY,
 		SoundEffectID.HIGH_ALCHEMY
 	);
+
+	protected static final Set<Integer> THICK_SKIN = ImmutableSet.of(
+		SoundEffectID.THICK_SKIN
+	);
+
+	protected static final Set<Integer> BURST_OF_STRENGTH = ImmutableSet.of(
+		SoundEffectID.BURST_OF_STRENGTH
+	);
+
+	protected static final Set<Integer> CLARITY_OF_THOUGHT = ImmutableSet.of(
+		SoundEffectID.CLARITY_OF_THOUGHT
+	);
+
+	protected static final Set<Integer> ROCK_SKIN = ImmutableSet.of(
+		SoundEffectID.ROCK_SKIN
+	);
+
+	protected static final Set<Integer> SUPERHUMAN_STRENGTH = ImmutableSet.of(
+		SoundEffectID.SUPERHUMAN_STRENGTH
+	);
+
+	protected static final Set<Integer> IMPROVED_REFLEXES = ImmutableSet.of(
+		SoundEffectID.IMPROVED_REFLEXES
+	);
+
+	protected static final Set<Integer> RAPID_HEAL = ImmutableSet.of(
+		SoundEffectID.RAPID_HEAL
+	);
+
+	protected static final Set<Integer> PROTECT_ITEM = ImmutableSet.of(
+		SoundEffectID.PROTECT_ITEM
+	);
+
+	protected static final Set<Integer> HAWK_EYE = ImmutableSet.of(
+		SoundEffectID.HAWK_EYE
+	);
+
+	protected static final Set<Integer> MYSTIC_LORE = ImmutableSet.of(
+		SoundEffectID.MYSTIC_LORE
+	);
+
+	protected static final Set<Integer> STEEL_SKIN = ImmutableSet.of(
+		SoundEffectID.STEEL_SKIN
+	);
+
+	protected static final Set<Integer> ULTIMATE_STRENGTH = ImmutableSet.of(
+		SoundEffectID.ULTIMATE_STRENGTH
+	);
+
+	protected static final Set<Integer> INCREDIBLE_REFLEXES = ImmutableSet.of(
+		SoundEffectID.INCREDIBLE_REFLEXES
+	);
+
+	protected static final Set<Integer> PROTECT_FROM_MAGIC = ImmutableSet.of(
+	SoundEffectID.PROTECT_FROM_MAGIC
+	);
+
+	protected static final Set<Integer> PROTECT_FROM_RANGE = ImmutableSet.of(
+	SoundEffectID.PROTECT_FROM_RANGE
+	);
+
+	protected static final Set<Integer> PROTECT_FROM_MELEE = ImmutableSet.of(
+	SoundEffectID.PROTECT_FROM_MELEE
+	);
+
+	protected static final Set<Integer> EAGLE_EYE = ImmutableSet.of(
+	SoundEffectID.EAGLE_EYE
+	);
+
+	protected static final Set<Integer> MYSTIC_MIGHT = ImmutableSet.of(
+	SoundEffectID.MYSTIC_MIGHT
+	);
+
+	protected static final Set<Integer> RETRIBUTION = ImmutableSet.of(
+	SoundEffectID.RETRIBUTION
+	);
+
+	protected static final Set<Integer> REDEMPTION = ImmutableSet.of(
+	SoundEffectID.REDEMPTION
+	);
+
+	protected static final Set<Integer> SMITE = ImmutableSet.of(
+	SoundEffectID.SMITE
+	);
+
+	protected static final Set<Integer> PRESERVE = ImmutableSet.of(
+	SoundEffectID.PRESERVE
+	);
+
+	protected static final Set<Integer> CHIVALRY = ImmutableSet.of(
+	SoundEffectID.CHIVALRY
+	);
+
+	protected static final Set<Integer> PIETY = ImmutableSet.of(
+	SoundEffectID.PIETY
+	);
+
+	protected static final Set<Integer> RIGOUR = ImmutableSet.of(
+	SoundEffectID.RIGOUR
+	);
+
+	protected static final Set<Integer> AUGURY = ImmutableSet.of(
+	SoundEffectID.AUGURY
+	);
+
+	protected static final Set<Integer> DEACTIVATE_PRAYER = ImmutableSet.of(
+	SoundEffectID.DEACTIVATE_PRAYER
+	);
+
 }

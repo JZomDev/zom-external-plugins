@@ -163,5 +163,38 @@ public class AnnoyanceMutePlugin extends Plugin
 		{
 			soundEffectPlayed.consume();
 		}
+
+		// Prayers
+		else if ((Sounds.THICK_SKIN.contains(soundId) && annoyanceMuteConfig.muteThickSkin()) ||
+			(Sounds.BURST_OF_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteBurstofStrength()) ||
+			(Sounds.CLARITY_OF_THOUGHT.contains(soundId) && annoyanceMuteConfig.muteClarityOfThought()) ||
+			(Sounds.ROCK_SKIN.contains(soundId) && annoyanceMuteConfig.muteRockSkin()) ||
+			(Sounds.SUPERHUMAN_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteSuperhumanStrength()) ||
+			(Sounds.IMPROVED_REFLEXES.contains(soundId) && annoyanceMuteConfig.muteImprovedReflexes()) ||
+			(Sounds.RAPID_HEAL.contains(soundId) && annoyanceMuteConfig.muteRapidHeal()) ||
+			(Sounds.PROTECT_ITEM.contains(soundId) && annoyanceMuteConfig.muteProtectItem()) ||
+			(Sounds.HAWK_EYE.contains(soundId) && annoyanceMuteConfig.muteHawkEye()) ||
+			(Sounds.MYSTIC_LORE.contains(soundId) && annoyanceMuteConfig.muteMysticLore()) ||
+			(Sounds.STEEL_SKIN.contains(soundId) && annoyanceMuteConfig.muteSteelSkin()) ||
+			(Sounds.ULTIMATE_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteUltimateStrength()) ||
+			(Sounds.INCREDIBLE_REFLEXES.contains(soundId) && annoyanceMuteConfig.muteIncredibleReflexes()) ||
+			(Sounds.PROTECT_FROM_MAGIC.contains(soundId) && annoyanceMuteConfig.muteProtectFromMagic()) ||
+			(Sounds.PROTECT_FROM_RANGE.contains(soundId) && annoyanceMuteConfig.muteProtectFromRange()) ||
+			(Sounds.PROTECT_FROM_MELEE.contains(soundId) && annoyanceMuteConfig.muteProtectFromMelee()) ||
+			(Sounds.EAGLE_EYE.contains(soundId) && annoyanceMuteConfig.muteEagleEye()) ||
+			(Sounds.MYSTIC_MIGHT.contains(soundId) && annoyanceMuteConfig.muteMysticMight()) ||
+			(Sounds.RETRIBUTION.contains(soundId) && annoyanceMuteConfig.muteRetribution()) ||
+			(Sounds.REDEMPTION.contains(soundId) && annoyanceMuteConfig.muteRedemption()) ||
+			(Sounds.SMITE.contains(soundId) && annoyanceMuteConfig.muteSmite()) ||
+			(Sounds.PRESERVE.contains(soundId) && annoyanceMuteConfig.mutePreserve()) ||
+			(Sounds.CHIVALRY.contains(soundId) && annoyanceMuteConfig.muteChivalry()) ||
+			(Sounds.PIETY.contains(soundId) && annoyanceMuteConfig.mutePiety()) ||
+			(Sounds.RIGOUR.contains(soundId) && annoyanceMuteConfig.muteRigour()) ||
+			(Sounds.AUGURY.contains(soundId) && annoyanceMuteConfig.muteAugury()) ||
+			(Sounds.DEACTIVATE_PRAYER.contains(soundId) && annoyanceMuteConfig.muteDeactivatePrayer()))
+		{
+			soundEffectPlayed.consume();
+		}
+
 	}
 }

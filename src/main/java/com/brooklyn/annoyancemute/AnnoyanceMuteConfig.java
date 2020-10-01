@@ -54,9 +54,17 @@ public interface AnnoyanceMuteConfig extends Config
 	String skillingSection = "Skilling";
 
 	@ConfigSection(
+		name = "Prayers",
+		description = "Pray activation/deactivation sounds to mute",
+		position = 3,
+		closedByDefault = true
+	)
+	String prayerSection = "Prayers";
+
+	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous sounds to mute",
-		position = 3
+		position = 4
 	)
 	String miscSection = "Miscellaneous";
 
@@ -257,4 +265,330 @@ public interface AnnoyanceMuteConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "muteThickSkin",
+		name = "Thick Skin",
+		description = "Mutes the activation sound of Thick Skin",
+		section = prayerSection,
+		position = 1
+	)
+	default boolean muteThickSkin()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteBurstOfStrength",
+		name = "Burst of Strength",
+		description = "Mutes the activation sound of Burst of Strength",
+		section = prayerSection,
+		position = 2
+	)
+	default boolean muteBurstofStrength()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteClarityOfThought",
+		name = "Clarity of Thought",
+		description = "Mutes the activation sound of Clarity of Thought",
+		section = prayerSection,
+		position = 3
+	)
+	default boolean muteClarityOfThought()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteRockSkin",
+		name = "Rock Skin",
+		description = "Mutes the activation sound of Rock Skin",
+		section = prayerSection,
+		position = 4
+	)
+	default boolean muteRockSkin()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteSuperhumanStrength",
+		name = "Superhuman Strength",
+		description = "Mutes the activation sound of Superhuman Strength",
+		section = prayerSection,
+		position = 5
+	)
+	default boolean muteSuperhumanStrength()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteImprovedReflexes",
+		name = "Improved Reflexes",
+		description = "Mutes the activation sound of Improved Reflexes",
+		section = prayerSection,
+		position = 6
+	)
+	default boolean muteImprovedReflexes()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteRapidHeal",
+		name = "Rapid Heal",
+		description = "Mutes the activation sound of Rapid Heal",
+		section = prayerSection,
+		position = 7
+	)
+	default boolean muteRapidHeal()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteProtectItem",
+		name = "Protect Item",
+		description = "Mutes the activation sound of Protect Item",
+		section = prayerSection,
+		position = 8
+	)
+	default boolean muteProtectItem()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteHawkEye",
+		name = "Hawk Eye",
+		description = "Mutes the activation sound of Hawk Eye",
+		section = prayerSection,
+		position = 9
+	)
+	default boolean muteHawkEye()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteMysticLore",
+		name = "Mystic Lore",
+		description = "Mutes the activation sound of Mystic Lore",
+		section = prayerSection,
+		position = 10
+	)
+	default boolean muteMysticLore()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteSteelSkin",
+		name = "Steel Skin",
+		description = "Mutes the activation sound of Steel Skin",
+		section = prayerSection,
+		position = 11
+	)
+	default boolean muteSteelSkin()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteUltimateStrength",
+		name = "Ultimate Strength",
+		description = "Mutes the activation sound of Ultimate Strength",
+		section = prayerSection,
+		position = 12
+	)
+	default boolean muteUltimateStrength()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteIncredibleReflexes",
+		name = "Incredible Reflexes",
+		description = "Mutes the activation sound of Incredible Reflexes",
+		section = prayerSection,
+		position = 13
+	)
+	default boolean muteIncredibleReflexes()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteProtectFromMagic",
+		name = "Protect from Magic",
+		description = "Mutes the activation sound of Protect from Magic",
+		section = prayerSection,
+		position = 14
+	)
+	default boolean muteProtectFromMagic()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteProtectFromRange",
+		name = "Protect from Range",
+		description = "Mutes the activation sound of Protect from Range",
+		section = prayerSection,
+		position = 15
+	)
+	default boolean muteProtectFromRange()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteProtectFromMelee",
+		name = "Protect from Melee",
+		description = "Mutes the activation sound of Protect from Melee",
+		section = prayerSection,
+		position = 16
+	)
+	default boolean muteProtectFromMelee()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteEagleEye",
+		name = "Eagle Eye",
+		description = "Mutes the activation sound of Eagle Eye",
+		section = prayerSection,
+		position = 17
+	)
+	default boolean muteEagleEye()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteMysticMight",
+		name = "Mystic Might",
+		description = "Mutes the activation sound of Mystic Might",
+		section = prayerSection,
+		position = 18
+	)
+	default boolean muteMysticMight()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteRetribution",
+		name = "Retribution",
+		description = "Mutes the activation sound of Retribution",
+		section = prayerSection,
+		position = 19
+	)
+	default boolean muteRetribution()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteRedemption",
+		name = "Redemption",
+		description = "Mutes the activation sound of Redemption",
+		section = prayerSection,
+		position = 20
+	)
+	default boolean muteRedemption()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteSmite",
+		name = "Smite",
+		description = "Mutes the activation sound of Smite",
+		section = prayerSection,
+		position = 21
+	)
+	default boolean muteSmite()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "mutePreserve",
+		name = "Preserve",
+		description = "Mutes the activation sound of Preserve and Rapid Restore",
+		section = prayerSection,
+		position = 22
+	)
+	default boolean mutePreserve()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteChivalry",
+		name = "Chivalry",
+		description = "Mutes the activation sound of Chivalry",
+		section = prayerSection,
+		position = 23
+	)
+	default boolean muteChivalry()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "mutePiety",
+		name = "Piety",
+		description = "Mutes the activation sound of Piety",
+		section = prayerSection,
+		position = 24
+	)
+	default boolean mutePiety()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteRigour",
+		name = "Rigour",
+		description = "Mutes the activation sound of Rigour and Sharp Eye",
+		section = prayerSection,
+		position = 25
+	)
+	default boolean muteRigour()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteAugury",
+		name = "Augury",
+		description = "Mutes the activation sound of Augury and Mystic Will",
+		section = prayerSection,
+		position = 26
+	)
+	default boolean muteAugury()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteDeactivatePrayer",
+		name = "Deactivate Prayer",
+		description = "Mutes the prayer deactivation sound",
+		section = prayerSection,
+		position = 27
+	)
+	default boolean muteDeactivatePrayer()
+	{
+		return false;
+	}
+
+
 }

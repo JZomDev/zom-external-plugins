@@ -97,4 +97,32 @@ public final class SoundEffectID
 	protected final static int LOW_ALCHEMY = 98;
 	protected final static int HIGH_ALCHEMY = 97;
 
+	// Prayers
+	protected final static int THICK_SKIN = 2690;
+	protected final static int BURST_OF_STRENGTH = 2688;
+	protected final static int CLARITY_OF_THOUGHT = 2664;
+	protected final static int ROCK_SKIN = 2684;
+	protected final static int SUPERHUMAN_STRENGTH = 2689;
+	protected final static int IMPROVED_REFLEXES = 2662;
+	protected final static int RAPID_HEAL = 2678;
+	protected final static int PROTECT_ITEM = 1982;
+	protected final static int HAWK_EYE = 2666;
+	protected final static int MYSTIC_LORE = 2668;
+	protected final static int STEEL_SKIN = 2687;
+	protected final static int ULTIMATE_STRENGTH = 2691;
+	protected final static int INCREDIBLE_REFLEXES = 2667;
+	protected final static int PROTECT_FROM_MAGIC = 2675;
+	protected final static int PROTECT_FROM_RANGE = 2677;
+	protected final static int PROTECT_FROM_MELEE = 2676;
+	protected final static int EAGLE_EYE = 2665;
+	protected final static int MYSTIC_MIGHT = 2669;
+	protected final static int RETRIBUTION = 2682;
+	protected final static int REDEMPTION = 2680;
+	protected final static int SMITE = 2686;
+	protected final static int PRESERVE = 2679;
+	protected final static int CHIVALRY = 3826;
+	protected final static int PIETY = 3825;
+	protected final static int RIGOUR = 2685;
+	protected final static int AUGURY = 2670;
+	protected final static int DEACTIVATE_PRAYER = 2663;
 }
