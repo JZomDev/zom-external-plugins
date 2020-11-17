@@ -125,4 +125,16 @@ public final class SoundEffectID
 	protected final static int RIGOUR = 2685;
 	protected final static int AUGURY = 2670;
 	protected final static int DEACTIVATE_PRAYER = 2663;
+
+	// Woodcutting
+	protected final static int WOODCUTTING_CHOP = 2735;
+
+	// Teleport
+	protected static final int TELEPORT_VWOOP = 200;
+
+	// Pickpocket
+	protected static final int PICKPOCKET_PLOP = 2581;
+
+	// NPC Contact
+	protected final static int NPC_CONTACT = 3618;
 }

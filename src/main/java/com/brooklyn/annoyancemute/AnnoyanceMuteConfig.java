@@ -113,6 +113,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteOthersAreaSounds",
+		name = "Others' Area Sounds",
+		description = "Mutes other players' area sounds",
+		section = miscSection
+	)
+	default boolean muteOthersAreaSounds()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteCrier",
 		name = "Town Crier",
 		description = "Mutes the sounds of the Town Crier",
@@ -168,6 +179,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteNPCContact",
+		name = "NPC Contact",
+		description = "Mutes the sound of NPC Contact",
+		section = miscSection
+	)
+	default boolean muteNPCContact()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "muteRandoms",
 		name = "Random Events",
 		description = "Mutes the sounds produced by random events",
@@ -212,6 +234,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteWoodcutting",
+		name = "Woodcutting",
+		description = "Mutes the sound of Woodcutting",
+		section = skillingSection
+	)
+	default boolean muteWoodcutting()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "plankMake",
 		name = "Plank Make",
 		description = "Mutes the sound of Plank Make",
@@ -220,6 +253,17 @@ public interface AnnoyanceMuteConfig extends Config
 	default boolean mutePlankMake()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "mutePickpocket",
+		name = "Pickpocket",
+		description = "Mutes the sound of the pickpocket plop",
+		section = skillingSection
+	)
+	default boolean mutePickpocket()
+	{
+		return false;
 	}
 
 	@ConfigItem(

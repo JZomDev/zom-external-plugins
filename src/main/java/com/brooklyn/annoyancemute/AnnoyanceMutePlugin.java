@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.Player;
 import net.runelite.api.events.AreaSoundEffectPlayed;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.client.callback.ClientThread;
@@ -82,6 +83,21 @@ public class AnnoyanceMutePlugin extends Plugin
 				areaSoundEffectPlayed.consume();
 			}
 			else if (Sounds.FISHING.contains(soundId) && annoyanceMuteConfig.muteFishing())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+			else if (Sounds.WOODCUTTING_CHOP.contains(soundId) && annoyanceMuteConfig.muteWoodcutting())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+		}
+		else if (source != client.getLocalPlayer() && source instanceof Player)
+		{
+			if (annoyanceMuteConfig.muteOthersAreaSounds())
+			{
+				areaSoundEffectPlayed.consume();
+			}
+			else if (Sounds.WOODCUTTING_CHOP.contains(soundId) && annoyanceMuteConfig.muteWoodcutting())
 			{
 				areaSoundEffectPlayed.consume();
 			}
@@ -160,6 +176,14 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (Sounds.ALCHEMY.contains(soundId) && annoyanceMuteConfig.muteAlchemy())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.PICKPOCKET.contains(soundId) && annoyanceMuteConfig.mutePickpocket())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.NPC_CONTACT.contains(soundId) && annoyanceMuteConfig.muteNPCContact())
 		{
 			soundEffectPlayed.consume();
 		}

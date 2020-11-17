@@ -226,4 +226,20 @@ public final class Sounds
 	SoundEffectID.DEACTIVATE_PRAYER
 	);
 
+	protected static final Set<Integer> WOODCUTTING_CHOP = ImmutableSet.of(
+	SoundEffectID.WOODCUTTING_CHOP
+	);
+
+	protected static final Set<Integer> TELEPORT = ImmutableSet.of(
+	SoundEffectID.TELEPORT_VWOOP
+	);
+
+	protected static final Set<Integer> PICKPOCKET = ImmutableSet.of(
+	SoundEffectID.PICKPOCKET_PLOP
+	);
+
+	protected static final Set<Integer> NPC_CONTACT = ImmutableSet.of(
+	SoundEffectID.NPC_CONTACT
+	);
+
 }
