@@ -6,8 +6,6 @@ There's always that one guy who brings a Bandos pet to Chambers of Xeric.. _thum
 
 To remedy that, this plugin mutes some annoying sounds without needing to disable area sounds altogether.
 
-It is recommended to enable `Mute other players' area sounds` in the `Music` plugin.
-
 ## Combat
 
 #### Armadyl Crossbow
@@ -61,8 +59,14 @@ Mutes the sound of chiseling Dense Essence blocks.
 #### Humidify
 Mutes the Humidify spell sound.
 
+#### Pickpocket
+Mutes the pickpocket plop.
+
 #### Plank Make
 Mutes the sound of the Plank Make spell.
+
+#### Woodcutting
+Mutes the sound of chopping trees.
 
 ## Prayer
 
@@ -73,6 +77,12 @@ Mutes the sounds of various prayer activations.
 Mutes the sound of prayer deactivation.
 
 ## Miscellaneous
+
+#### NPC Contact
+Mutes the sound of the NPC Contact spell.
+
+#### Others' Area Sounds
+Mutes other players' area sounds.
 
 #### Snowballs
 Mutes the snowball throw/hit sound.
