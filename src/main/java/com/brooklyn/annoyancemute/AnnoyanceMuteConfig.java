@@ -212,6 +212,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteCows",
+		name = "Cows",
+		description = "Mutes the sounds of Cows' moomoo",
+		section = npcSection
+	)
+	default boolean muteCows()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "muteDenseEssence",
 		name = "Dense Essence",
 		description = "Mutes the sound of chiseling Dense Essence",
@@ -264,6 +275,17 @@ public interface AnnoyanceMuteConfig extends Config
 	default boolean mutePickpocket()
 	{
 		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteStringJewellery",
+		name = "String Jewellery",
+		description = "Mutes the sound of the String Jewellery spell",
+		section = skillingSection
+	)
+	default boolean muteStringJewellery()
+	{
+		return true;
 	}
 
 	@ConfigItem(

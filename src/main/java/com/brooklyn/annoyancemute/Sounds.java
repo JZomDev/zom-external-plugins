@@ -242,4 +242,12 @@ public final class Sounds
 	SoundEffectID.NPC_CONTACT
 	);
 
+	protected static final Set<Integer> MOO_MOO = ImmutableSet.of(
+	SoundEffectID.MOO_MOO
+	);
+
+	protected static final Set<Integer> STRING_JEWELERY = ImmutableSet.of(
+	SoundEffectID.STRING_JEWELLERY
+	);
+
 }

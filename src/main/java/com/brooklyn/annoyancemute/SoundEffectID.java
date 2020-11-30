@@ -137,4 +137,10 @@ public final class SoundEffectID
 
 	// NPC Contact
 	protected final static int NPC_CONTACT = 3618;
+
+	// Cow
+	protected final static int MOO_MOO = 3044;
+
+	// String Jewelery
+	protected final static int STRING_JEWELLERY = 2903;
 }

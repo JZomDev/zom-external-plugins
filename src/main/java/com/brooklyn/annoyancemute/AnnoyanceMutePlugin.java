@@ -140,6 +140,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (Sounds.MOO_MOO.contains(soundId) && annoyanceMuteConfig.muteCows())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 	}
 
@@ -184,6 +188,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (Sounds.NPC_CONTACT.contains(soundId) && annoyanceMuteConfig.muteNPCContact())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.STRING_JEWELERY.contains(soundId) && annoyanceMuteConfig.muteStringJewellery())
 		{
 			soundEffectPlayed.consume();
 		}
