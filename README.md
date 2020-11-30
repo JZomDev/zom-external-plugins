@@ -4,7 +4,7 @@ There's always that one guy who brings a Bandos pet to Chambers of Xeric.. _thum
 
 ..or the one guy at the GE who is always throwing snowballs.
 
-To remedy that, this plugin mutes some annoying sounds without needing to disable area sounds altogether.
+To remedy that, this plugin mutes annoying sounds, so you can always play with sound enabled.
 
 ## Combat
 
@@ -15,6 +15,9 @@ Mutes the sound of the Armadyl Crossbow's _REEEEE_.
 Mutes the sound of the cannon spinning.
 
 ## NPCs
+
+#### Cows
+Mutes the sound of cows' moo.
 
 #### Nightmare
 Mutes the sound of the Nightmare's parry (when it gets hit; does not affect the attack sounds).
@@ -64,6 +67,9 @@ Mutes the pickpocket plop.
 
 #### Plank Make
 Mutes the sound of the Plank Make spell.
+
+#### String Jewellery
+Mutes the sound of the String Jewellery spell.
 
 #### Woodcutting
 Mutes the sound of chopping trees.
