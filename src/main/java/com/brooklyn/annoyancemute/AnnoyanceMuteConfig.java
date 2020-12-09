@@ -223,6 +223,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteCaveHorrors",
+		name = "Cave Horrors",
+		description = "Mutes the sound of Cave Horrors",
+		section = npcSection
+	)
+	default boolean muteCaveHorrors()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "muteDenseEssence",
 		name = "Dense Essence",
 		description = "Mutes the sound of chiseling Dense Essence",

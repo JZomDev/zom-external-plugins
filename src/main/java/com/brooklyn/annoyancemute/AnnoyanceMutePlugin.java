@@ -195,6 +195,10 @@ public class AnnoyanceMutePlugin extends Plugin
 		{
 			soundEffectPlayed.consume();
 		}
+		else if (Sounds.CAVE_HORROR.contains(soundId) && annoyanceMuteConfig.muteCaveHorrors())
+		{
+			soundEffectPlayed.consume();
+		}
 
 		// Prayers
 		else if ((Sounds.THICK_SKIN.contains(soundId) && annoyanceMuteConfig.muteThickSkin()) ||

@@ -143,4 +143,7 @@ public final class SoundEffectID
 
 	// String Jewelery
 	protected final static int STRING_JEWELLERY = 2903;
+
+	// Cave Horror
+	protected final static int CAVE_HORROR = 497;
 }

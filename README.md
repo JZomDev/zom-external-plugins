@@ -16,6 +16,9 @@ Mutes the sound of the cannon spinning.
 
 ## NPCs
 
+#### Cave Horrors
+Mutes the sound of Cave Horrors' shriek.
+
 #### Cows
 Mutes the sound of cows' moo.
 

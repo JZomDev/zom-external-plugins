@@ -250,4 +250,8 @@ public final class Sounds
 	SoundEffectID.STRING_JEWELLERY
 	);
 
+	protected static final Set<Integer> CAVE_HORROR = ImmutableSet.of(
+	SoundEffectID.CAVE_HORROR
+	);
+
 }
