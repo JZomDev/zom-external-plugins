@@ -234,6 +234,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteWyverns",
+		name = "Fossil Island Wyverns",
+		description = "Mutes the sounds of Fossil Island Wyverns",
+		section = npcSection
+	)
+	default boolean muteWyverns()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "muteDenseEssence",
 		name = "Dense Essence",
 		description = "Mutes the sound of chiseling Dense Essence",

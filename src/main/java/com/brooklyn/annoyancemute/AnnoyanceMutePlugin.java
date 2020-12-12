@@ -199,6 +199,10 @@ public class AnnoyanceMutePlugin extends Plugin
 		{
 			soundEffectPlayed.consume();
 		}
+		else if (Sounds.FOSSIL_ISLAND_WYVERN.contains(soundId) && annoyanceMuteConfig.muteWyverns())
+		{
+			soundEffectPlayed.consume();
+		}
 
 		// Prayers
 		else if ((Sounds.THICK_SKIN.contains(soundId) && annoyanceMuteConfig.muteThickSkin()) ||

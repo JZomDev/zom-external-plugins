@@ -146,4 +146,9 @@ public final class SoundEffectID
 
 	// Cave Horror
 	protected final static int CAVE_HORROR = 497;
+
+	// Fossil Island Wyvern
+	protected  final static int FOSSIL_ISLAND_WYVERN_69 = 769;
+	protected final static int FOSSIL_ISLAND_WYVERN_71 = 771;
+	protected final static int FOSSIL_ISLAND_WYVERN_73 = 773;
 }

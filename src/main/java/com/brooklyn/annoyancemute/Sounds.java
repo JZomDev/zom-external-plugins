@@ -254,4 +254,10 @@ public final class Sounds
 	SoundEffectID.CAVE_HORROR
 	);
 
+	protected static final Set<Integer> FOSSIL_ISLAND_WYVERN = ImmutableSet.of(
+	SoundEffectID.FOSSIL_ISLAND_WYVERN_69,
+	SoundEffectID.FOSSIL_ISLAND_WYVERN_71,
+	SoundEffectID.FOSSIL_ISLAND_WYVERN_73
+	);
+
 }
