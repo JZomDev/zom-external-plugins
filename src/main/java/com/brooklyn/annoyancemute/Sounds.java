@@ -33,12 +33,15 @@ public final class Sounds
 		SoundEffectID.CAT_HISS,
 		SoundEffectID.SNAKELING_METAMORPHOSIS,
 		SoundEffectID.CLOCKWORK_CAT_CLICK_CLICK,
-		SoundEffectID.PET_WALKING_THUMP,
 		SoundEffectID.PET_KREEARRA_WING_FLAP,
 		SoundEffectID.ELECTRIC_HYDRA_IN,
 		SoundEffectID.ELECTRIC_HYDRA_OUT,
 		SoundEffectID.IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP,
 		SoundEffectID.IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP
+	);
+
+	protected static final Set<Integer> PET_THUMP = ImmutableSet.of(
+		SoundEffectID.PET_WALKING_THUMP
 	);
 
 	protected static final Set<Integer> WHACK = ImmutableSet.of(

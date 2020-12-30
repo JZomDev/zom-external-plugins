@@ -31,12 +31,14 @@ public final class SoundEffectID
 	protected final static int CAT_HISS = 333;
 	protected final static int SNAKELING_METAMORPHOSIS = 794;
 	protected final static int CLOCKWORK_CAT_CLICK_CLICK = 941;
-	protected final static int PET_WALKING_THUMP = 3834;
 	protected final static int PET_KREEARRA_WING_FLAP = 3882;
 	protected final static int ELECTRIC_HYDRA_IN = 4118;
 	protected final static int ELECTRIC_HYDRA_OUT = 4132;
 	protected final static int IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP = 4112;
 	protected final static int IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP = 4134;
+
+	// Pet Thump
+	protected final static int PET_WALKING_THUMP = 3834;
 
 	// Town Crier
 	protected final static int TOWN_CRIER_BELL_DING = 3813;

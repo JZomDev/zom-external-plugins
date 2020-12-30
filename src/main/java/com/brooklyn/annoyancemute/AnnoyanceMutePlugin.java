@@ -30,6 +30,7 @@ import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
+import net.runelite.api.Varbits;
 import net.runelite.api.events.AreaSoundEffectPlayed;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.client.callback.ClientThread;
@@ -67,7 +68,7 @@ public class AnnoyanceMutePlugin extends Plugin
 		int soundId = areaSoundEffectPlayed.getSoundId();
 		if (source instanceof NPC)
 		{
-			if (Sounds.PETS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			if ((Sounds.PETS.contains(soundId) || Sounds.PET_THUMP.contains(soundId)) && annoyanceMuteConfig.mutePetSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
@@ -104,6 +105,18 @@ public class AnnoyanceMutePlugin extends Plugin
 		}
 		else if (source == null)
 		{
+			if (Sounds.PET_THUMP.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			{
+				if (client.getVar(Varbits.IN_RAID) == 1)
+				{
+					return;
+				}
+				else
+				{
+					areaSoundEffectPlayed.consume();
+				}
+			}
+
 			if (Sounds.PETS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
 			{
 				areaSoundEffectPlayed.consume();
