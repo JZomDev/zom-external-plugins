@@ -263,4 +263,10 @@ public final class Sounds
 	SoundEffectID.FOSSIL_ISLAND_WYVERN_73
 	);
 
+	protected static final Set<Integer> HEAL_OTHER = ImmutableSet.of(
+		SoundEffectID.HEAL_OTHER_2,
+		SoundEffectID.HEAL_OTHER_3,
+		SoundEffectID.HEAL_OTHER_4,
+		SoundEffectID.HEAL_OTHER_5
+	);
 }

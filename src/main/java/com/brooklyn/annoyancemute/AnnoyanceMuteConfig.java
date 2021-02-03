@@ -190,6 +190,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteHealOther",
+		name = "Heal Other",
+		description = "Mutes the sound of Heal Other and Heal Group",
+		section = miscSection
+	)
+	default boolean muteHealOther()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteRandoms",
 		name = "Random Events",
 		description = "Mutes the sounds produced by random events",

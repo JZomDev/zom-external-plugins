@@ -87,6 +87,9 @@ Mutes the sound of prayer deactivation.
 
 ## Miscellaneous
 
+#### Heal Other
+Mutes the sound of Heal Other and Heal Group.
+
 #### NPC Contact
 Mutes the sound of the NPC Contact spell.
 

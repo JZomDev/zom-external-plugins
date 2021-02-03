@@ -157,6 +157,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (Sounds.HEAL_OTHER.contains(soundId) && annoyanceMuteConfig.muteHealOther())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 	}
 
