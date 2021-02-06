@@ -174,93 +174,93 @@ public final class Sounds
 	);
 
 	protected static final Set<Integer> PROTECT_FROM_MAGIC = ImmutableSet.of(
-	SoundEffectID.PROTECT_FROM_MAGIC
+		SoundEffectID.PROTECT_FROM_MAGIC
 	);
 
 	protected static final Set<Integer> PROTECT_FROM_RANGE = ImmutableSet.of(
-	SoundEffectID.PROTECT_FROM_RANGE
+		SoundEffectID.PROTECT_FROM_RANGE
 	);
 
 	protected static final Set<Integer> PROTECT_FROM_MELEE = ImmutableSet.of(
-	SoundEffectID.PROTECT_FROM_MELEE
+		SoundEffectID.PROTECT_FROM_MELEE
 	);
 
 	protected static final Set<Integer> EAGLE_EYE = ImmutableSet.of(
-	SoundEffectID.EAGLE_EYE
+		SoundEffectID.EAGLE_EYE
 	);
 
 	protected static final Set<Integer> MYSTIC_MIGHT = ImmutableSet.of(
-	SoundEffectID.MYSTIC_MIGHT
+		SoundEffectID.MYSTIC_MIGHT
 	);
 
 	protected static final Set<Integer> RETRIBUTION = ImmutableSet.of(
-	SoundEffectID.RETRIBUTION
+		SoundEffectID.RETRIBUTION
 	);
 
 	protected static final Set<Integer> REDEMPTION = ImmutableSet.of(
-	SoundEffectID.REDEMPTION
+		SoundEffectID.REDEMPTION
 	);
 
 	protected static final Set<Integer> SMITE = ImmutableSet.of(
-	SoundEffectID.SMITE
+		SoundEffectID.SMITE
 	);
 
 	protected static final Set<Integer> PRESERVE = ImmutableSet.of(
-	SoundEffectID.PRESERVE
+		SoundEffectID.PRESERVE
 	);
 
 	protected static final Set<Integer> CHIVALRY = ImmutableSet.of(
-	SoundEffectID.CHIVALRY
+		SoundEffectID.CHIVALRY
 	);
 
 	protected static final Set<Integer> PIETY = ImmutableSet.of(
-	SoundEffectID.PIETY
+		SoundEffectID.PIETY
 	);
 
 	protected static final Set<Integer> RIGOUR = ImmutableSet.of(
-	SoundEffectID.RIGOUR
+		SoundEffectID.RIGOUR
 	);
 
 	protected static final Set<Integer> AUGURY = ImmutableSet.of(
-	SoundEffectID.AUGURY
+		SoundEffectID.AUGURY
 	);
 
 	protected static final Set<Integer> DEACTIVATE_PRAYER = ImmutableSet.of(
-	SoundEffectID.DEACTIVATE_PRAYER
+		SoundEffectID.DEACTIVATE_PRAYER
 	);
 
 	protected static final Set<Integer> WOODCUTTING_CHOP = ImmutableSet.of(
-	SoundEffectID.WOODCUTTING_CHOP
+		SoundEffectID.WOODCUTTING_CHOP
 	);
 
 	protected static final Set<Integer> TELEPORT = ImmutableSet.of(
-	SoundEffectID.TELEPORT_VWOOP
+		SoundEffectID.TELEPORT_VWOOP
 	);
 
 	protected static final Set<Integer> PICKPOCKET = ImmutableSet.of(
-	SoundEffectID.PICKPOCKET_PLOP
+		SoundEffectID.PICKPOCKET_PLOP
 	);
 
 	protected static final Set<Integer> NPC_CONTACT = ImmutableSet.of(
-	SoundEffectID.NPC_CONTACT
+		SoundEffectID.NPC_CONTACT
 	);
 
 	protected static final Set<Integer> MOO_MOO = ImmutableSet.of(
-	SoundEffectID.MOO_MOO
+		SoundEffectID.MOO_MOO
 	);
 
 	protected static final Set<Integer> STRING_JEWELERY = ImmutableSet.of(
-	SoundEffectID.STRING_JEWELLERY
+		SoundEffectID.STRING_JEWELLERY
 	);
 
 	protected static final Set<Integer> CAVE_HORROR = ImmutableSet.of(
-	SoundEffectID.CAVE_HORROR
+		SoundEffectID.CAVE_HORROR
 	);
 
 	protected static final Set<Integer> FOSSIL_ISLAND_WYVERN = ImmutableSet.of(
-	SoundEffectID.FOSSIL_ISLAND_WYVERN_69,
-	SoundEffectID.FOSSIL_ISLAND_WYVERN_71,
-	SoundEffectID.FOSSIL_ISLAND_WYVERN_73
+		SoundEffectID.FOSSIL_ISLAND_WYVERN_69,
+		SoundEffectID.FOSSIL_ISLAND_WYVERN_71,
+		SoundEffectID.FOSSIL_ISLAND_WYVERN_73
 	);
 
 	protected static final Set<Integer> HEAL_OTHER = ImmutableSet.of(
