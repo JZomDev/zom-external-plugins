@@ -201,6 +201,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteLevelUp",
+		name = "Level Up",
+		description = "Mutes the sound of the Level-up fireworks",
+		section = miscSection
+	)
+	default boolean muteLevelUp()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteRandoms",
 		name = "Random Events",
 		description = "Mutes the sounds produced by random events",

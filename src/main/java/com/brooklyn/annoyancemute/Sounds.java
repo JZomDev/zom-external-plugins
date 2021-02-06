@@ -269,4 +269,9 @@ public final class Sounds
 		SoundEffectID.HEAL_OTHER_4,
 		SoundEffectID.HEAL_OTHER_5
 	);
+
+	protected static final Set<Integer> LEVEL_UP = ImmutableSet.of(
+		SoundEffectID.LEVEL_UP_1,
+		SoundEffectID.LEVEL_UP_2
+	);
 }

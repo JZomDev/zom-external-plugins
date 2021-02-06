@@ -90,6 +90,9 @@ Mutes the sound of prayer deactivation.
 #### Heal Other
 Mutes the sound of Heal Other and Heal Group.
 
+#### Level Up
+Mutes the sound of the Level-up fireworks.
+
 #### NPC Contact
 Mutes the sound of the NPC Contact spell.
 

@@ -159,4 +159,8 @@ public final class SoundEffectID
 	protected final static int HEAL_OTHER_3 = 2893;
 	protected final static int HEAL_OTHER_4 = 2894;
 	protected final static int HEAL_OTHER_5 = 2895;
+
+	// Level Up Fireworks
+	protected final static int LEVEL_UP_1 = 2396;
+	protected final static int LEVEL_UP_2 = 2384;
 }

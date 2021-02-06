@@ -161,6 +161,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (Sounds.LEVEL_UP.contains(soundId) && annoyanceMuteConfig.muteLevelUp())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 	}
 
