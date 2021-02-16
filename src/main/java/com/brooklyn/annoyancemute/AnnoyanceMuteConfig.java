@@ -267,6 +267,39 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteJellies",
+		name = "Jellies",
+		description = "Mutes the sounds of Jellies",
+		section = npcSection
+	)
+	default boolean muteJellies()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "muteNailBeasts",
+		name = "Nail Beasts",
+		description = "Mutes the sounds of Nail Beasts",
+		section = npcSection
+	)
+	default boolean muteNailBeasts()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "muteDemons",
+		name = "Demons",
+		description = "Mutes the sounds of various Demons",
+		section = npcSection
+	)
+	default boolean muteDemons()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteDenseEssence",
 		name = "Dense Essence",
 		description = "Mutes the sound of chiseling Dense Essence",

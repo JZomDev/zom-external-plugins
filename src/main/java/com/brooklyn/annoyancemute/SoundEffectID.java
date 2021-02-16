@@ -163,4 +163,22 @@ public final class SoundEffectID
 	// Level Up Fireworks
 	protected final static int LEVEL_UP_1 = 2396;
 	protected final static int LEVEL_UP_2 = 2384;
+
+	// Jellies
+	protected final static int JELLY_ATTACK = 547;
+	protected final static int JELLY_DEATH = 549;
+	protected final static int JELLY_PARRY = 550;
+
+	// Nail Beasts
+	protected final static int NAIL_BEAST_ATTACK = 3482;
+	protected final static int NAIL_BEAST_DEATH = 3484;
+	protected final static int NAIL_BEAST_PARRY = 3485;
+
+	// Demons
+	protected final static int GREATER_DEMON_ATTACK = 397;
+	protected final static int GREATER_DEMON_DEATH = 398;
+	protected final static int GREATER_DEMON_PARRY = 399;
+	protected final static int DEMON_ATTACK = 400; // Lesser and Black Demons
+	protected final static int DEMON_DEATH = 403;
+	protected final static int DEMON_PARRY = 404;
 }

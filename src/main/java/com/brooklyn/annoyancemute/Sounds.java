@@ -274,4 +274,25 @@ public final class Sounds
 		SoundEffectID.LEVEL_UP_1,
 		SoundEffectID.LEVEL_UP_2
 	);
+
+	protected static final Set<Integer> JELLIES = ImmutableSet.of(
+		SoundEffectID.JELLY_ATTACK,
+		SoundEffectID.JELLY_DEATH,
+		SoundEffectID.JELLY_PARRY
+	);
+
+	protected static final Set<Integer> NAIL_BEASTS = ImmutableSet.of(
+		SoundEffectID.NAIL_BEAST_ATTACK,
+		SoundEffectID.NAIL_BEAST_DEATH,
+		SoundEffectID.NAIL_BEAST_PARRY
+	);
+
+	protected static final Set<Integer> DEMONS = ImmutableSet.of(
+		SoundEffectID.GREATER_DEMON_ATTACK,
+		SoundEffectID.GREATER_DEMON_DEATH,
+		SoundEffectID.GREATER_DEMON_PARRY,
+		SoundEffectID.DEMON_ATTACK,
+		SoundEffectID.DEMON_DEATH,
+		SoundEffectID.DEMON_PARRY
+	);
 }

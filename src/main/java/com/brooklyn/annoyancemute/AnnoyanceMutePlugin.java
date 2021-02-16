@@ -165,6 +165,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				areaSoundEffectPlayed.consume();
 			}
+			else if (Sounds.NAIL_BEASTS.contains(soundId) && annoyanceMuteConfig.muteNailBeasts())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 		}
 	}
 
@@ -221,6 +225,18 @@ public class AnnoyanceMutePlugin extends Plugin
 			soundEffectPlayed.consume();
 		}
 		else if (Sounds.FOSSIL_ISLAND_WYVERN.contains(soundId) && annoyanceMuteConfig.muteWyverns())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.JELLIES.contains(soundId) && annoyanceMuteConfig.muteJellies())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.NAIL_BEASTS.contains(soundId) && annoyanceMuteConfig.muteNailBeasts())
+		{
+			soundEffectPlayed.consume();
+		}
+		else if (Sounds.DEMONS.contains(soundId) && annoyanceMuteConfig.muteDemons())
 		{
 			soundEffectPlayed.consume();
 		}
