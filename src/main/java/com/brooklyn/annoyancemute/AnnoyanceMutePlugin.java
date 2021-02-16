@@ -41,7 +41,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 
 @PluginDescriptor(
 	name = "Annoyance Mute",
-	description = "Mute annoying sounds without muting all area sounds",
+	description = "Selectively mute annoying game sounds",
 	tags = {"sound", "volume", "mute", "hub", "brooklyn", "pet", "stomp"}
 )
 public class AnnoyanceMutePlugin extends Plugin
