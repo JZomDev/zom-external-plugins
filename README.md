@@ -22,6 +22,18 @@ Mutes the sound of Cave Horrors' shriek.
 #### Cows
 Mutes the sound of cows' moo.
 
+#### Demons
+Mutes the sounds of Greater, Lesser, and Black Demons.
+
+#### Fossil Island Wyverns
+Mutes the sounds of Fossil Island Wyverns.
+
+#### Jellies
+Mutes the sounds of Jellies in the Catacombs as well as the Fremmenik Slayer Cave.
+
+#### Nail Beasts
+Mutes the sounds of Nail Beasts in Temple Trekking.
+
 #### Nightmare
 Mutes the sound of the Nightmare's parry (when it gets hit; does not affect the attack sounds).
 
@@ -61,6 +73,9 @@ Mutes the sound of the Dragon axe special attack.
 
 #### Dense Essence
 Mutes the sound of chiseling Dense Essence blocks.
+
+#### Fishing
+Mutes the sound of Fishing.
 
 #### Humidify
 Mutes the Humidify spell sound.
