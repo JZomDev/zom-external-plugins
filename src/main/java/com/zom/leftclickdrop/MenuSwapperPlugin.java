@@ -91,12 +91,7 @@ public class MenuSwapperPlugin extends Plugin
 	{
 		try
 		{
-			if (itemList == null || itemList.size() == 0)
-			{
-				return;
-			}
-
-			if (menuEntry == null || !(menuEntry.length == 4 || menuEntry.length == 5))
+			if (itemList == null || menuEntry == null|| itemList.size() == 0)
 			{
 				return;
 			}
@@ -107,7 +102,7 @@ public class MenuSwapperPlugin extends Plugin
 
 			for (String item : itemList)
 			{
-				if (item.equals(target) && isGenericItem())
+				if (item.equals(target))
 				{
 
 					// salamanders are the exception to the rule below
@@ -115,8 +110,8 @@ public class MenuSwapperPlugin extends Plugin
 					{
 						swap("release", option, target, true);
 					}
-					// swap use with drop, only on items that are a generic item (not equipment, food, teleport tab, etc)
-					else if (option.equals("use"))
+					// swap first option with drop
+					else
 					{
 						swap("drop", option, target, true);
 					}
@@ -126,28 +121,6 @@ public class MenuSwapperPlugin extends Plugin
 		} catch (Exception ignored) {
 			// ignored
 		}
-	}
-
-	// returns true if the item is a generic item, generic items only have use, drop, examine, cancel.
-	private boolean isGenericItem()
-	{
-		MenuEntry[] entries = client.getMenuEntries();
-		boolean destroyAble = true;
-		boolean release = false;
-		for (MenuEntry entry : entries)
-		{
-			if (Text.removeTags(entry.getOption().toLowerCase()).equals("drop"))
-			{
-				destroyAble = false;
-			}
-
-			if (Text.removeTags(entry.getOption().toLowerCase()).equals("release"))
-			{
-				release = true;
-			}
-		}
-
-		return !destroyAble && entries.length == 4 || release;
 	}
 
 	private void swap(String optionA, String optionB, String target, boolean strict)
