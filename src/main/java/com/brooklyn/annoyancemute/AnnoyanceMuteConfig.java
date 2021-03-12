@@ -211,6 +211,18 @@ public interface AnnoyanceMuteConfig extends Config
 		return false;
 	}
 
+
+	@ConfigItem(
+		keyName = "muteTeleport",
+		name = "Teleport",
+		description = "Mutes the teleport vwoop sound",
+		section = miscSection
+	)
+	default boolean muteTeleport()
+	{
+		return false;
+	}
+
 	@ConfigItem(
 		keyName = "muteRandoms",
 		name = "Random Events",
@@ -295,6 +307,39 @@ public interface AnnoyanceMuteConfig extends Config
 		section = npcSection
 	)
 	default boolean muteDemons()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteNechryael",
+		name = "Nechryael",
+		description = "Mutes the sounds of Nechryaels",
+		section = npcSection
+	)
+	default boolean muteNechryael()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteDustDevils",
+		name = "Dust Devils",
+		description = "Mutes the sounds of Dust Devils",
+		section = npcSection
+	)
+	default boolean muteDustDevils()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "muteSpectres",
+		name = "Spectres",
+		description = "Mutes the sounds of Aberrant and Deviant Spectres",
+		section = npcSection
+	)
+	default boolean muteSpectres()
 	{
 		return false;
 	}
@@ -396,6 +441,17 @@ public interface AnnoyanceMuteConfig extends Config
 	default boolean muteFishing()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "muteMining",
+		name = "Mining",
+		description = "Mutes the sounds of Mining",
+		section = skillingSection
+	)
+	default boolean muteMining()
+	{
+		return false;
 	}
 
 	@ConfigItem(

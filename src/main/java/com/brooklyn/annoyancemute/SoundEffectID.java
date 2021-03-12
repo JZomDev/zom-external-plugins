@@ -181,4 +181,24 @@ public final class SoundEffectID
 	protected final static int DEMON_ATTACK = 400; // Lesser and Black Demons
 	protected final static int DEMON_DEATH = 403;
 	protected final static int DEMON_PARRY = 404;
+
+	// Nechryael
+	protected static final int NECHRYAEL_ATTACK = 645;
+	protected static final int NECHRYAE_DEATH = 646;
+	protected static final int NECHRYAEL_PARRY = 647;
+
+	// Dust Devils
+	protected static final int DUST_DEVIL_ATTACK = 414;
+	protected static final int DUST_DEVIL_DEATH = 415;
+	protected static final int DUST_DEVIL_PARRY = 416;
+
+	// Spectres
+	protected static final int SPECTRE_ATTACK_SHOOT = 272;
+	protected static final int SPECTRE_ATTACK_HIT = 273;
+	protected static final int SPECTRE_DEATH = 274;
+	protected static final int SPECTRE_PARRY = 275;
+
+	// Mining
+	protected static final int MINING_PICK_SWING_1 = 3220;
+	protected static final int MINING_PICK_SWING_2 = 3221;
 }

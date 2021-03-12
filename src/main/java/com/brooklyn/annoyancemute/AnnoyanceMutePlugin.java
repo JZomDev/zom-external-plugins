@@ -131,6 +131,11 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.DEMON_PARRY:
 				return config.muteDemons();
 
+			case SoundEffectID.DUST_DEVIL_ATTACK:
+			case SoundEffectID.DUST_DEVIL_DEATH:
+			case SoundEffectID.DUST_DEVIL_PARRY:
+				return config.muteDustDevils();
+
 			case SoundEffectID.FOSSIL_ISLAND_WYVERN_69:
 			case SoundEffectID.FOSSIL_ISLAND_WYVERN_71:
 			case SoundEffectID.FOSSIL_ISLAND_WYVERN_73:
@@ -145,6 +150,11 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.NAIL_BEAST_DEATH:
 			case SoundEffectID.NAIL_BEAST_PARRY:
 				return config.muteNailBeasts();
+
+			case SoundEffectID.NECHRYAEL_ATTACK:
+			case SoundEffectID.NECHRYAE_DEATH:
+			case SoundEffectID.NECHRYAEL_PARRY:
+				return config.muteNechryael();
 
 			case SoundEffectID.NIGHTMARE_SOUND:
 				return config.muteNightmare();
@@ -175,6 +185,12 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.SIRE_SPAWNS_DEATH:
 				return config.muteSire();
 
+			case SoundEffectID.SPECTRE_ATTACK_SHOOT:
+			case SoundEffectID.SPECTRE_ATTACK_HIT:
+			case SoundEffectID.SPECTRE_DEATH:
+			case SoundEffectID.SPECTRE_PARRY:
+				return config.muteSpectres();
+
 			case SoundEffectID.METEOR:
 				return config.muteTekton();
 
@@ -203,6 +219,10 @@ public class AnnoyanceMutePlugin extends Plugin
 
 			case SoundEffectID.PICKPOCKET_PLOP:
 				return config.mutePickpocket();
+
+			case SoundEffectID.MINING_PICK_SWING_1:
+			case SoundEffectID.MINING_PICK_SWING_2:
+				return config.muteMining();
 
 			case SoundEffectID.PLANK_MAKE:
 				return config.mutePlankMake();
@@ -261,6 +281,9 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.SNOWBALL_HIT:
 			case SoundEffectID.SNOWBALL_THROW:
 				return config.muteSnowballSounds();
+
+			case SoundEffectID.TELEPORT_VWOOP:
+				return config.muteTeleport();
 
 			case SoundEffectID.WHACK:
 				return config.muteRubberChickenSounds();
