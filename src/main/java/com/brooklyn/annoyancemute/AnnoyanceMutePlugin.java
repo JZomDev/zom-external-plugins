@@ -28,7 +28,6 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
-import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.AreaSoundEffectPlayed;
@@ -53,7 +52,7 @@ public class AnnoyanceMutePlugin extends Plugin
 	private ClientThread clientThread;
 
 	@Inject
-	private AnnoyanceMuteConfig annoyanceMuteConfig;
+	private AnnoyanceMuteConfig config;
 
 	@Provides
 	AnnoyanceMuteConfig provideConfig(ConfigManager configManager)
@@ -66,109 +65,31 @@ public class AnnoyanceMutePlugin extends Plugin
 	{
 		Actor source = areaSoundEffectPlayed.getSource();
 		int soundId = areaSoundEffectPlayed.getSoundId();
-		if (source instanceof NPC)
+		if (source != client.getLocalPlayer() && source instanceof Player)
 		{
-			if ((Sounds.PETS.contains(soundId) || Sounds.PET_THUMP.contains(soundId)) && annoyanceMuteConfig.mutePetSounds())
+			if (config.muteOthersAreaSounds())
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (Sounds.TOWN_CRIER.contains(soundId) && annoyanceMuteConfig.muteTownCrierSounds())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-		}
-		else if (source == client.getLocalPlayer())
-		{
-			if (Sounds.DENSE_ESSENCE.contains(soundId) && annoyanceMuteConfig.muteDenseEssence())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.FISHING.contains(soundId) && annoyanceMuteConfig.muteFishing())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.WOODCUTTING_CHOP.contains(soundId) && annoyanceMuteConfig.muteWoodcutting())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-		}
-		else if (source != client.getLocalPlayer() && source instanceof Player)
-		{
-			if (annoyanceMuteConfig.muteOthersAreaSounds())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.WOODCUTTING_CHOP.contains(soundId) && annoyanceMuteConfig.muteWoodcutting())
+			else if (shouldMute(soundId))
 			{
 				areaSoundEffectPlayed.consume();
 			}
 		}
 		else if (source == null)
 		{
-			if (Sounds.PET_THUMP.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			if (soundId == SoundEffectID.PET_WALKING_THUMP && client.getVar(Varbits.IN_RAID) == 1)
 			{
-				if (client.getVar(Varbits.IN_RAID) == 1)
-				{
-					return;
-				}
-				else
-				{
-					areaSoundEffectPlayed.consume();
-				}
+				return;
 			}
-
-			if (Sounds.PETS.contains(soundId) && annoyanceMuteConfig.mutePetSounds())
+			if (shouldMute(soundId))
 			{
 				areaSoundEffectPlayed.consume();
 			}
-			else if (Sounds.SNOWBALL.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.WHACK.contains(soundId) && annoyanceMuteConfig.muteRubberChickenSounds())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.AOE_SPELL.contains(soundId) && annoyanceMuteConfig.muteAOESounds())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.CANNON.contains(soundId) && annoyanceMuteConfig.muteCannon())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.RANDOM_EVENTS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.TEKTON.contains(soundId) && annoyanceMuteConfig.muteTekton())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.CHOP_CHOP.contains(soundId) && annoyanceMuteConfig.muteChopChop())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.NIGHTMARE.contains(soundId) && annoyanceMuteConfig.muteNightmare())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.MOO_MOO.contains(soundId) && annoyanceMuteConfig.muteCows())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.HEAL_OTHER.contains(soundId) && annoyanceMuteConfig.muteHealOther())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.LEVEL_UP.contains(soundId) && annoyanceMuteConfig.muteLevelUp())
-			{
-				areaSoundEffectPlayed.consume();
-			}
-			else if (Sounds.NAIL_BEASTS.contains(soundId) && annoyanceMuteConfig.muteNailBeasts())
-			{
-				areaSoundEffectPlayed.consume();
-			}
+		}
+		else if (shouldMute(soundId))
+		{
+			areaSoundEffectPlayed.consume();
 		}
 	}
 
@@ -176,102 +97,179 @@ public class AnnoyanceMutePlugin extends Plugin
 	public void onSoundEffectPlayed(SoundEffectPlayed soundEffectPlayed)
 	{
 		int soundId = soundEffectPlayed.getSoundId();
-		if (Sounds.SNOWBALL.contains(soundId) && annoyanceMuteConfig.muteSnowballSounds())
+		if (shouldMute(soundId))
 		{
 			soundEffectPlayed.consume();
 		}
-		else if (Sounds.ACB_REEEE.contains(soundId) && annoyanceMuteConfig.muteREEEE())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.SIRE.contains(soundId) && annoyanceMuteConfig.muteSire())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.OBELISK.contains(soundId) && annoyanceMuteConfig.muteObelisk())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.RANDOM_EVENTS.contains(soundId) && annoyanceMuteConfig.muteRandoms())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.PLANK_MAKE.contains(soundId) && annoyanceMuteConfig.mutePlankMake())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.SCARABS.contains(soundId) && annoyanceMuteConfig.muteScarabs())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.ALCHEMY.contains(soundId) && annoyanceMuteConfig.muteAlchemy())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.PICKPOCKET.contains(soundId) && annoyanceMuteConfig.mutePickpocket())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.NPC_CONTACT.contains(soundId) && annoyanceMuteConfig.muteNPCContact())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.STRING_JEWELERY.contains(soundId) && annoyanceMuteConfig.muteStringJewellery())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.CAVE_HORROR.contains(soundId) && annoyanceMuteConfig.muteCaveHorrors())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.FOSSIL_ISLAND_WYVERN.contains(soundId) && annoyanceMuteConfig.muteWyverns())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.JELLIES.contains(soundId) && annoyanceMuteConfig.muteJellies())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.NAIL_BEASTS.contains(soundId) && annoyanceMuteConfig.muteNailBeasts())
-		{
-			soundEffectPlayed.consume();
-		}
-		else if (Sounds.DEMONS.contains(soundId) && annoyanceMuteConfig.muteDemons())
-		{
-			soundEffectPlayed.consume();
-		}
+	}
 
-		// Prayers
-		else if ((Sounds.THICK_SKIN.contains(soundId) && annoyanceMuteConfig.muteThickSkin()) ||
-			(Sounds.BURST_OF_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteBurstofStrength()) ||
-			(Sounds.CLARITY_OF_THOUGHT.contains(soundId) && annoyanceMuteConfig.muteClarityOfThought()) ||
-			(Sounds.ROCK_SKIN.contains(soundId) && annoyanceMuteConfig.muteRockSkin()) ||
-			(Sounds.SUPERHUMAN_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteSuperhumanStrength()) ||
-			(Sounds.IMPROVED_REFLEXES.contains(soundId) && annoyanceMuteConfig.muteImprovedReflexes()) ||
-			(Sounds.RAPID_HEAL.contains(soundId) && annoyanceMuteConfig.muteRapidHeal()) ||
-			(Sounds.PROTECT_ITEM.contains(soundId) && annoyanceMuteConfig.muteProtectItem()) ||
-			(Sounds.HAWK_EYE.contains(soundId) && annoyanceMuteConfig.muteHawkEye()) ||
-			(Sounds.MYSTIC_LORE.contains(soundId) && annoyanceMuteConfig.muteMysticLore()) ||
-			(Sounds.STEEL_SKIN.contains(soundId) && annoyanceMuteConfig.muteSteelSkin()) ||
-			(Sounds.ULTIMATE_STRENGTH.contains(soundId) && annoyanceMuteConfig.muteUltimateStrength()) ||
-			(Sounds.INCREDIBLE_REFLEXES.contains(soundId) && annoyanceMuteConfig.muteIncredibleReflexes()) ||
-			(Sounds.PROTECT_FROM_MAGIC.contains(soundId) && annoyanceMuteConfig.muteProtectFromMagic()) ||
-			(Sounds.PROTECT_FROM_RANGE.contains(soundId) && annoyanceMuteConfig.muteProtectFromRange()) ||
-			(Sounds.PROTECT_FROM_MELEE.contains(soundId) && annoyanceMuteConfig.muteProtectFromMelee()) ||
-			(Sounds.EAGLE_EYE.contains(soundId) && annoyanceMuteConfig.muteEagleEye()) ||
-			(Sounds.MYSTIC_MIGHT.contains(soundId) && annoyanceMuteConfig.muteMysticMight()) ||
-			(Sounds.RETRIBUTION.contains(soundId) && annoyanceMuteConfig.muteRetribution()) ||
-			(Sounds.REDEMPTION.contains(soundId) && annoyanceMuteConfig.muteRedemption()) ||
-			(Sounds.SMITE.contains(soundId) && annoyanceMuteConfig.muteSmite()) ||
-			(Sounds.PRESERVE.contains(soundId) && annoyanceMuteConfig.mutePreserve()) ||
-			(Sounds.CHIVALRY.contains(soundId) && annoyanceMuteConfig.muteChivalry()) ||
-			(Sounds.PIETY.contains(soundId) && annoyanceMuteConfig.mutePiety()) ||
-			(Sounds.RIGOUR.contains(soundId) && annoyanceMuteConfig.muteRigour()) ||
-			(Sounds.AUGURY.contains(soundId) && annoyanceMuteConfig.muteAugury()) ||
-			(Sounds.DEACTIVATE_PRAYER.contains(soundId) && annoyanceMuteConfig.muteDeactivatePrayer()))
+	private boolean shouldMute(int soundId)
+	{
+		switch (soundId)
 		{
-			soundEffectPlayed.consume();
-		}
+			// ------- Combat -------
 
+			case SoundEffectID.ACB_REEEE:
+				return config.muteREEEE();
+
+			case SoundEffectID.CANNON_SPIN:
+				return config.muteCannon();
+
+			// ------- NPCs -------
+
+			case SoundEffectID.CAVE_HORROR:
+				return config.muteCaveHorrors();
+
+			case SoundEffectID.MOO_MOO:
+				return config.muteCows();
+
+			case SoundEffectID.GREATER_DEMON_ATTACK:
+			case SoundEffectID.GREATER_DEMON_DEATH:
+			case SoundEffectID.GREATER_DEMON_PARRY:
+			case SoundEffectID.DEMON_ATTACK:
+			case SoundEffectID.DEMON_DEATH:
+			case SoundEffectID.DEMON_PARRY:
+				return config.muteDemons();
+
+			case SoundEffectID.FOSSIL_ISLAND_WYVERN_69:
+			case SoundEffectID.FOSSIL_ISLAND_WYVERN_71:
+			case SoundEffectID.FOSSIL_ISLAND_WYVERN_73:
+				return config.muteWyverns();
+
+			case SoundEffectID.JELLY_ATTACK:
+			case SoundEffectID.JELLY_DEATH:
+			case SoundEffectID.JELLY_PARRY:
+				return config.muteJellies();
+
+			case SoundEffectID.NAIL_BEAST_ATTACK:
+			case SoundEffectID.NAIL_BEAST_DEATH:
+			case SoundEffectID.NAIL_BEAST_PARRY:
+				return config.muteNailBeasts();
+
+			case SoundEffectID.NIGHTMARE_SOUND:
+				return config.muteNightmare();
+
+			case SoundEffectID.SNAKELING_METAMORPHOSIS:
+			case SoundEffectID.CLOCKWORK_CAT_CLICK_CLICK:
+			case SoundEffectID.PET_KREEARRA_WING_FLAP:
+			case SoundEffectID.ELECTRIC_HYDRA_IN:
+			case SoundEffectID.ELECTRIC_HYDRA_OUT:
+			case SoundEffectID.IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP:
+			case SoundEffectID.IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP:
+			case SoundEffectID.PET_WALKING_THUMP:
+				return config.mutePetSounds();
+
+			case SoundEffectID.CAT_HISS:
+				// Applicable to both pet sounds and random event sounds
+				return config.mutePetSounds() || config.muteRandoms();
+
+			case SoundEffectID.NPC_TELEPORT_WOOSH:
+			case SoundEffectID.DRUNKEN_DWARF:
+				return config.muteRandoms();
+
+			case SoundEffectID.SCARAB_ATTACK_SOUND:
+			case SoundEffectID.SCARAB_SPAWN_SOUND:
+				return config.muteScarabs();
+
+			case SoundEffectID.SIRE_SPAWNS:
+			case SoundEffectID.SIRE_SPAWNS_DEATH:
+				return config.muteSire();
+
+			case SoundEffectID.METEOR:
+				return config.muteTekton();
+
+			case SoundEffectID.TOWN_CRIER_BELL_DING:
+			case SoundEffectID.TOWN_CRIER_BELL_DONG:
+			case SoundEffectID.TOWN_CRIER_SHOUT_SQUEAK:
+				return config.muteTownCrierSounds();
+
+			// ------- Skilling -------
+
+			case SoundEffectID.HIGH_ALCHEMY:
+			case SoundEffectID.LOW_ALCHEMY:
+				return config.muteAlchemy();
+
+			case SoundEffectID.CHOP_CHOP:
+				return config.muteChopChop();
+
+			case SoundEffectID.CHISEL:
+				return config.muteDenseEssence();
+
+			case SoundEffectID.FISHING_SOUND:
+				return config.muteFishing();
+
+			case SoundEffectID.HUMIDIFY_SOUND:
+				return config.muteAOESounds();
+
+			case SoundEffectID.PICKPOCKET_PLOP:
+				return config.mutePickpocket();
+
+			case SoundEffectID.PLANK_MAKE:
+				return config.mutePlankMake();
+
+			case SoundEffectID.STRING_JEWELLERY:
+				return config.muteStringJewellery();
+
+			case SoundEffectID.WOODCUTTING_CHOP:
+				return config.muteWoodcutting();
+
+			// ------- Prayers -------
+
+			case SoundEffectID.THICK_SKIN: return config.muteThickSkin();
+			case SoundEffectID.BURST_OF_STRENGTH: return config.muteBurstofStrength();
+			case SoundEffectID.CLARITY_OF_THOUGHT: return config.muteClarityOfThought();
+			case SoundEffectID.ROCK_SKIN: return config.muteRockSkin();
+			case SoundEffectID.SUPERHUMAN_STRENGTH: return config.muteSuperhumanStrength();
+			case SoundEffectID.IMPROVED_REFLEXES: return config.muteImprovedReflexes();
+			case SoundEffectID.RAPID_HEAL: return config.muteRapidHeal();
+			case SoundEffectID.PROTECT_ITEM: return config.muteProtectItem();
+			case SoundEffectID.HAWK_EYE: return config.muteHawkEye();
+			case SoundEffectID.MYSTIC_LORE: return config.muteMysticLore();
+			case SoundEffectID.STEEL_SKIN: return config.muteSteelSkin();
+			case SoundEffectID.ULTIMATE_STRENGTH: return config.muteUltimateStrength();
+			case SoundEffectID.INCREDIBLE_REFLEXES: return config.muteIncredibleReflexes();
+			case SoundEffectID.PROTECT_FROM_MAGIC: return config.muteProtectFromMagic();
+			case SoundEffectID.PROTECT_FROM_RANGE: return config.muteProtectFromRange();
+			case SoundEffectID.PROTECT_FROM_MELEE: return config.muteProtectFromMelee();
+			case SoundEffectID.EAGLE_EYE: return config.muteEagleEye();
+			case SoundEffectID.MYSTIC_MIGHT: return config.muteMysticMight();
+			case SoundEffectID.RETRIBUTION: return config.muteRetribution();
+			case SoundEffectID.REDEMPTION: return config.muteRedemption();
+			case SoundEffectID.SMITE: return config.muteSmite();
+			case SoundEffectID.PRESERVE: return config.mutePreserve();
+			case SoundEffectID.CHIVALRY: return config.muteChivalry();
+			case SoundEffectID.PIETY: return config.mutePiety();
+			case SoundEffectID.RIGOUR: return config.muteRigour();
+			case SoundEffectID.AUGURY: return config.muteAugury();
+			case SoundEffectID.DEACTIVATE_PRAYER: return config.muteDeactivatePrayer();
+
+			// ------- Miscellaneous -------
+
+			case SoundEffectID.HEAL_OTHER_2:
+			case SoundEffectID.HEAL_OTHER_3:
+			case SoundEffectID.HEAL_OTHER_4:
+			case SoundEffectID.HEAL_OTHER_5:
+				return config.muteHealOther();
+
+			case SoundEffectID.LEVEL_UP_1:
+			case SoundEffectID.LEVEL_UP_2:
+				return config.muteLevelUp();
+
+			case SoundEffectID.NPC_CONTACT:
+				return config.muteNPCContact();
+
+			case SoundEffectID.SNOWBALL_HIT:
+			case SoundEffectID.SNOWBALL_THROW:
+				return config.muteSnowballSounds();
+
+			case SoundEffectID.WHACK:
+				return config.muteRubberChickenSounds();
+
+			case SoundEffectID.WILDY_OBELISK:
+				return config.muteObelisk();
+
+			default:
+				return false;
+		}
 	}
 }
