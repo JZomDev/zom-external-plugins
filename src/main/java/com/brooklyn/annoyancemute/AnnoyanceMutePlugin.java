@@ -283,13 +283,35 @@ public class AnnoyanceMutePlugin extends Plugin
 				return config.muteSnowballSounds();
 
 			case SoundEffectID.TELEPORT_VWOOP:
-				return config.muteTeleport();
+				return config.muteTeleport() || (config.muteTeleportOthers() && !localTeleport());
 
 			case SoundEffectID.WHACK:
 				return config.muteRubberChickenSounds();
 
 			case SoundEffectID.WILDY_OBELISK:
 				return config.muteObelisk();
+
+			default:
+				return false;
+		}
+	}
+
+	private boolean localTeleport()
+	{
+		Player localPlayer = client.getLocalPlayer();
+		int animID = localPlayer.getAnimation();
+
+		switch (animID)
+		{
+			case 714:	// Normal
+			case 1816:	// Lunar
+			case 3864:	// Scroll
+			case 3865:	// Xeric
+			case 3867:	// Wilderness
+			case 3869:	// Cabbage
+			case 3872:	// Ardougne
+			case 3874:	// Burgh
+				return true;
 
 			default:
 				return false;

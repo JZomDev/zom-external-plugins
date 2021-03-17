@@ -224,6 +224,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteTeleportOthers",
+		name = "Teleport (only others)",
+		description = "Mutes the sound of other players' teleports",
+		section = miscSection
+	)
+	default boolean muteTeleportOthers()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "muteRandoms",
 		name = "Random Events",
 		description = "Mutes the sounds produced by random events",
