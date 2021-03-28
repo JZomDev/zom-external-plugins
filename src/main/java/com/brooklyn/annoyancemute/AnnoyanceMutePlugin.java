@@ -220,6 +220,9 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.PICKPOCKET_PLOP:
 				return config.mutePickpocket();
 
+			case SoundEffectID.PICKPOCKET_STUN:
+				return config.mutePickpocketStun();
+
 			case SoundEffectID.MINING_PICK_SWING_1:
 			case SoundEffectID.MINING_PICK_SWING_2:
 				return config.muteMining();

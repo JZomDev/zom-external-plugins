@@ -411,6 +411,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "mutePickpocketStun",
+		name = "Pickpocket Stun",
+		description = "Mutes the sound of the pickpocket stun",
+		section = skillingSection
+	)
+	default boolean mutePickpocketStun()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteStringJewellery",
 		name = "String Jewellery",
 		description = "Mutes the sound of the String Jewellery spell",

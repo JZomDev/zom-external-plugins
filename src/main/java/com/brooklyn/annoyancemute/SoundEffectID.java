@@ -136,6 +136,7 @@ public final class SoundEffectID
 
 	// Pickpocket
 	protected static final int PICKPOCKET_PLOP = 2581;
+	protected static final int PICKPOCKET_STUN = 2727;
 
 	// NPC Contact
 	protected final static int NPC_CONTACT = 3618;
