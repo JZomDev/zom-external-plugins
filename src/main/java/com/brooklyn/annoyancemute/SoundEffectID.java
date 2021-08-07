@@ -61,6 +61,13 @@ public final class SoundEffectID
 	// ACB
 	protected final static int ACB_REEEE = 3892;
 
+	// Ice Spells
+	protected final static int ICE_BARRAGE_CAST = 168;
+	protected final static int ICE_BLITZ_CAST = 169;
+	protected final static int ICE_BURST_CAST = 170;
+	protected final static int ICE_SPELL_LAND = 171;
+	protected final static int ICE_RUSH_CAST = 173;
+
 	// Sire
 	protected final static int SIRE_SPAWNS = 236;
 	protected final static int SIRE_SPAWNS_DEATH = 237;

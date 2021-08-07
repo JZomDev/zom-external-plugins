@@ -157,6 +157,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteIceSpells",
+		name = "Ice Spells",
+		description = "Mutes the sounds of Ice Barrage, Ice Blitz, etc.",
+		section = combatSection
+	)
+	default boolean muteIceSpells()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteSire",
 		name = "Sire Spawns",
 		description = "Mutes the sounds of the Abyssal Sire's spawns",

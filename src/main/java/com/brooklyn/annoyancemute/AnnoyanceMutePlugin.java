@@ -115,6 +115,13 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.CANNON_SPIN:
 				return config.muteCannon();
 
+			case SoundEffectID.ICE_BARRAGE_CAST:
+			case SoundEffectID.ICE_BLITZ_CAST:
+			case SoundEffectID.ICE_BURST_CAST:
+			case SoundEffectID.ICE_SPELL_LAND:
+			case SoundEffectID.ICE_RUSH_CAST:
+				return config.muteIceSpells();
+
 			// ------- NPCs -------
 
 			case SoundEffectID.CAVE_HORROR:
