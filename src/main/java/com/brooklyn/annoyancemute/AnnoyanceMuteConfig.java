@@ -498,6 +498,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteFiremaking",
+		name = "Firemaking",
+		description = "Mutes the sound of burning and lighting logs",
+		section = skillingSection
+	)
+	default boolean muteFiremaking()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteFishing",
 		name = "Fishing",
 		description = "Mutes the sound of Fishing",

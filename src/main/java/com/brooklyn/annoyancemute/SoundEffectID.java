@@ -99,6 +99,10 @@ public final class SoundEffectID
 	protected final static int SCARAB_SPAWN_SOUND = 1478;
 	protected final static int SCARAB_ATTACK_SOUND = 1481;
 
+	// Firemaking
+	protected final static int FIREMAKING_LOG_BURN = 2596;
+	protected final static int FIREMAKING_LOG_LIGHT = 2597;
+
 	// Fishing
 	protected final static int FISHING_SOUND = 2600;
 

@@ -218,6 +218,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.CHISEL:
 				return config.muteDenseEssence();
 
+			case SoundEffectID.FIREMAKING_LOG_BURN:
+			case SoundEffectID.FIREMAKING_LOG_LIGHT:
+				return config.muteFiremaking();
+
 			case SoundEffectID.FISHING_SOUND:
 				return config.muteFishing();
 
