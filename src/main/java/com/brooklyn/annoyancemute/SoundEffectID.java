@@ -165,6 +165,9 @@ public final class SoundEffectID
 	protected final static int FOSSIL_ISLAND_WYVERN_71 = 771;
 	protected final static int FOSSIL_ISLAND_WYVERN_73 = 773;
 
+	// Fishing Explosive
+	protected final static int FISHING_EXPLOSIVE = 1487;
+
 	// Heal Other
 	protected final static int HEAL_OTHER_2 = 2892;
 	protected final static int HEAL_OTHER_3 = 2893;

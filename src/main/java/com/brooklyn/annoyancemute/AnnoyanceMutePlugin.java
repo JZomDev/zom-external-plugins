@@ -275,6 +275,9 @@ public class AnnoyanceMutePlugin extends Plugin
 
 			// ------- Miscellaneous -------
 
+			case SoundEffectID.FISHING_EXPLOSIVE:
+				return config.muteFishingExplosive();
+
 			case SoundEffectID.HEAL_OTHER_2:
 			case SoundEffectID.HEAL_OTHER_3:
 			case SoundEffectID.HEAL_OTHER_4:

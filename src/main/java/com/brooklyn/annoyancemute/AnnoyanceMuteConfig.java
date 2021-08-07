@@ -179,6 +179,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteFishingExplosive",
+		name = "Fishing Explosive",
+		description = "Mutes the sound of Fishing Explosives",
+		section = miscSection
+	)
+	default boolean muteFishingExplosive()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteObelisk",
 		name = "Wilderness Obelisk",
 		description = "Mutes the sounds of the Wilderness Obelisk",
