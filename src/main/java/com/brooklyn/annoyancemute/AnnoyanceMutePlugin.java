@@ -292,6 +292,9 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.SNOWBALL_THROW:
 				return config.muteSnowballSounds();
 
+			case SoundEffectID.TELEOTHER:
+				return config.muteTeleother();
+
 			case SoundEffectID.TELEPORT_VWOOP:
 				return config.muteTeleport() || (config.muteTeleportOthers() && !localTeleport());
 

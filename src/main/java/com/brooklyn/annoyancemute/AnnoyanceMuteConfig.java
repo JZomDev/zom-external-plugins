@@ -222,6 +222,16 @@ public interface AnnoyanceMuteConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+		keyName = "muteTeleother",
+		name = "Teleother",
+		description = "Mutes the sound of the Teleother spell",
+		section = miscSection
+	)
+	default boolean muteTeleother()
+	{
+		return false;
+	}
 
 	@ConfigItem(
 		keyName = "muteTeleport",

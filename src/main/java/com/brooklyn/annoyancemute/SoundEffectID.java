@@ -141,6 +141,9 @@ public final class SoundEffectID
 	// Teleport
 	protected static final int TELEPORT_VWOOP = 200;
 
+	// Teleother
+	protected static final int TELEOTHER = 199;
+
 	// Pickpocket
 	protected static final int PICKPOCKET_PLOP = 2581;
 	protected static final int PICKPOCKET_STUN = 2727;
