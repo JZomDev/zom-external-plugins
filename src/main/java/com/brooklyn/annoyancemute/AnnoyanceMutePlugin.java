@@ -284,6 +284,9 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.HEAL_OTHER_5:
 				return config.muteHealOther();
 
+			case SoundEffectID.ITEM_DROP:
+				return config.muteItemDrop();
+
 			case SoundEffectID.LEVEL_UP_1:
 			case SoundEffectID.LEVEL_UP_2:
 				return config.muteLevelUp();

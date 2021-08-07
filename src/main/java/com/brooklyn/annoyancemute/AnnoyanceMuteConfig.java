@@ -223,6 +223,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteItemDrop",
+		name = "Item Dropping",
+		description = "Mutes the sound that occurs when dropping an item",
+		section = miscSection
+	)
+	default boolean muteItemDrop()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteLevelUp",
 		name = "Level Up",
 		description = "Mutes the sound of the Level-up fireworks",
