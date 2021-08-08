@@ -168,6 +168,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteThralls",
+		name = "Thralls",
+		description = "Mutes the sounds of Thrall attacks",
+		section = combatSection
+	)
+	default boolean muteThralls()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteSire",
 		name = "Sire Spawns",
 		description = "Mutes the sounds of the Abyssal Sire's spawns",

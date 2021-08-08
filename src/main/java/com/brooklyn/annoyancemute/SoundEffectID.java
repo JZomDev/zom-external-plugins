@@ -61,6 +61,12 @@ public final class SoundEffectID
 	// ACB
 	protected final static int ACB_REEEE = 3892;
 
+	// Thralls
+	protected final static int WATER_STRIKE_CAST = 211; // Ghostly Thrall
+	protected final static int WATER_STRIKE_LAND = 212;
+	protected final static int SKELETON_THRALL_ATTACK = 2700;
+	protected final static int ZOMBIE_THRALL_ATTACK = 918;
+
 	// Ice Spells
 	protected final static int ICE_BARRAGE_CAST = 168;
 	protected final static int ICE_BLITZ_CAST = 169;

@@ -122,6 +122,12 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.ICE_RUSH_CAST:
 				return config.muteIceSpells();
 
+			case SoundEffectID.WATER_STRIKE_CAST:
+			case SoundEffectID.WATER_STRIKE_LAND:
+			case SoundEffectID.SKELETON_THRALL_ATTACK:
+			case SoundEffectID.ZOMBIE_THRALL_ATTACK:
+				return config.muteThralls();
+
 			// ------- NPCs -------
 
 			case SoundEffectID.CAVE_HORROR:
