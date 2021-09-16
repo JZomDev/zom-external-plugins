@@ -876,5 +876,17 @@ public interface AnnoyanceMuteConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+			keyName = "soundsToMute",
+			name = "Muted Sounds",
+			description = "Enter IDs of the sounds you wish to mute",
+			position = 28
+	)
+	default String soundsToMute()
+	{
+		return "";
+	}
+
+
 
 }
