@@ -37,6 +37,10 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.util.Text;
+
+import java.util.Collections;
+import java.util.List;
 
 @PluginDescriptor(
 	name = "Annoyance Mute",
@@ -105,6 +109,11 @@ public class AnnoyanceMutePlugin extends Plugin
 
 	private boolean shouldMute(int soundId)
 	{
+		if (getSelectedSounds().contains(Integer.toString(soundId)))
+		{
+			return true;
+		}
+
 		switch (soundId)
 		{
 			// ------- Combat -------
@@ -345,5 +354,17 @@ public class AnnoyanceMutePlugin extends Plugin
 			default:
 				return false;
 		}
+	}
+
+	List<String> getSelectedSounds()
+	{
+		final String configSounds = config.soundsToMute().toLowerCase();
+
+		if (configSounds.isEmpty())
+		{
+			return Collections.emptyList();
+		}
+
+		return Text.fromCSV(configSounds);
 	}
 }
