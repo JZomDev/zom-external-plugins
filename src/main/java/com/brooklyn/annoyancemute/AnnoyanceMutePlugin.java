@@ -86,6 +86,10 @@ public class AnnoyanceMutePlugin extends Plugin
 			{
 				return;
 			}
+			if (soundId == SoundEffectID.SKELETON_THRALL_ATTACK && config.muteThralls())
+			{
+				areaSoundEffectPlayed.consume();
+			}
 			if (shouldMute(soundId))
 			{
 				areaSoundEffectPlayed.consume();
@@ -133,7 +137,6 @@ public class AnnoyanceMutePlugin extends Plugin
 
 			case SoundEffectID.WATER_STRIKE_CAST:
 			case SoundEffectID.WATER_STRIKE_LAND:
-			case SoundEffectID.SKELETON_THRALL_ATTACK:
 			case SoundEffectID.ZOMBIE_THRALL_ATTACK:
 				return config.muteThralls();
 
