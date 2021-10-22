@@ -109,6 +109,9 @@ public final class SoundEffectID
 	protected final static int FIREMAKING_LOG_BURN = 2596;
 	protected final static int FIREMAKING_LOG_LIGHT = 2597;
 
+	// Fletching
+	protected final static int FLETCHING_CUT = 2605;
+
 	// Fishing
 	protected final static int FISHING_SOUND = 2600;
 

@@ -240,6 +240,9 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.FISHING_SOUND:
 				return config.muteFishing();
 
+			case SoundEffectID.FLETCHING_CUT:
+				return config.muteFletching();
+
 			case SoundEffectID.HUMIDIFY_SOUND:
 				return config.muteAOESounds();
 

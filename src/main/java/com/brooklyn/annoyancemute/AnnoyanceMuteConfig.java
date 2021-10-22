@@ -531,6 +531,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "muteFletching",
+		name = "Fletching",
+		description = "Mutes the sound of Fletching",
+		section = skillingSection
+	)
+	default boolean muteFletching()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteMining",
 		name = "Mining",
 		description = "Mutes the sounds of Mining",
