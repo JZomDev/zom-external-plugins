@@ -231,4 +231,10 @@ public final class SoundEffectID
 	// Mining
 	protected static final int MINING_PICK_SWING_1 = 3220;
 	protected static final int MINING_PICK_SWING_2 = 3221;
+
+	//Charge Orb spells
+	protected static final int CHARGE_EARTH_ORB = 115;
+	protected static final int CHARGE_AIR_ORB = 116;
+	protected static final int CHARGE_FIRE_ORB = 117;
+	protected static final int CHARGE_WATER_ORB = 118;
 }
