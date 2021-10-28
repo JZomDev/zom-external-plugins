@@ -564,6 +564,17 @@ public interface AnnoyanceMuteConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "muteChargeOrb",
+			name = "Charge Orb",
+			description = "Mutes the sounds of Charge Orb spells",
+			section = skillingSection
+	)
+	default boolean muteChargeOrb()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "muteThickSkin",
 		name = "Thick Skin",
 		description = "Mutes the activation sound of Thick Skin",

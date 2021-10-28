@@ -268,6 +268,12 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.WOODCUTTING_CHOP:
 				return config.muteWoodcutting();
 
+			case SoundEffectID.CHARGE_EARTH_ORB:
+			case SoundEffectID.CHARGE_AIR_ORB:
+			case SoundEffectID.CHARGE_FIRE_ORB:
+			case SoundEffectID.CHARGE_WATER_ORB:
+				return config.muteChargeOrb();
+
 			// ------- Prayers -------
 
 			case SoundEffectID.THICK_SKIN: return config.muteThickSkin();
