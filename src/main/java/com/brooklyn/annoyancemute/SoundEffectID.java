@@ -111,6 +111,7 @@ public final class SoundEffectID
 
 	// Fletching
 	protected final static int FLETCHING_CUT = 2605;
+	protected final static int AMETHYST_FLETCHING = 2586;
 
 	// Fishing
 	protected final static int FISHING_SOUND = 2600;
