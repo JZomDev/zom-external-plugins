@@ -61,7 +61,7 @@ public class MenuSwapperPlugin extends Plugin
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
 	private List<String> itemList;
 
-	private HashSet<String> releaseItems = new HashSet<>();
+	private HashSet<String> releaseItems;
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
@@ -176,6 +176,7 @@ public class MenuSwapperPlugin extends Plugin
 	protected void startUp()
 	{
 		itemList = Text.fromCSV(config.itemList().toLowerCase());
+		releaseItems = new HashSet<>();
 		releaseItems.add("black salamander");
 		releaseItems.add("orange salamander");
 		releaseItems.add("red salamander");
@@ -185,8 +186,8 @@ public class MenuSwapperPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		releaseItems.clear();
-		itemList.clear();
+		releaseItems = null;
+		itemList = null;
 	}
 
 	@Subscribe
