@@ -25,6 +25,7 @@
 
 package com.zom.leftclickdrop;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.inject.Provides;
 import java.util.HashSet;
@@ -62,6 +63,11 @@ public class MenuSwapperPlugin extends Plugin
 	private List<String> itemList;
 
 	private HashSet<String> releaseItems;
+
+	private Splitter CONFIG_SPLITTER = Splitter
+			.onPattern("([,\n])")
+			.omitEmptyStrings()
+			.trimResults();
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
@@ -195,7 +201,7 @@ public class MenuSwapperPlugin extends Plugin
 	{
 		if (event.getGroup().equals("leftclickdrop"))
 		{
-			itemList = Text.fromCSV(config.itemList().toLowerCase());
+			itemList = CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase());
 		}
 	}
 }
