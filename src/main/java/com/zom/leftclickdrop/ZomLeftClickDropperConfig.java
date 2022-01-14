@@ -30,7 +30,7 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
 @ConfigGroup("leftclickdrop")
-public interface MenuSwapperConfig extends Config
+public interface ZomLeftClickDropperConfig extends Config
 {
 	@ConfigItem(
 		keyName = "itemList",

@@ -35,13 +35,9 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ClientTick;
-import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.Text;
@@ -50,13 +46,13 @@ import net.runelite.client.util.Text;
 @PluginDescriptor(
 	name = "Custom Left Click Drop"
 )
-public class MenuSwapperPlugin extends Plugin
+public class ZomLeftClickDropper extends Plugin
 {
 	@Inject
 	private Client client;
 
 	@Inject
-	private MenuSwapperConfig config;
+	private ZomLeftClickDropperConfig config;
 
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
 	private List<String> itemList;
@@ -167,9 +163,9 @@ public class MenuSwapperPlugin extends Plugin
 	}
 
 	@Provides
-	MenuSwapperConfig provideConfig(ConfigManager configManager)
+	ZomLeftClickDropperConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(MenuSwapperConfig.class);
+		return configManager.getConfig(ZomLeftClickDropperConfig.class);
 	}
 
 	@Override
