@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ClientTick;
 import net.runelite.client.config.ConfigManager;
@@ -92,9 +93,9 @@ public class ZomLeftClickDropper extends Plugin
 				return;
 			}
 
-			// menuEntry.length - 2 is the default left click option. Use,Wear,Wield,Break, etc.
-			final String option = Text.removeTags(menuEntry[menuEntry.length - 2].getOption()).toLowerCase();
-			final String target = Text.removeTags(menuEntry[menuEntry.length - 2].getTarget()).toLowerCase();
+			// menuEntry.length - 1 is the default left click option. Use,Wear,Wield,Break, etc.
+			final String option = Text.removeTags(menuEntry[menuEntry.length - 1].getOption()).toLowerCase();
+			final String target = Text.removeTags(menuEntry[menuEntry.length - 1].getTarget()).toLowerCase();
 
 			for (String item : itemList)
 			{
@@ -126,11 +127,24 @@ public class ZomLeftClickDropper extends Plugin
 		int idxA = searchIndex(entries, optionA, target, strict);
 		int idxB = searchIndex(entries, optionB, target, strict);
 
-		if (idxA >= 0 && idxB >= 0)
+		if (idxA != idxB)
 		{
-			MenuEntry entry = entries[idxA];
-			entries[idxA] = entries[idxB];
-			entries[idxB] = entry;
+			MenuEntry entry1 = entries[idxB];
+			MenuEntry entry2 = entries[idxA];
+			entries[idxA] = entry1;
+			entries[idxB] = entry2;
+
+			// Item op4 and op5 are CC_OP_LOW_PRIORITY so they get added underneath Use,
+			// but this also causes them to get sorted after client tick. Change them to
+			// CC_OP to avoid this.
+			if (entry1.isItemOp() && entry1.getType() == MenuAction.CC_OP_LOW_PRIORITY)
+			{
+				entry1.setType(MenuAction.CC_OP);
+			}
+			if (entry2.isItemOp() && entry2.getType() == MenuAction.CC_OP_LOW_PRIORITY)
+			{
+				entry2.setType(MenuAction.CC_OP);
+			}
 
 			client.setMenuEntries(entries);
 		}
