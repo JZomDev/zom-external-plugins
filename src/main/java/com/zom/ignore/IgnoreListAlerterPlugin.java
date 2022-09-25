@@ -1,5 +1,6 @@
 package com.zom.ignore;
 
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Nameable;
 import net.runelite.api.NameableContainer;
+import net.runelite.api.Player;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.PlayerSpawned;
@@ -97,6 +99,12 @@ public class IgnoreListAlerterPlugin extends Plugin
 			{
 				String name = ig.getName();
 
+				Player targetPlayer = findPlayer(name);
+				if (targetPlayer == null)
+				{
+					return;
+				}
+
 				String note = getFriendNote(name);
 				if (note != null)
 				{
@@ -104,6 +112,18 @@ public class IgnoreListAlerterPlugin extends Plugin
 				}
 			}
 		}
+	}
+
+	private Player findPlayer(String name)
+	{
+		for (Player player : client.getPlayers())
+		{
+			if (player.getName().equals(name))
+			{
+				return player;
+			}
+		}
+		return null;
 	}
 
 
