@@ -25,6 +25,7 @@
 
 package com.zom.leftclickdrop;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.inject.Provides;
 import java.util.HashSet;
@@ -59,6 +60,11 @@ public class ZomLeftClickDropper extends Plugin
 	private List<String> itemList;
 
 	private HashSet<String> releaseItems;
+
+	private Splitter CONFIG_SPLITTER = Splitter
+		.onPattern("([,\n])")
+		.omitEmptyStrings()
+		.trimResults();
 
 	@Subscribe
 	public void onClientTick(ClientTick clientTick)
@@ -185,7 +191,7 @@ public class ZomLeftClickDropper extends Plugin
 	@Override
 	protected void startUp()
 	{
-		itemList = Text.fromCSV(config.itemList().toLowerCase());
+		itemList = CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase());
 		releaseItems = new HashSet<>();
 		releaseItems.add("black salamander");
 		releaseItems.add("orange salamander");
@@ -205,7 +211,7 @@ public class ZomLeftClickDropper extends Plugin
 	{
 		if (event.getGroup().equals("leftclickdrop"))
 		{
-			itemList = Text.fromCSV(config.itemList().toLowerCase());
+			itemList = CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase());
 		}
 	}
 }
