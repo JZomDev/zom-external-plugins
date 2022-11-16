@@ -10,7 +10,7 @@ public interface MolemanModeConfig extends Config
 {
 	String MOLEMAN_MODE_CONFIGGROUP = "molemanmode";
 	
-	String spentTicks = "0";
+	String spentTicks = "spentTicks";
 
 	@ConfigItem(
 		keyName = "manualToggle",

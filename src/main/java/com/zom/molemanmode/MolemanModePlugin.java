@@ -47,6 +47,7 @@ public class MolemanModePlugin extends Plugin
 
 	@Getter
 	private long timeAvailable;
+	private String ticksSpentAboveGroundStr;
 	@Getter
 	private long ticksSpentAboveGround;
 	@Getter
@@ -63,6 +64,7 @@ public class MolemanModePlugin extends Plugin
 	private int xpUntilNextThreshold;
 	private boolean prevState;
 	private boolean enabled;
+	private WorldPoint lastPlayerLocation;
 
 
 	@Override
@@ -80,17 +82,6 @@ public class MolemanModePlugin extends Plugin
 		formatTicksAsTime = config.formatTimer();
 		showRegion = config.showRegion();
 		showAboveGroundState = config.showAboveGround();
-		if (configManager.getConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks) == null) {
-			ticksSpentAboveGround = 0;
-		} else {
-			if (tryParseInt(configManager.getConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks)))
-			{
-				ticksSpentAboveGround = Integer.parseInt(configManager.getConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks));
-			} else {
-				ticksSpentAboveGround = 0;
-				log.info("Time above ground was not previously set, setting it to zero.");
-			}
-		}
 
 		aboveGround = false;
 		prevState = false;
@@ -113,8 +104,8 @@ public class MolemanModePlugin extends Plugin
 		showAboveGroundState = false;
 		whiteListRegionIds.clear();
 		blackListRegionIds.clear();
-		configManager.setConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks, ticksSpentAboveGround);
 		overlayManager.remove(overlay);
+		lastPlayerLocation = null;
 	}
 
 	@Provides
@@ -137,10 +128,42 @@ public class MolemanModePlugin extends Plugin
 		updateTime();
 	}
 
+	boolean loggingIn;
+
 	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged) {
-		if (gameStateChanged.getGameState() != GameState.LOGGED_IN) {
-			aboveGround = false;
+	public void onGameStateChanged(GameStateChanged event) {
+		switch (event.getGameState())
+		{
+			case LOGIN_SCREEN:
+				aboveGround = false;
+				if (lastPlayerLocation != null)
+				{
+					saveConfig();
+				}
+				ticksSpentAboveGround = 0;
+				lastPlayerLocation = null;
+				break;
+			case LOGGING_IN:
+				loggingIn = true;
+				break;
+			case LOGGED_IN:
+				if (loggingIn)
+				{
+					loggingIn = false;
+					onLogin();
+				}
+				break;
+		}
+	}
+
+	private void onLogin()
+	{
+		loadConfig();
+		WorldPoint newLocation = client.getLocalPlayer().getWorldLocation();
+		assert newLocation != null;
+
+		if (lastPlayerLocation == null) {
+			lastPlayerLocation = newLocation;
 		}
 	}
 
@@ -173,6 +196,26 @@ public class MolemanModePlugin extends Plugin
 					warningCount = config.timeWarningThreshold();
 					break;
 			}
+		}
+	}
+
+	private void saveConfig()
+	{
+		ticksSpentAboveGroundStr = String.valueOf(ticksSpentAboveGround);
+		configManager.setConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks, ticksSpentAboveGroundStr);
+	}
+
+	private void loadConfig()
+	{
+		ticksSpentAboveGroundStr = configManager.getConfiguration(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP, MolemanModeConfig.spentTicks);
+		if (ticksSpentAboveGroundStr == null) {
+			ticksSpentAboveGround = 0;
+			log.info("Failed to load ticks above. Setting it to 0.");
+
+		} else {
+			ticksSpentAboveGround = Long.parseLong(ticksSpentAboveGroundStr);
+			log.info("Loaded ticks spent above. Setting it to {}", ticksSpentAboveGroundStr);
+
 		}
 	}
 

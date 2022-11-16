@@ -1,11 +1,12 @@
 plugins {
 	id 'java'
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 repositories {
 	mavenLocal()
 	maven {
-		url = 'http://repo.runelite.net'
+		url = 'https://repo.runelite.net'
 	}
 	mavenCentral()
 }
@@ -23,6 +24,14 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion, {
 		exclude group: 'ch.qos.logback', module: 'logback-classic'
 	}
+}
+
+shadowJar {
+    from sourceSets.test.output
+    configurations = [project.configurations.testRuntimeClasspath]
+    manifest {
+        attributes "Main-Class": "com.zom.molemanmode.ExamplePluginTest"
+    }
 }
 
 group = 'com.zom.molemanmode'
