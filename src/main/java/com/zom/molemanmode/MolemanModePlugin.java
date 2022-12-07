@@ -60,8 +60,11 @@ public class MolemanModePlugin extends Plugin
 	private boolean showRegion;
 	@Getter
 	private boolean showAboveGroundState;
+	@Getter
+	private long xpUntilNextThreshold;
+	@Getter
+	private boolean showOverlay;
 
-	private int xpUntilNextThreshold;
 	private boolean prevState;
 	private boolean enabled;
 	private WorldPoint lastPlayerLocation;
@@ -78,6 +81,7 @@ public class MolemanModePlugin extends Plugin
 		whiteListRegionIds.add(12592);
 
 		enabled = config.manualToggle();
+		showOverlay = config.showOverlay();
 		warningCount = config.timeWarningThreshold();
 		formatTicksAsTime = config.formatTimer();
 		showRegion = config.showRegion();
@@ -96,6 +100,7 @@ public class MolemanModePlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		enabled = false;
+		showOverlay = false;
 		aboveGround = false;
 		prevState = false;
 		warningCount = -1;
@@ -175,8 +180,12 @@ public class MolemanModePlugin extends Plugin
 			String key = event.getKey();
 			switch (key)
 			{
+				case "showOverlay":
+					showOverlay = config.showOverlay();
+					break;
 				case "manualToggle":
 					enabled = config.manualToggle();
+					break;
 				case "whiteList":
 					updateWhitelist();
 					break;
@@ -224,6 +233,7 @@ public class MolemanModePlugin extends Plugin
 		int earnedSeconds = config.bonusTime();
 		earnedSeconds += config.timeEarnedPerThreshold() * (client.getOverallExperience() / config.xpThreshold());
 		timeAvailable = earnedSeconds - ticksSpentAboveGround;
+		xpUntilNextThreshold = config.xpThreshold() - (client.getOverallExperience() % config.xpThreshold());
 	}
 
 	public void evaluateIfMoleMan() {

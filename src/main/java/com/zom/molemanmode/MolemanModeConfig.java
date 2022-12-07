@@ -4,6 +4,7 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
+import net.runelite.client.config.Range;
 
 @ConfigGroup(MolemanModeConfig.MOLEMAN_MODE_CONFIGGROUP)
 public interface MolemanModeConfig extends Config
@@ -13,10 +14,21 @@ public interface MolemanModeConfig extends Config
 	String spentTicks = "spentTicks";
 
 	@ConfigItem(
+		keyName = "showOverlay",
+		name = "Show Overlay",
+		description = "Enable Overlay",
+		position = 1
+	)
+	default boolean showOverlay()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "manualToggle",
 		name = "Manual Toggle",
 		description = "Forces the time tick into the opposite state that it’s currently in",
-		position = 1
+		position = 2
 	)
 	default boolean manualToggle()
 	{
@@ -27,7 +39,7 @@ public interface MolemanModeConfig extends Config
 		keyName = "xpThreshold",
 		name = "XP Threshold",
 		description = "XP to gain before more time is added",
-		position = 2
+		position = 3
 	)
 	default int xpThreshold()
 	{
@@ -36,9 +48,9 @@ public interface MolemanModeConfig extends Config
 
 	@ConfigItem(
 		keyName = "timeEarnedPerThreshold",
-		name = "XP Earmed per Threshold",
+		name = "XP Earned per Threshold",
 		description = "This is the amount of time (in ticks) that the player earns to spend Above Ground",
-		position = 3
+		position = 4
 	)
 	default int timeEarnedPerThreshold()
 	{
@@ -49,7 +61,7 @@ public interface MolemanModeConfig extends Config
 		keyName = "timeWarning",
 		name = "Time Warning Threshold",
 		description = "When the player’s available time is below this threshold (in ticks), the available time value text’s colour is changed to red.",
-		position = 4
+		position = 5
 	)
 	default int timeWarningThreshold()
 	{
@@ -60,8 +72,9 @@ public interface MolemanModeConfig extends Config
 		keyName = "bonusTime",
 		name = "Bonus time given",
 		description = "This is the amount of time (in ticks) that the player can manually give themselves when starting the plugin for the first time.",
-		position = 5
+		position = 6
 	)
+	@Range(min = Integer.MIN_VALUE, max = Integer.MAX_VALUE)
 	default int bonusTime()
 	{
 		return 0;

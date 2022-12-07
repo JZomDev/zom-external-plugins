@@ -31,9 +31,13 @@ class MolemanModeOverlay extends OverlayPanel
 
 	@Override
 	public Dimension render(Graphics2D graphics) {
+
+		if (!plugin.isShowOverlay()) return null;
+
 		boolean aboveGround = plugin.isAboveGround();
 		long timeSpentAbove = plugin.getTicksSpentAboveGround();
 		long timeAvailable = plugin.getTimeAvailable();
+		long xpUntilMoreTime = plugin.getXpUntilNextThreshold();
 
 		String formattedTimeAbove = plugin.isFormatTicksAsTime() ?
 			formatTicksAsTime(timeSpentAbove) :
@@ -43,13 +47,13 @@ class MolemanModeOverlay extends OverlayPanel
 			formatTicksAsTime(timeAvailable) :
 			addCommasToNumber(timeAvailable);
 
-		if (plugin.isShowAboveGroundState())
-		{
-			panelComponent.getChildren().add(LineComponent.builder()
-				.left("Above ground: ")
-				.right(aboveGround ? "Yes" : "No")
-				.build());
-		}
+		String xpUntilMoreTimeStr = String.valueOf(xpUntilMoreTime);
+
+
+		panelComponent.getChildren().add(LineComponent.builder()
+			.left("XP Needed for more time: ")
+			.right(xpUntilMoreTimeStr)
+			.build());
 
 		panelComponent.getChildren().add(LineComponent.builder()
 			.left((plugin.isFormatTicksAsTime() ? "Time"  : "Ticks") + " spent above ground: ")
@@ -61,6 +65,15 @@ class MolemanModeOverlay extends OverlayPanel
 			.right(formattedTimeAvailable)
 			.rightColor(plugin.getWarningCount() > timeAvailable ? Color.RED : Color.WHITE)
 			.build());
+
+		if (plugin.isShowAboveGroundState())
+		{
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("Above ground: ")
+				.right(aboveGround ? "Yes" : "No")
+				.build());
+		}
+
 
 		if (plugin.isShowRegion())
 		{
