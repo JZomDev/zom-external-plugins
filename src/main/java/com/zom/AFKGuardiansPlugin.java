@@ -6,12 +6,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Animation;
 import net.runelite.api.ChatMessageType;
@@ -21,7 +17,6 @@ import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
-import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
@@ -48,6 +43,11 @@ public class AFKGuardiansPlugin extends Plugin
 
 	private final Set<GameObject> activeGuardians = new HashSet<>();
 	private final Set<GameObject> guardians = new HashSet<>();
+
+	public static final String CONFIG_GROUP = "zomafkgotr";
+
+	@Inject
+	private AFKGuardiansConfig config;
 
 	@Inject
 	private Notifier notifier;
@@ -107,7 +107,7 @@ public class AFKGuardiansPlugin extends Plugin
 		if (msg.contains("creatures from the abyss will attack in 120 seconds"))
 		{
 			notifier.notify("Start mining!");
-			stopAFK = Instant.now().plusSeconds(100);
+			stopAFK = Instant.now().plusSeconds(config.timeWasting());
 		}
 	}
 
@@ -139,5 +139,12 @@ public class AFKGuardiansPlugin extends Plugin
 
 		Widget elementalRuneWidget = client.getWidget(PARENT_WIDGET_ID);
 		return elementalRuneWidget != null;
+	}
+
+
+	@Provides
+	AFKGuardiansConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(AFKGuardiansConfig.class);
 	}
 }
