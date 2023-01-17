@@ -29,4 +29,26 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "enableInfoBox",
+		name = "Enable info Box",
+		description = "Show an infobox of being within xp drop range",
+		position = 3
+	)
+	default boolean enableInfoBox()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "hideInfoBox",
+		name = "Hide info box when above 150",
+		description = "Hide the info box when over 150 points",
+		position = 4
+	)
+	default boolean hideInfoBox()
+	{
+		return true;
+	}
 }

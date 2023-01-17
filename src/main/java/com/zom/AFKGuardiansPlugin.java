@@ -2,6 +2,7 @@ package com.zom;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
+import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -15,15 +16,20 @@ import net.runelite.api.Client;
 import net.runelite.api.DynamicObject;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
+import net.runelite.api.ItemID;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.infobox.InfoBox;
+import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 
 @Slf4j
 @PluginDescriptor(
@@ -31,26 +37,35 @@ import net.runelite.client.plugins.PluginDescriptor;
 )
 public class AFKGuardiansPlugin extends Plugin
 {
+	public static final String CONFIG_GROUP = "zomafkgotr";
+
 	@Inject
 	private Client client;
-
-	private static final Set<Integer> GUARDIAN_IDS = ImmutableSet.of(43704, 43707, 43708);
-	private static final int MINIGAME_MAIN_REGION = 14484;
-	private static final int PARENT_WIDGET_ID = 48889857;
-	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
-	private boolean hasBeenNotified;
-	private Instant stopAFK;
-
-	private final Set<GameObject> activeGuardians = new HashSet<>();
-	private final Set<GameObject> guardians = new HashSet<>();
-
-	public static final String CONFIG_GROUP = "zomafkgotr";
 
 	@Inject
 	private AFKGuardiansConfig config;
 
 	@Inject
 	private Notifier notifier;
+
+	@Inject
+	private InfoBoxManager infoBoxManager;
+
+	@Inject
+	private ItemManager itemManager;
+
+	private static final Set<Integer> GUARDIAN_IDS = ImmutableSet.of(43704, 43707, 43708);
+	private static final int MINIGAME_MAIN_REGION = 14484;
+	private static final int PARENT_WIDGET_ID = 48889857;
+	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
+
+	private int currentElementalRewardPoints;
+	private int currentCatalyticRewardPoints;
+	private boolean hasBeenNotified;
+	private Instant stopAFK;
+	private final Set<GameObject> activeGuardians = new HashSet<>();
+	private final Set<GameObject> guardians = new HashSet<>();
+	private InfoBox goodToAFKInfoBox;
 
 	@Override
 	protected void startUp() throws Exception
@@ -66,12 +81,16 @@ public class AFKGuardiansPlugin extends Plugin
 		hasBeenNotified = false;
 		activeGuardians.clear();
 		guardians.clear();
+		disableInfoBox();
 	}
 
 	@Subscribe
 	public void onGameTick(GameTick tick)
 	{
-		if (!checkInMinigame()) return;
+		if (!checkInMinigame()) {
+			disableInfoBox();
+			return;
+		}
 
 		activeGuardians.removeIf(ag -> {
 			Animation anim = ((DynamicObject)ag.getRenderable()).getAnimation();
@@ -108,13 +127,57 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			notifier.notify("Start mining!");
 			stopAFK = Instant.now().plusSeconds(config.timeWasting());
+			currentElementalRewardPoints = 0;
+			currentCatalyticRewardPoints = 0;
+			if (config.enableInfoBox()) {
+				createInfoBox();
+			}
 		}
 	}
 
-	private boolean checkInMainRegion()
+	@Subscribe
+	public void onVarbitChanged(VarbitChanged event)
 	{
-		int[] currentMapRegions = client.getMapRegions();
-		return Arrays.stream(currentMapRegions).anyMatch(x -> x == MINIGAME_MAIN_REGION);
+		if (!checkInMinigame()) return;
+		currentElementalRewardPoints = client.getVarbitValue(13686);
+		currentCatalyticRewardPoints = client.getVarbitValue(13685);
+
+		if (getSum() >= 150 && config.hideInfoBox()) {
+			disableInfoBox();
+		}
+	}
+
+	private int getSum()
+	{
+		return currentElementalRewardPoints + currentCatalyticRewardPoints;
+	}
+
+	private void createInfoBox()
+	{
+		if (goodToAFKInfoBox == null)
+		{
+			goodToAFKInfoBox = new InfoBox(itemManager.getImage(ItemID.ABYSSAL_LANTERN), this)
+			{
+				@Override
+				public String getText()
+				{
+					return getSum() + "/150";
+				}
+
+				@Override
+				public Color getTextColor()
+				{
+					return getSum() < 150 ? Color.RED : Color.GREEN;
+				}
+			};
+			infoBoxManager.addInfoBox(goodToAFKInfoBox);
+		}
+	}
+
+	private void disableInfoBox()
+	{
+		infoBoxManager.removeInfoBox(goodToAFKInfoBox);
+		goodToAFKInfoBox = null;
 	}
 
 	@Subscribe
