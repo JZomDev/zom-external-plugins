@@ -1,6 +1,17 @@
-# Zom Runelite Plugin Hub plugins
+# Welcome to AFK GOTR!
 
-1. [Left Click Dropper](https://github.com/redrumze/zom-external-plugins/tree/leftclick-drop-antidragremoved) Allows left click dropping. 
-2. [NMZ Utilities](https://github.com/redrumze/zom-external-plugins/tree/nmz_util) Helpful Nightmare Zone utilties.
-3. [Dense Runecrafting](https://github.com/redrumze/zom-external-plugins/tree/dense_essence) Dense Runestone highlghter.
+Rules:
+Blame Ironman when you lose, not the other leachers.
 
+That's it, lmao.
+
+## How to use
+
+- Use a GOTR world.
+- Take a stack of uncharged cells.
+- Mine essence until notified to stop.
+- Craft runes that are red tier. Bloods, Deaths & Fire runes. Only have to do it once.
+- Place overpowered barrier after you've crafted.
+- Go back to mining essence.
+
+Enjoy the 25k to 40k xp/hr (depending on your RC level) 
