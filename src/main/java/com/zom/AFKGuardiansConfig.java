@@ -18,4 +18,15 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return 105;
 	}
+
+	@ConfigItem(
+		keyName = "alertOnRed",
+		name = "Alert on Fire/Death/Blood",
+		description = "Notify that a overpowered altar is available",
+		position = 2
+	)
+	default boolean alertOnRed()
+	{
+		return true;
+	}
 }

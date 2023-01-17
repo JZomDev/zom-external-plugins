@@ -91,7 +91,7 @@ public class AFKGuardiansPlugin extends Plugin
 			hasBeenNotified = false;
 		}
 
-		if (activeGuardians.size() > 0 && !hasBeenNotified) {
+		if (config.alertOnRed() && activeGuardians.size() > 0 && !hasBeenNotified) {
 			notifier.notify("Go craft runes at an available RED altar!");
 			hasBeenNotified = true;
 		}
