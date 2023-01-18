@@ -17,14 +17,17 @@ import net.runelite.api.DynamicObject;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -55,16 +58,35 @@ public class AFKGuardiansPlugin extends Plugin
 	private ItemManager itemManager;
 
 	private static final Set<Integer> GUARDIAN_IDS = ImmutableSet.of(43704, 43707, 43708);
-	private static final int MINIGAME_MAIN_REGION = 14484;
-	private static final int PARENT_WIDGET_ID = 48889857;
-	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
-
-	private int currentElementalRewardPoints;
-	private int currentCatalyticRewardPoints;
-	private boolean hasBeenNotified;
-	private Instant stopAFK;
 	private final Set<GameObject> activeGuardians = new HashSet<>();
 	private final Set<GameObject> guardians = new HashSet<>();
+
+	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
+
+	int[] altars = {
+		10571, // Earth
+		10315, // Fire
+		10827, // Water
+		11339, // Air
+		10059, // Body
+		11083, // Mind
+		8523,  // Cosmic
+		9035,  // Chaos
+		9803,  // Law
+		9547,  // Nature
+		8779,  // Death
+		9291, // Wrath
+		8508, // Astral
+		12875 // Blood
+	};
+
+	// point globals
+	private int currentElementalRewardPoints;
+	private int currentCatalyticRewardPoints;
+
+	// configured items
+	private boolean hasBeenNotified;
+	private Instant stopAFK;
 	private InfoBox goodToAFKInfoBox;
 
 	@Override
@@ -85,51 +107,66 @@ public class AFKGuardiansPlugin extends Plugin
 	}
 
 	@Subscribe
+	private void onGameStateChanged(GameStateChanged gameStateChanged)
+	{
+		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			disableInfoBox();
+		}
+	}
+
+	@Subscribe
 	public void onGameTick(GameTick tick)
 	{
-		if (!checkInMinigame()) {
-			disableInfoBox();
+		if (!checkInMainRegion())
+		{
 			return;
 		}
 
 		activeGuardians.removeIf(ag -> {
-			Animation anim = ((DynamicObject)ag.getRenderable()).getAnimation();
+			Animation anim = ((DynamicObject) ag.getRenderable()).getAnimation();
 			return anim == null || anim.getId() != GUARDIAN_ACTIVE_ANIM;
 		});
 
-		for(GameObject guardian : guardians){
+		for (GameObject guardian : guardians)
+		{
 			Animation animation = ((DynamicObject) guardian.getRenderable()).getAnimation();
-			if(animation != null && animation.getId() == GUARDIAN_ACTIVE_ANIM) {
+			if (animation != null && animation.getId() == GUARDIAN_ACTIVE_ANIM)
+			{
 				activeGuardians.add(guardian);
 			}
 		}
 
-		if (stopAFK != null && 1350 > ChronoUnit.MILLIS.between(Instant.now(), stopAFK)) {
+		if (stopAFK != null && 1350 > ChronoUnit.MILLIS.between(Instant.now(), stopAFK))
+		{
 			notifier.notify("Stop afking! Time to to make Guardian Essence!");
 			stopAFK = null;
 			hasBeenNotified = false;
 		}
 
-		if (config.alertOnRed() && activeGuardians.size() > 0 && !hasBeenNotified) {
+		if (config.alertOnRed() && activeGuardians.size() > 0 && !hasBeenNotified)
+		{
 			notifier.notify("Go craft runes at an available RED altar!");
 			hasBeenNotified = true;
 		}
 	}
 
-
 	@Subscribe
 	public void onChatMessage(ChatMessage chatMessage)
 	{
-		String msg = chatMessage.getMessage().toLowerCase();
 		if (chatMessage.getType() != ChatMessageType.GAMEMESSAGE) return;
+		if (!checkInMainRegion()) return;
 
-		if (msg.contains("creatures from the abyss will attack in 120 seconds"))
+		String msg = chatMessage.getMessage().toLowerCase();
+
+		if (msg.contains("creatures from the abyss will attack in 120 seconds") || msg.contains("123"))
 		{
 			notifier.notify("Start mining!");
 			stopAFK = Instant.now().plusSeconds(config.timeWasting());
 			currentElementalRewardPoints = 0;
 			currentCatalyticRewardPoints = 0;
-			if (config.enableInfoBox()) {
+			if (config.enableInfoBox())
+			{
 				createInfoBox();
 			}
 		}
@@ -138,11 +175,12 @@ public class AFKGuardiansPlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		if (!checkInMinigame()) return;
+		if (!checkInMainRegion()) return;
 		currentElementalRewardPoints = client.getVarbitValue(13686);
 		currentCatalyticRewardPoints = client.getVarbitValue(13685);
 
-		if (getSum() >= 150 && config.hideInfoBox()) {
+		if (getSum() >= 150 && config.hideInfoBox())
+		{
 			disableInfoBox();
 		}
 	}
@@ -192,18 +230,20 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 	}
 
-	private boolean checkInMinigame() {
-		GameState gameState = client.getGameState();
-		if (gameState != GameState.LOGGED_IN
-			&& gameState != GameState.LOADING)
+	private boolean checkInMainRegion()
+	{
+		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
+		for (int altarRegion : altars)
 		{
-			return false;
+			if (altarRegion == playerLoc.getRegionID())
+			{
+				return true;
+			}
 		}
 
-		Widget elementalRuneWidget = client.getWidget(PARENT_WIDGET_ID);
-		return elementalRuneWidget != null;
+		int[] currentMapRegions = client.getMapRegions();
+		return Arrays.stream(currentMapRegions).anyMatch(x -> x == 14484);
 	}
-
 
 	@Provides
 	AFKGuardiansConfig provideConfig(ConfigManager configManager)
