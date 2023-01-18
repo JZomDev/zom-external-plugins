@@ -51,4 +51,15 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "notifyMining",
+		name = "Notify on round start",
+		description = "Notifies when the round starts",
+		position = 5
+	)
+	default boolean notifyMining()
+	{
+		return true;
+	}
 }

@@ -159,9 +159,9 @@ public class AFKGuardiansPlugin extends Plugin
 
 		String msg = chatMessage.getMessage().toLowerCase();
 
-		if (msg.contains("creatures from the abyss will attack in 120 seconds") || msg.contains("123"))
+		if (msg.contains("creatures from the abyss will attack in 120 seconds"))
 		{
-			notifier.notify("Start mining!");
+			if (config.notifyMining()) notifier.notify("Start mining!");
 			stopAFK = Instant.now().plusSeconds(config.timeWasting());
 			currentElementalRewardPoints = 0;
 			currentCatalyticRewardPoints = 0;
