@@ -27,7 +27,6 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -122,6 +121,10 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			return;
 		}
+		if (!checkInMinigame())
+		{
+			return;
+		}
 
 		activeGuardians.removeIf(ag -> {
 			Animation anim = ((DynamicObject) ag.getRenderable()).getAnimation();
@@ -135,6 +138,16 @@ public class AFKGuardiansPlugin extends Plugin
 			{
 				activeGuardians.add(guardian);
 			}
+		}
+		
+		if (activeGuardians.size() == 0 && getSum() < 150 && config.additionalNotify())
+		{
+			hasBeenNotified = false;
+		}
+
+		if (atAltar() && getSum() < 150 && config.additionalNotify())
+		{
+			activeGuardians.clear();
 		}
 
 		if (stopAFK != null && 1350 > ChronoUnit.MILLIS.between(Instant.now(), stopAFK))
@@ -178,6 +191,11 @@ public class AFKGuardiansPlugin extends Plugin
 		if (!checkInMainRegion()) return;
 		currentElementalRewardPoints = client.getVarbitValue(13686);
 		currentCatalyticRewardPoints = client.getVarbitValue(13685);
+
+		if (getSum() < 150 && config.additionalNotify())
+		{
+			hasBeenNotified = false;
+		}
 
 		if (getSum() >= 150 && config.hideInfoBox())
 		{
@@ -230,6 +248,19 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 	}
 
+	private boolean atAltar()
+	{
+		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
+		for (int altarRegion : altars)
+		{
+			if (altarRegion == playerLoc.getRegionID())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private boolean checkInMainRegion()
 	{
 		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
@@ -249,5 +280,17 @@ public class AFKGuardiansPlugin extends Plugin
 	AFKGuardiansConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(AFKGuardiansConfig.class);
+	}
+
+	private boolean checkInMinigame() {
+		GameState gameState = client.getGameState();
+		if (gameState != GameState.LOGGED_IN
+			&& gameState != GameState.LOADING)
+		{
+			return false;
+		}
+
+		Widget elementalRuneWidget = client.getWidget(48889857);
+		return elementalRuneWidget != null;
 	}
 }

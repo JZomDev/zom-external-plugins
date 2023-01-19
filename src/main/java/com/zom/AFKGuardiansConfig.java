@@ -62,4 +62,15 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "additionalNotify",
+		name = "Notify when below 150, again",
+		description = "Notifies when red is up & below 150",
+		position = 6
+	)
+	default boolean additionalNotify()
+	{
+		return true;
+	}
 }
