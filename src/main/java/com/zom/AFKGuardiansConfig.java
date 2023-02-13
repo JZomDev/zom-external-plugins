@@ -1,8 +1,11 @@
 package com.zom;
 
+import java.util.Collections;
+import java.util.Set;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.Range;
 
 
 @ConfigGroup(AFKGuardiansPlugin.CONFIG_GROUP)
@@ -20,14 +23,14 @@ public interface AFKGuardiansConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "alertOnRed",
-		name = "Alert on Fire/Death/Blood",
-		description = "Notify that a overpowered altar is available",
+		keyName = "alertOnTier",
+		name = "Notify on selection	",
+		description = "Notify on selection",
 		position = 2
 	)
-	default boolean alertOnRed()
+	default Set<AFKAlertTier> alertOnRed()
 	{
-		return true;
+		return Collections.emptySet();
 	}
 
 	@ConfigItem(
@@ -65,12 +68,24 @@ public interface AFKGuardiansConfig extends Config
 
 	@ConfigItem(
 		keyName = "additionalNotify",
-		name = "Notify when below 150, again",
-		description = "Notifies when red is up & below 150",
+		name = "Notify when below 150, again.",
+		description = "Notifies when specific color is up & below 150",
 		position = 6
 	)
 	default boolean additionalNotify()
 	{
 		return true;
+	}
+
+	@Range(min = -1, max = 99)
+	@ConfigItem(
+		keyName = "additionalPercent",
+		name = "Notify when below 150 at a certain %",
+		description = "Notifies when at a specific % when color is up & below 150",
+		position = 7
+	)
+	default int additionalPercent()
+	{
+		return 40;
 	}
 }

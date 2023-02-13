@@ -1,6 +1,5 @@
 package com.zom;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.time.Instant;
@@ -27,6 +26,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -56,7 +56,28 @@ public class AFKGuardiansPlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 
-	private static final Set<Integer> GUARDIAN_IDS = ImmutableSet.of(43704, 43707, 43708);
+	// white
+	public static final int AIR = 43701;
+	public static final int MIND = 43705;
+	public static final int BODY = 43709;
+
+	// blue
+	public static final int WATER = 43702;
+	public static final int COSMIC = 43710;
+	public static final int CHAOS = 43706;
+
+	// green
+	public static final int EARTH = 43703;
+	public static final int LAW = 43712;
+	public static final int NATURE = 43711;
+
+	// red
+	public static final int FIRE = 43704;
+	public static final int DEATH = 43707;
+	public static final int BLOOD = 43708;
+
+	private Set<AFKAlertTier> currentAlerts;
+
 	private final Set<GameObject> activeGuardians = new HashSet<>();
 	private final Set<GameObject> guardians = new HashSet<>();
 
@@ -87,6 +108,8 @@ public class AFKGuardiansPlugin extends Plugin
 	private boolean hasBeenNotified;
 	private Instant stopAFK;
 	private InfoBox goodToAFKInfoBox;
+	private boolean alwaysNotify;
+	private int notifiyPercent;
 
 	@Override
 	protected void startUp() throws Exception
@@ -94,6 +117,9 @@ public class AFKGuardiansPlugin extends Plugin
 		hasBeenNotified = false;
 		activeGuardians.clear();
 		guardians.clear();
+		currentAlerts = config.alertOnRed();
+		alwaysNotify = config.additionalNotify();
+		notifiyPercent = config.additionalPercent();
 	}
 
 	@Override
@@ -103,6 +129,8 @@ public class AFKGuardiansPlugin extends Plugin
 		activeGuardians.clear();
 		guardians.clear();
 		disableInfoBox();
+		alwaysNotify = false;
+		notifiyPercent = -1;
 	}
 
 	@Subscribe
@@ -136,18 +164,15 @@ public class AFKGuardiansPlugin extends Plugin
 			Animation animation = ((DynamicObject) guardian.getRenderable()).getAnimation();
 			if (animation != null && animation.getId() == GUARDIAN_ACTIVE_ANIM)
 			{
+				log.debug("Altar has spawned: {}", guardian.getId());
 				activeGuardians.add(guardian);
 			}
 		}
-		
-		if (activeGuardians.size() == 0 && getSum() < 150 && config.additionalNotify())
+
+		// allow for second notification
+		if (activeGuardians.size() == 0 && getSum() < 150 && alwaysNotify)
 		{
 			hasBeenNotified = false;
-		}
-
-		if (atAltar() && getSum() < 150 && config.additionalNotify())
-		{
-			activeGuardians.clear();
 		}
 
 		if (stopAFK != null && 1350 > ChronoUnit.MILLIS.between(Instant.now(), stopAFK))
@@ -157,9 +182,23 @@ public class AFKGuardiansPlugin extends Plugin
 			hasBeenNotified = false;
 		}
 
-		if (config.alertOnRed() && activeGuardians.size() > 0 && !hasBeenNotified)
+		if (getGamePercent() == notifiyPercent && hasBeenNotified)
 		{
-			notifier.notify("Go craft runes at an available RED altar!");
+			hasBeenNotified = false;
+			return;
+		}
+
+		// if at altar just clear the active guardian list
+		if (atAltar())
+		{
+			guardians.clear();
+			activeGuardians.clear();
+			return;
+		}
+
+		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150)
+		{
+			notifier.notify("Go craft runes at available altar!");
 			hasBeenNotified = true;
 		}
 	}
@@ -175,7 +214,7 @@ public class AFKGuardiansPlugin extends Plugin
 		if (msg.contains("creatures from the abyss will attack in 120 seconds"))
 		{
 			if (config.notifyMining()) notifier.notify("Start mining!");
-			stopAFK = Instant.now().plusSeconds(config.timeWasting());
+			stopAFK = config.timeWasting() == 0 ? null : Instant.now().plusSeconds(config.timeWasting());
 			currentElementalRewardPoints = 0;
 			currentCatalyticRewardPoints = 0;
 			if (config.enableInfoBox())
@@ -192,7 +231,7 @@ public class AFKGuardiansPlugin extends Plugin
 		currentElementalRewardPoints = client.getVarbitValue(13686);
 		currentCatalyticRewardPoints = client.getVarbitValue(13685);
 
-		if (getSum() < 150 && config.additionalNotify())
+		if (getSum() < 150 && alwaysNotify)
 		{
 			hasBeenNotified = false;
 		}
@@ -240,11 +279,17 @@ public class AFKGuardiansPlugin extends Plugin
 	public void onGameObjectSpawned(GameObjectSpawned event)
 	{
 		GameObject gameObject = event.getGameObject();
-		if (GUARDIAN_IDS.contains(event.getGameObject().getId()))
+
+		for (AFKAlertTier afk : currentAlerts)
 		{
-			guardians.removeIf(g -> g.getId() == gameObject.getId());
-			activeGuardians.removeIf(g -> g.getId() == gameObject.getId());
-			guardians.add(gameObject);
+			for (int i = 0; i < afk.getTier().size(); i++)
+			{
+				if (event.getGameObject().getId() == afk.getTier().get(i)) {
+					guardians.removeIf(g -> g.getId() == gameObject.getId());
+					activeGuardians.removeIf(g -> g.getId() == gameObject.getId());
+					guardians.add(gameObject);
+				}
+			}
 		}
 	}
 
@@ -276,12 +321,6 @@ public class AFKGuardiansPlugin extends Plugin
 		return Arrays.stream(currentMapRegions).anyMatch(x -> x == 14484);
 	}
 
-	@Provides
-	AFKGuardiansConfig provideConfig(ConfigManager configManager)
-	{
-		return configManager.getConfig(AFKGuardiansConfig.class);
-	}
-
 	private boolean checkInMinigame() {
 		GameState gameState = client.getGameState();
 		if (gameState != GameState.LOGGED_IN
@@ -292,5 +331,40 @@ public class AFKGuardiansPlugin extends Plugin
 
 		Widget elementalRuneWidget = client.getWidget(48889857);
 		return elementalRuneWidget != null;
+	}
+
+	private int getGamePercent()
+	{
+		try
+		{
+			Widget elementalRuneWidget = client.getWidget(48889874);
+			if (elementalRuneWidget != null)
+			{
+				log.debug("Current Guardian Power: {}", Integer.valueOf(elementalRuneWidget.getText().replaceAll("[^0-9]", "")));
+				return Integer.valueOf(elementalRuneWidget.getText().replaceAll("[^0-9]", ""));
+			}
+		} catch (Exception e) {
+			return -1;
+		}
+		return -1;
+	}
+
+	@Provides
+	AFKGuardiansConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(AFKGuardiansConfig.class);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals(CONFIG_GROUP))
+		{
+			guardians.clear();
+			activeGuardians.clear();
+			currentAlerts = config.alertOnRed();
+			alwaysNotify = config.additionalNotify();
+			notifiyPercent = config.additionalPercent();
+		}
 	}
 }
