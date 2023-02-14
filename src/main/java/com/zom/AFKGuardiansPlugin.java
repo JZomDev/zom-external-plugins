@@ -191,7 +191,7 @@ public class AFKGuardiansPlugin extends Plugin
 		// if at altar just clear the active guardian list
 		if (atAltar())
 		{
-			guardians.clear();
+//			guardians.clear();
 			activeGuardians.clear();
 			return;
 		}
@@ -221,6 +221,14 @@ public class AFKGuardiansPlugin extends Plugin
 			{
 				createInfoBox();
 			}
+		}
+
+		if (msg.contains("the great guardian was defeated"))
+		{
+			stopAFK = null;
+			currentElementalRewardPoints = 0;
+			currentCatalyticRewardPoints = 0;
+			disableInfoBox();
 		}
 	}
 
