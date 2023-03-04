@@ -88,4 +88,16 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return 40;
 	}
+
+	@ConfigItem(
+		keyName = "alertWithCell",
+		name = "Send alerts when carrying cell",
+		description = "Send alerts when carrying cell (white, blue, green or red)",
+		hidden = true,
+		position = 9
+	)
+	default boolean alertWithCell()
+	{
+		return false;
+	}
 }

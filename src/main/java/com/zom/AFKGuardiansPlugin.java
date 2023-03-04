@@ -15,12 +15,17 @@ import net.runelite.api.Client;
 import net.runelite.api.DynamicObject;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
@@ -100,6 +105,21 @@ public class AFKGuardiansPlugin extends Plugin
 		12875 // Blood
 	};
 
+	int[] guardiansArr = {
+		AIR,
+		MIND,
+		BODY,
+		WATER,
+		LAW,
+		NATURE,
+		CHAOS,
+		DEATH,
+		BLOOD,
+		EARTH,
+		FIRE,
+		COSMIC
+	};
+
 	// point globals
 	private int currentElementalRewardPoints;
 	private int currentCatalyticRewardPoints;
@@ -110,27 +130,32 @@ public class AFKGuardiansPlugin extends Plugin
 	private InfoBox goodToAFKInfoBox;
 	private boolean alwaysNotify;
 	private int notifiyPercent;
+	private boolean alertWithCell;
+
+	private Item[] inv;
+	private boolean postAFK;
 
 	@Override
 	protected void startUp() throws Exception
 	{
 		hasBeenNotified = false;
-		activeGuardians.clear();
 		guardians.clear();
-		currentAlerts = config.alertOnRed();
-		alwaysNotify = config.additionalNotify();
-		notifiyPercent = config.additionalPercent();
+		settings();
+
+		postAFK = false;
+		inv = new Item[]{};
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
 		hasBeenNotified = false;
-		activeGuardians.clear();
 		guardians.clear();
+		settings();
+
+		postAFK = false;
 		disableInfoBox();
-		alwaysNotify = false;
-		notifiyPercent = -1;
+		inv = new Item[]{};
 	}
 
 	@Subscribe
@@ -140,6 +165,55 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			disableInfoBox();
 		}
+	}
+
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		final ItemContainer container = event.getItemContainer();
+
+		if (container != client.getItemContainer(InventoryID.INVENTORY))
+		{
+			return;
+		}
+
+		if (!checkInMainRegion())
+		{
+			return;
+		}
+		if (!checkInMinigame())
+		{
+			return;
+		}
+
+		inv = container.getItems();
+	}
+
+	private boolean hasGuardianStone()
+	{
+		for (Item item: inv)
+		{
+			if (item.getId() == ItemID.CATALYTIC_GUARDIAN_STONE
+				|| item.getId() == ItemID.ELEMENTAL_GUARDIAN_STONE
+				|| item.getId() == ItemID.POLYELEMENTAL_GUARDIAN_STONE) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean hasCell()
+	{
+		for (Item item: inv)
+		{
+			if (item.getId() == ItemID.WEAK_CELL
+				|| item.getId() == ItemID.MEDIUM_CELL
+				|| item.getId() == ItemID.STRONG_CELL
+				|| item.getId() == ItemID.OVERCHARGED_CELL) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Subscribe
@@ -164,8 +238,16 @@ public class AFKGuardiansPlugin extends Plugin
 			Animation animation = ((DynamicObject) guardian.getRenderable()).getAnimation();
 			if (animation != null && animation.getId() == GUARDIAN_ACTIVE_ANIM)
 			{
-				log.debug("Altar has spawned: {}", guardian.getId());
-				activeGuardians.add(guardian);
+				for (AFKAlertTier afk : currentAlerts)
+				{
+					for (int i = 0; i < afk.getTier().size(); i++)
+					{
+						if (guardian.getId() == afk.getTier().get(i)) {
+							activeGuardians.removeIf(g -> g.getId() == guardian.getId());
+							activeGuardians.add(guardian);
+						}
+					}
+				}
 			}
 		}
 
@@ -175,11 +257,12 @@ public class AFKGuardiansPlugin extends Plugin
 			hasBeenNotified = false;
 		}
 
-		if (stopAFK != null && 1350 > ChronoUnit.MILLIS.between(Instant.now(), stopAFK))
+		if (stopAFK != null &&  Instant.now().compareTo(stopAFK) >= 0)
 		{
 			notifier.notify("Stop afking! Time to to make Guardian Essence!");
 			stopAFK = null;
 			hasBeenNotified = false;
+			postAFK = true;
 		}
 
 		if (getGamePercent() == notifiyPercent && hasBeenNotified)
@@ -191,12 +274,11 @@ public class AFKGuardiansPlugin extends Plugin
 		// if at altar just clear the active guardian list
 		if (atAltar())
 		{
-//			guardians.clear();
 			activeGuardians.clear();
 			return;
 		}
 
-		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150)
+		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150 && (alertWithCell && !hasCell()) && !hasGuardianStone() && postAFK)
 		{
 			notifier.notify("Go craft runes at available altar!");
 			hasBeenNotified = true;
@@ -215,6 +297,7 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			if (config.notifyMining()) notifier.notify("Start mining!");
 			stopAFK = config.timeWasting() == 0 ? null : Instant.now().plusSeconds(config.timeWasting());
+			postAFK = config.timeWasting() == 0;
 			currentElementalRewardPoints = 0;
 			currentCatalyticRewardPoints = 0;
 			if (config.enableInfoBox())
@@ -288,15 +371,12 @@ public class AFKGuardiansPlugin extends Plugin
 	{
 		GameObject gameObject = event.getGameObject();
 
-		for (AFKAlertTier afk : currentAlerts)
+		for (int id : guardiansArr)
 		{
-			for (int i = 0; i < afk.getTier().size(); i++)
+			if (gameObject.getId() == id)
 			{
-				if (event.getGameObject().getId() == afk.getTier().get(i)) {
-					guardians.removeIf(g -> g.getId() == gameObject.getId());
-					activeGuardians.removeIf(g -> g.getId() == gameObject.getId());
-					guardians.add(gameObject);
-				}
+				guardians.removeIf(g -> g.getId() == gameObject.getId());
+				guardians.add(gameObject);
 			}
 		}
 	}
@@ -368,11 +448,16 @@ public class AFKGuardiansPlugin extends Plugin
 	{
 		if (event.getGroup().equals(CONFIG_GROUP))
 		{
-			guardians.clear();
-			activeGuardians.clear();
-			currentAlerts = config.alertOnRed();
-			alwaysNotify = config.additionalNotify();
-			notifiyPercent = config.additionalPercent();
+			settings();
 		}
+	}
+
+	private void settings()
+	{
+		alertWithCell = config.alertWithCell();
+		activeGuardians.clear();
+		currentAlerts = config.alertOnRed();
+		alwaysNotify = config.additionalNotify();
+		notifiyPercent = config.additionalPercent();
 	}
 }
