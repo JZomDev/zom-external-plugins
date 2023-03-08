@@ -3,11 +3,12 @@ package com.zom;
 import com.google.inject.Provides;
 import java.awt.Color;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Animation;
 import net.runelite.api.ChatMessageType;
@@ -20,7 +21,6 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
@@ -61,69 +61,6 @@ public class AFKGuardiansPlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 
-	// white
-	public static final int AIR = 43701;
-	public static final int MIND = 43705;
-	public static final int BODY = 43709;
-
-	// blue
-	public static final int WATER = 43702;
-	public static final int COSMIC = 43710;
-	public static final int CHAOS = 43706;
-
-	// green
-	public static final int EARTH = 43703;
-	public static final int LAW = 43712;
-	public static final int NATURE = 43711;
-
-	// red
-	public static final int FIRE = 43704;
-	public static final int DEATH = 43707;
-	public static final int BLOOD = 43708;
-
-	private Set<AFKAlertTier> currentAlerts;
-
-	private final Set<GameObject> activeGuardians = new HashSet<>();
-	private final Set<GameObject> guardians = new HashSet<>();
-
-	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
-
-	int[] altars = {
-		10571, // Earth
-		10315, // Fire
-		10827, // Water
-		11339, // Air
-		10059, // Body
-		11083, // Mind
-		8523,  // Cosmic
-		9035,  // Chaos
-		9803,  // Law
-		9547,  // Nature
-		8779,  // Death
-		9291, // Wrath
-		8508, // Astral
-		12875 // Blood
-	};
-
-	int[] guardiansArr = {
-		AIR,
-		MIND,
-		BODY,
-		WATER,
-		LAW,
-		NATURE,
-		CHAOS,
-		DEATH,
-		BLOOD,
-		EARTH,
-		FIRE,
-		COSMIC
-	};
-
-	// point globals
-	private int currentElementalRewardPoints;
-	private int currentCatalyticRewardPoints;
-
 	// configured items
 	private boolean hasBeenNotified;
 	private Instant stopAFK;
@@ -131,31 +68,66 @@ public class AFKGuardiansPlugin extends Plugin
 	private boolean alwaysNotify;
 	private int notifiyPercent;
 	private boolean alertWithCell;
+	private Set<AFKAlertTier> currentAlerts;
 
+	// globals
 	private Item[] inv;
 	private boolean postAFK;
+	private final Set<GameObject> activeGuardians = new HashSet<>();
+	private final Set<GameObject> guardians = new HashSet<>();
+	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
+
+	// white tier guardians
+	public static final int AIR_GUARDIAN = 43701, MIND_GUARDIAN = 43705, BODY_GUARDIAN = 43709;
+
+	// blue tier guardians
+	public static final int WATER_GUARDIAN = 43702, COSMIC_GUARDIAN = 43710, CHAOS_GUARDIAN = 43706;
+
+	// green tier guardians
+	public static final int EARTH_GUARDIAN = 43703, LAW_GUARDIAN = 43712, NATURE_GUARDIAN = 43711;
+
+	// red tier guardians
+	public static final int FIRE_GUARDIAN = 43704, DEATH_GUARDIAN = 43707, BLOOD_GUARDIAN = 43708;
+
+	int[] guardiansArr = {
+		AIR_GUARDIAN, MIND_GUARDIAN, BODY_GUARDIAN,
+		WATER_GUARDIAN, COSMIC_GUARDIAN, CHAOS_GUARDIAN,
+		EARTH_GUARDIAN, LAW_GUARDIAN, NATURE_GUARDIAN,
+		FIRE_GUARDIAN, DEATH_GUARDIAN, BLOOD_GUARDIAN
+	};
+
+	// white altars
+	private static final int AIR_ALTAR = 11339, MIND_ALTAR = 11083, BODY_ALTAR = 10059;
+	// blue altars
+	private static final int WATER_ALTAR = 10827, COSMIC_ALTAR = 8523, CHAOS_ALTAR = 9035;
+	// green altars
+	private static final int EARTH_ALTAR = 10571, LAW_ALTAR = 9803, NATURE_ALTAR = 9547;
+	// red altars
+	private static final int FIRE_ALTAR = 10315, DEATH_ALTAR = 8779, BLOOD_ALTAR = 12875;
+
+	int[] altarsArr = {
+		AIR_ALTAR, MIND_ALTAR, BODY_ALTAR,
+		WATER_ALTAR, COSMIC_ALTAR, CHAOS_ALTAR,
+		EARTH_ALTAR, LAW_ALTAR, NATURE_ALTAR,
+		FIRE_ALTAR, DEATH_ALTAR, BLOOD_ALTAR
+	};
+
+	// points
+	@Getter
+	@Setter
+	private int currentElementalRewardPoints, currentCatalyticRewardPoints;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		hasBeenNotified = false;
-		guardians.clear();
-		settings();
-
-		postAFK = false;
-		inv = new Item[]{};
+		reset();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		hasBeenNotified = false;
-		guardians.clear();
-		settings();
-
-		postAFK = false;
+		reset();
 		disableInfoBox();
-		inv = new Item[]{};
 	}
 
 	@Subscribe
@@ -165,55 +137,6 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			disableInfoBox();
 		}
-	}
-
-	@Subscribe
-	public void onItemContainerChanged(ItemContainerChanged event)
-	{
-		final ItemContainer container = event.getItemContainer();
-
-		if (container != client.getItemContainer(InventoryID.INVENTORY))
-		{
-			return;
-		}
-
-		if (!checkInMainRegion())
-		{
-			return;
-		}
-		if (!checkInMinigame())
-		{
-			return;
-		}
-
-		inv = container.getItems();
-	}
-
-	private boolean hasGuardianStone()
-	{
-		for (Item item: inv)
-		{
-			if (item.getId() == ItemID.CATALYTIC_GUARDIAN_STONE
-				|| item.getId() == ItemID.ELEMENTAL_GUARDIAN_STONE
-				|| item.getId() == ItemID.POLYELEMENTAL_GUARDIAN_STONE) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean hasCell()
-	{
-		for (Item item: inv)
-		{
-			if (item.getId() == ItemID.WEAK_CELL
-				|| item.getId() == ItemID.MEDIUM_CELL
-				|| item.getId() == ItemID.STRONG_CELL
-				|| item.getId() == ItemID.OVERCHARGED_CELL) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Subscribe
@@ -257,6 +180,7 @@ public class AFKGuardiansPlugin extends Plugin
 			hasBeenNotified = false;
 		}
 
+		// remind user to play the game
 		if (stopAFK != null &&  Instant.now().compareTo(stopAFK) >= 0)
 		{
 			notifier.notify("Stop afking! Time to to make Guardian Essence!");
@@ -265,6 +189,7 @@ public class AFKGuardiansPlugin extends Plugin
 			postAFK = true;
 		}
 
+		// if game progress reaches target percent, sned another notification
 		if (getGamePercent() == notifiyPercent && hasBeenNotified)
 		{
 			hasBeenNotified = false;
@@ -278,6 +203,7 @@ public class AFKGuardiansPlugin extends Plugin
 			return;
 		}
 
+		// send notification
 		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150 && (alertWithCell && !hasCell()) && !hasGuardianStone() && postAFK)
 		{
 			notifier.notify("Go craft runes at available altar!");
@@ -298,8 +224,8 @@ public class AFKGuardiansPlugin extends Plugin
 			if (config.notifyMining()) notifier.notify("Start mining!");
 			stopAFK = config.timeWasting() == 0 ? null : Instant.now().plusSeconds(config.timeWasting());
 			postAFK = config.timeWasting() == 0;
-			currentElementalRewardPoints = 0;
-			currentCatalyticRewardPoints = 0;
+			setCurrentElementalRewardPoints(0);
+			setCurrentCatalyticRewardPoints(0);
 			if (config.enableInfoBox())
 			{
 				createInfoBox();
@@ -309,9 +235,24 @@ public class AFKGuardiansPlugin extends Plugin
 		if (msg.contains("the great guardian was defeated"))
 		{
 			stopAFK = null;
-			currentElementalRewardPoints = 0;
-			currentCatalyticRewardPoints = 0;
+			setCurrentElementalRewardPoints(0);
+			setCurrentCatalyticRewardPoints(0);
 			disableInfoBox();
+		}
+	}
+
+	@Subscribe
+	public void onGameObjectSpawned(GameObjectSpawned event)
+	{
+		GameObject gameObject = event.getGameObject();
+
+		for (int id : guardiansArr)
+		{
+			if (gameObject.getId() == id)
+			{
+				guardians.removeIf(g -> g.getId() == gameObject.getId());
+				guardians.add(gameObject);
+			}
 		}
 	}
 
@@ -319,8 +260,9 @@ public class AFKGuardiansPlugin extends Plugin
 	public void onVarbitChanged(VarbitChanged event)
 	{
 		if (!checkInMainRegion()) return;
-		currentElementalRewardPoints = client.getVarbitValue(13686);
-		currentCatalyticRewardPoints = client.getVarbitValue(13685);
+
+		setCurrentElementalRewardPoints(client.getVarbitValue(13686));
+		setCurrentCatalyticRewardPoints(client.getVarbitValue(13685));
 
 		if (getSum() < 150 && alwaysNotify)
 		{
@@ -333,9 +275,28 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 	}
 
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		final ItemContainer container = event.getItemContainer();
+
+		if (container != client.getItemContainer(InventoryID.INVENTORY))
+		{
+			return;
+		}
+
+		if (!checkInMainRegion() || !checkInMinigame())
+		{
+			return;
+		}
+
+		inv = container.getItems();
+	}
+
+	// returns the sum of reward points
 	private int getSum()
 	{
-		return currentElementalRewardPoints + currentCatalyticRewardPoints;
+		return getCurrentElementalRewardPoints() + getCurrentCatalyticRewardPoints();
 	}
 
 	private void createInfoBox()
@@ -366,25 +327,37 @@ public class AFKGuardiansPlugin extends Plugin
 		goodToAFKInfoBox = null;
 	}
 
-	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned event)
+	private boolean hasGuardianStone()
 	{
-		GameObject gameObject = event.getGameObject();
-
-		for (int id : guardiansArr)
+		for (Item item: inv)
 		{
-			if (gameObject.getId() == id)
-			{
-				guardians.removeIf(g -> g.getId() == gameObject.getId());
-				guardians.add(gameObject);
+			if (item.getId() == ItemID.CATALYTIC_GUARDIAN_STONE
+				|| item.getId() == ItemID.ELEMENTAL_GUARDIAN_STONE
+				|| item.getId() == ItemID.POLYELEMENTAL_GUARDIAN_STONE) {
+				return true;
 			}
 		}
+		return false;
+	}
+
+	private boolean hasCell()
+	{
+		for (Item item: inv)
+		{
+			if (item.getId() == ItemID.WEAK_CELL
+				|| item.getId() == ItemID.MEDIUM_CELL
+				|| item.getId() == ItemID.STRONG_CELL
+				|| item.getId() == ItemID.OVERCHARGED_CELL) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean atAltar()
 	{
 		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
-		for (int altarRegion : altars)
+		for (int altarRegion : altarsArr)
 		{
 			if (altarRegion == playerLoc.getRegionID())
 			{
@@ -396,23 +369,13 @@ public class AFKGuardiansPlugin extends Plugin
 
 	private boolean checkInMainRegion()
 	{
-		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
-		for (int altarRegion : altars)
-		{
-			if (altarRegion == playerLoc.getRegionID())
-			{
-				return true;
-			}
-		}
-
-		int[] currentMapRegions = client.getMapRegions();
-		return Arrays.stream(currentMapRegions).anyMatch(x -> x == 14484);
+		if (atAltar()) return true;
+		return Arrays.stream(client.getMapRegions()).anyMatch(x -> x == 14484);
 	}
 
 	private boolean checkInMinigame() {
 		GameState gameState = client.getGameState();
-		if (gameState != GameState.LOGGED_IN
-			&& gameState != GameState.LOADING)
+		if (gameState != GameState.LOGGED_IN && gameState != GameState.LOADING)
 		{
 			return false;
 		}
@@ -450,6 +413,15 @@ public class AFKGuardiansPlugin extends Plugin
 		{
 			settings();
 		}
+	}
+
+	private void reset()
+	{
+		hasBeenNotified = false;
+		guardians.clear();
+		settings();
+		postAFK = false;
+		inv = new Item[]{};
 	}
 
 	private void settings()

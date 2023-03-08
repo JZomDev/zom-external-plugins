@@ -5,8 +5,8 @@ import java.util.Set;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Range;
-
 
 @ConfigGroup(AFKGuardiansPlugin.CONFIG_GROUP)
 public interface AFKGuardiansConfig extends Config
@@ -22,11 +22,18 @@ public interface AFKGuardiansConfig extends Config
 		return 105;
 	}
 
+	@ConfigSection(
+		position = 2,
+		name = "Notifications",
+		description = "Selection for things to notify on. hold CTRL to multi select"
+	)
+	String notifySection = "notifySection";
+
 	@ConfigItem(
 		keyName = "alertOnTier",
 		name = "Notify on selection	",
 		description = "Notify on selection",
-		position = 2
+		section = notifySection
 	)
 	default Set<AFKAlertTier> alertOnRed()
 	{
@@ -93,8 +100,7 @@ public interface AFKGuardiansConfig extends Config
 		keyName = "alertWithCell",
 		name = "Send alerts when carrying cell",
 		description = "Send alerts when carrying cell (white, blue, green or red)",
-		hidden = true,
-		position = 9
+		position = 8
 	)
 	default boolean alertWithCell()
 	{
