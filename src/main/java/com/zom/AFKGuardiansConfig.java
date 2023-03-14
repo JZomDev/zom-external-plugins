@@ -31,7 +31,7 @@ public interface AFKGuardiansConfig extends Config
 
 	@ConfigItem(
 		keyName = "alertOnTier",
-		name = "Notify on selection	",
+		name = "Notify on selection",
 		description = "Notify on selection",
 		section = notifySection
 	)

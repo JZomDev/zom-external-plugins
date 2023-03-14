@@ -391,7 +391,6 @@ public class AFKGuardiansPlugin extends Plugin
 			Widget elementalRuneWidget = client.getWidget(48889874);
 			if (elementalRuneWidget != null)
 			{
-				log.debug("Current Guardian Power: {}", Integer.valueOf(elementalRuneWidget.getText().replaceAll("[^0-9]", "")));
 				return Integer.valueOf(elementalRuneWidget.getText().replaceAll("[^0-9]", ""));
 			}
 		} catch (Exception e) {
