@@ -204,7 +204,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// send notification
-		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150 && (alertWithCell && !hasCell()) && !hasGuardianStone() && postAFK)
+		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150 && !hasGuardianStone() && postAFK && (!hasCell() || alertWithCell))
 		{
 			notifier.notify("Go craft runes at available altar!");
 			hasBeenNotified = true;
