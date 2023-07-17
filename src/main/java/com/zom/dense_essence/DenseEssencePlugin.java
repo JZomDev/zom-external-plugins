@@ -6,10 +6,7 @@ import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.NullObjectID;
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
@@ -53,6 +50,12 @@ public class DenseEssencePlugin extends Plugin
 
 	@Getter(AccessLevel.PACKAGE)
 	private LocalPoint localPointRunestoneNorth;
+
+	@Getter(AccessLevel.PACKAGE)
+	private GameObject soulAltar;
+
+	@Getter(AccessLevel.PACKAGE)
+	private GameObject bloodAltar;
 
 	@Getter(AccessLevel.PACKAGE)
 	private Color CLICKBOX_BORDER_COLOR_MINABLE;
@@ -156,6 +159,12 @@ public class DenseEssencePlugin extends Plugin
 				denseRunestoneNorth = obj;
 				localPointRunestoneNorth = event.getGameObject().getLocalLocation();
 				break;
+			case ObjectID.SOUL_ALTAR:
+				soulAltar = obj;
+				break;
+			case ObjectID.BLOOD_ALTAR:
+				bloodAltar = obj;
+				break;
 		}
 	}
 
@@ -169,6 +178,12 @@ public class DenseEssencePlugin extends Plugin
 				break;
 			case DENSE_RUNESTONE_NORTH_ID:
 				denseRunestoneNorth = null;
+				break;
+			case ObjectID.SOUL_ALTAR:
+				soulAltar = null;
+				break;
+			case ObjectID.BLOOD_ALTAR:
+				bloodAltar = null;
 				break;
 		}
 	}
