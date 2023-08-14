@@ -192,6 +192,8 @@ public class AnnoyanceMutePlugin extends Plugin
 			case SoundEffectID.IKKLE_HYDRA_RIGHT_FOOT_LETS_STOMP:
 			case SoundEffectID.IKKLE_HYDRA_LEFT_FOOT_LETS_STOMP:
 			case SoundEffectID.PET_WALKING_THUMP:
+			case SoundEffectID.VETION_JR_RIGHT_FOOT_LETS_STOMP:
+			case SoundEffectID.VETION_JR_LEFT_FOOT_LETS_STOMP:
 				return config.mutePetSounds();
 
 			case SoundEffectID.CAT_HISS:
