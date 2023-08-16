@@ -7,7 +7,7 @@ public class ExamplePluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(WhispererKicker.class);
+		ExternalPluginManager.loadBuiltin(BossKicker.class);
 		RuneLite.main(args);
 	}
 }
