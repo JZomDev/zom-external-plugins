@@ -1,6 +1,7 @@
 package com.zom;
 
-import java.util.Objects;
+import com.google.inject.Provides;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -11,9 +12,12 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.util.Text;
 
 @Slf4j
 @PluginDescriptor(
@@ -25,20 +29,70 @@ public class BossKicker extends Plugin
 	@Inject
 	private Client client;
 
+	@Inject
+	private BossKickerConfig config;
+
 	private LocalPoint supportedKick;
 	private NPC genericNPC;
+
+	List<String> kickOptions;
+	List<String> bossesToKick;
+
+	@Override
+	public void startUp()
+	{
+		configSet();
+	}
+
+	@Override
+	public void shutDown()
+	{
+		kickOptions.clear();
+		bossesToKick.clear();
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged configChanged)
+	{
+		if (configChanged.getGroup().equals(BossKickerConfig.CONFIG_GROUP))
+		{
+			configSet();
+		}
+	}
+
+	@Provides
+	BossKickerConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(BossKickerConfig.class);
+	}
+
+	private void configSet()
+	{
+		kickOptions = Text.fromCSV(config.bossWakeUpOptions());
+		bossesToKick = Text.fromCSV(config.bossNames());
+
+		if (kickOptions.size() != bossesToKick.size()) {
+			log.info("Bosses to kick and kick options are not equal in length");
+
+			bossesToKick.clear();
+			kickOptions.clear();
+		}
+	}
 
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked e)
 	{
 		// set the supportedKick value to a non null when you interact with the NPC that is supported
-		if (e.getMenuOption().equals("Disturb") && e.getMenuTarget().endsWith("Odd Figure"))
+		String target = Text.removeFormattingTags(e.getMenuTarget());
+		int index = bossesToKick.indexOf(target);
+
+		if (index != -1)
 		{
-			supportedKick = LocalPoint.fromScene(e.getParam0(), e.getParam1());
-		}
-		else if (e.getMenuOption().equals("Poke") && e.getMenuTarget().endsWith("Vorkath"))
-		{
-			supportedKick = LocalPoint.fromScene(e.getParam0(), e.getParam1());
+			String option = Text.removeFormattingTags(e.getMenuOption());
+			if (kickOptions.get(index).equals(option))
+			{
+				supportedKick = LocalPoint.fromScene(e.getParam0(), e.getParam1());
+			}
 		}
 		else
 		{
@@ -50,13 +104,9 @@ public class BossKicker extends Plugin
 	public void onNpcSpawned(NpcSpawned event)
 	{
 		// assign the genericNPC to the boss that is spawned so that we can compare our distance to it
-		if (Objects.equals(event.getNpc().getName(), "Vorkath"))
-		{
-			genericNPC = event.getNpc();
-		}
+		String npcName = event.getNpc().getName();
 
-		if (Objects.equals(event.getNpc().getName(), "Odd Figure"))
-		{
+		if (bossesToKick.contains(npcName)) {
 			genericNPC = event.getNpc();
 		}
 	}
@@ -64,14 +114,9 @@ public class BossKicker extends Plugin
 	@Subscribe
 	public void onNpcDespawned(NpcDespawned event)
 	{
-		// unassign the genericNPC if we leave or it dies or waht ever
-		if (Objects.equals(event.getNpc().getName(), "Vorkath"))
-		{
-			genericNPC = null;
-		}
+		String npcName = event.getNpc().getName();
 
-		if (Objects.equals(event.getNpc().getName(), "Odd Figure"))
-		{
+		if (bossesToKick.contains(npcName)) {
 			genericNPC = null;
 		}
 	}
@@ -81,19 +126,9 @@ public class BossKicker extends Plugin
 	{
 		if (genericNPC != null && supportedKick != null)
 		{
-			int distance;
-			switch (Objects.requireNonNull(genericNPC.getName())) {
-				case "Odd Figure":
-				case "Vorkath":
-					distance = 1;
-					break;
-				default:
-					distance = 1;
-			}
-
 			Player local = client.getLocalPlayer();
 
-			if (genericNPC.getWorldArea().distanceTo(local.getWorldArea()) == distance)
+			if (genericNPC.getWorldArea().distanceTo(local.getWorldArea()) == 1)
 			{
 				local.setAnimation(423);
 				local.setActionFrame(0);
