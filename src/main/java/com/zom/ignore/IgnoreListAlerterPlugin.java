@@ -1,17 +1,15 @@
 package com.zom.ignore;
 
-import java.util.List;
+import com.google.inject.Provides;
+import static com.zom.ignore.IgnoreListAlerterConfig.GROUP;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.Nameable;
-import net.runelite.api.NameableContainer;
-import net.runelite.api.Player;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.GameTick;
 import net.runelite.api.events.PlayerSpawned;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -19,6 +17,7 @@ import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
@@ -37,18 +36,39 @@ public class IgnoreListAlerterPlugin extends Plugin
 	@Inject
 	private ChatMessageManager chatMessageManager;
 
-	private int tickCounter;
+	@Inject
+	private IgnoreListAlerterConfig config;
+
+	int delay = -1;
+	HashMap<String, Instant> delayList;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		tickCounter = 0;
+		delay = config.alertTimeOut();
+		delayList = new HashMap<>();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		tickCounter = 0;
+		delay = -1;
+		delayList = null;
+	}
+
+	@Provides
+	public IgnoreListAlerterConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(IgnoreListAlerterConfig.class);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals(GROUP))
+		{
+			delay = config.alertTimeOut();
+		}
 	}
 
 	@Nullable
@@ -60,72 +80,23 @@ public class IgnoreListAlerterPlugin extends Plugin
 	@Subscribe
 	public void onPlayerSpawned(PlayerSpawned playerSpawned)
 	{
-		if (tickCounter > 1)
+		String name = playerSpawned.getPlayer().getName();
+
+		if (client.getIgnoreContainer().findByName(name) != null)
 		{
-			String name = playerSpawned.getPlayer().getName();
+			 Instant instant = delayList.getOrDefault(name, Instant.now().minus(1L, ChronoUnit.SECONDS));
 
-			NameableContainer nc = client.getIgnoreContainer();
-
-			if (client.getIgnoreContainer().findByName(name) != null)
-			{
-				String note = getFriendNote(name);
-				if (note != null)
-				{
-					alertPlayerWarning(name, note);
-				}
-			}
+			 if (instant.isBefore(Instant.now()))
+			 {
+			 	String note = getFriendNote(name);
+			 	if (note != null)
+			 	{
+			 		delayList.put(name, Instant.now().plusSeconds(delay * 60L));
+			 		alertPlayerWarning(name, note);
+			 	}
+			 }
 		}
 	}
-
-
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
-	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
-		{
-			tickCounter = 0;
-		}
-	}
-
-	@Subscribe
-	public void onGameTick(GameTick gameTick)
-	{
-		tickCounter++;
-		if (tickCounter == 2)
-		{
-			NameableContainer nc = client.getIgnoreContainer();
-
-			for (Nameable ig : nc.getMembers())
-			{
-				String name = ig.getName();
-
-				Player targetPlayer = findPlayer(name);
-				if (targetPlayer == null)
-				{
-					return;
-				}
-
-				String note = getFriendNote(name);
-				if (note != null)
-				{
-					alertPlayerWarning(name, note);
-				}
-			}
-		}
-	}
-
-	private Player findPlayer(String name)
-	{
-		for (Player player : client.getPlayers())
-		{
-			if (player.getName().equals(name))
-			{
-				return player;
-			}
-		}
-		return null;
-	}
-
 
 	private void alertPlayerWarning(String rsn, String note)
 	{
