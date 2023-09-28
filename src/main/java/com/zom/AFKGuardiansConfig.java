@@ -106,4 +106,12 @@ public interface AFKGuardiansConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+			keyName = "portalNotify",
+			name = "Notify on portal when below 150",
+			description = "Send notification when a portal spawns and you are below 150",
+			position = 9
+	)
+	default boolean portalNotify() { return false; }
 }
