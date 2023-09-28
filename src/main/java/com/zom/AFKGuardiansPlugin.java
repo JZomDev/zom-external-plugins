@@ -183,7 +183,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// remind user to play the game
-		if (stopAFK != null &&  Instant.now().compareTo(stopAFK) >= 0)
+		if (stopAFK != null &&  Instant.now().isAfter(stopAFK))
 		{
 			notifier.notify("Stop afking! Time to to make Guardian Essence!");
 			stopAFK = null;
@@ -262,7 +262,7 @@ public class AFKGuardiansPlugin extends Plugin
 			if (config.portalNotify()
 					&& getSum() < 150
 					&& checkInMinigame()
-					&& (minPortalNotificationTime == null || 0 <= Instant.now().compareTo(minPortalNotificationTime)))
+					&& (minPortalNotificationTime == null || Instant.now().isAfter(minPortalNotificationTime)))
 			{
 				minPortalNotificationTime = Instant.now().plusSeconds(40);
 				notifier.notify("A portal has spawned");
