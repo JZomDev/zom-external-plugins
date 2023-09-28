@@ -64,6 +64,7 @@ public class AFKGuardiansPlugin extends Plugin
 	// configured items
 	private boolean hasBeenNotified;
 	private Instant stopAFK;
+	private Instant minPortalNotificationTime;
 	private InfoBox goodToAFKInfoBox;
 	private boolean alwaysNotify;
 	private int notifiyPercent;
@@ -258,8 +259,12 @@ public class AFKGuardiansPlugin extends Plugin
 
 		if (gameObject.getId() == PORTAL)
 		{
-			if (config.portalNotify() && getSum() < 150)
+			if (config.portalNotify()
+					&& getSum() < 150
+					&& checkInMinigame()
+					&& (minPortalNotificationTime == null || 0 <= Instant.now().compareTo(minPortalNotificationTime)))
 			{
+				minPortalNotificationTime = Instant.now().plusSeconds(40);
 				notifier.notify("A portal has spawned");
 			}
 		}
