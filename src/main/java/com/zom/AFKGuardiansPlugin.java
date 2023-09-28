@@ -64,6 +64,7 @@ public class AFKGuardiansPlugin extends Plugin
 	// configured items
 	private boolean hasBeenNotified;
 	private Instant stopAFK;
+	private Instant minPortalNotificationTime;
 	private InfoBox goodToAFKInfoBox;
 	private boolean alwaysNotify;
 	private int notifiyPercent;
@@ -76,6 +77,7 @@ public class AFKGuardiansPlugin extends Plugin
 	private final Set<GameObject> activeGuardians = new HashSet<>();
 	private final Set<GameObject> guardians = new HashSet<>();
 	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
+	private static final int PORTAL = 43729;
 
 	// white tier guardians
 	public static final int AIR_GUARDIAN = 43701, MIND_GUARDIAN = 43705, BODY_GUARDIAN = 43709;
@@ -252,6 +254,18 @@ public class AFKGuardiansPlugin extends Plugin
 			{
 				guardians.removeIf(g -> g.getId() == gameObject.getId());
 				guardians.add(gameObject);
+			}
+		}
+
+		if (gameObject.getId() == PORTAL)
+		{
+			if (config.portalNotify()
+					&& getSum() < 150
+					&& checkInMinigame()
+					&& (minPortalNotificationTime == null || 0 <= Instant.now().compareTo(minPortalNotificationTime)))
+			{
+				minPortalNotificationTime = Instant.now().plusSeconds(40);
+				notifier.notify("A portal has spawned");
 			}
 		}
 	}
