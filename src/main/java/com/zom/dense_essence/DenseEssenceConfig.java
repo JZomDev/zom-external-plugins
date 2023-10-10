@@ -51,4 +51,15 @@ public interface DenseEssenceConfig extends Config
 	{
 		return Color.RED;
 	}
+
+	@ConfigItem(
+			keyName = "highlightAltarClickbox",
+			name = "Highlight Altars",
+			description = "Highlights Blood/Soul Altars when there are dark essence fragments/blocks in inventory",
+			position = 5
+	)
+	default boolean highlightAltarClickbox()
+	{
+		return true;
+	}
 }

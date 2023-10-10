@@ -1,14 +1,11 @@
 package com.zom.dense_essence;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import javax.inject.Inject;
-import net.runelite.api.Client;
-import net.runelite.api.GameObject;
-import net.runelite.api.Point;
-import net.runelite.api.Skill;
+
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.ui.overlay.Overlay;
@@ -47,6 +44,7 @@ public class DenseRunestoneOverlay extends Overlay
 		GameObject northStone = plugin.getDenseRunestoneNorth();
 		GameObject southStone = plugin.getDenseRunestoneSouth();
 		LocalPoint playerLocation = client.getLocalPlayer().getLocalLocation();
+		ItemContainer inventoryContainer = client.getItemContainer(InventoryID.INVENTORY);
 
 		if (northStone != null)
 		{
@@ -61,6 +59,18 @@ public class DenseRunestoneOverlay extends Overlay
 			if (plugin.getLocalPointRunestoneSouth().distanceTo(playerLocation) < MAX_DISTANCE)
 			{
 				renderStone(graphics, southStone, southStoneMineable);
+			}
+		}
+
+		if (config.highlightAltarClickbox()) {
+			if (inventoryContainer.contains(ItemID.DARK_ESSENCE_FRAGMENTS) || inventoryContainer.contains(ItemID.DARK_ESSENCE_BLOCK)) {
+				if (plugin.getSoulAltar().getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
+					renderAltar(graphics, plugin.getSoulAltar());
+				}
+
+				if (plugin.getBloodAltar().getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
+					renderAltar(graphics, plugin.getBloodAltar());
+				}
 			}
 		}
 
@@ -93,5 +103,18 @@ public class DenseRunestoneOverlay extends Overlay
 				client, graphics, gameObjectLocation,
 				skillIconManager.getSkillImage(Skill.MINING, false), Z_OFFSET);
 		}
+	}
+
+	private void renderAltar(Graphics2D graphics, GameObject gameObject)
+	{
+		final net.runelite.api.Point mousePosition = client.getMouseCanvasPosition();
+
+		OverlayUtil.renderHoverableArea(graphics, gameObject.getClickbox(), mousePosition,
+				plugin.getCLICKBOX_FILL_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_COLOR_MINABLE(),
+				plugin.getCLICKBOX_BORDER_HOVER_COLOR_MINABLE());
+
+		OverlayUtil.renderImageLocation(
+				client, graphics, gameObject.getLocalLocation(),
+				skillIconManager.getSkillImage(Skill.RUNECRAFT, false), Z_OFFSET);
 	}
 }
