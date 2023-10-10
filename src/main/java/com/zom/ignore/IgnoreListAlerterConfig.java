@@ -1,9 +1,11 @@
 package com.zom.ignore;
 
+import java.time.temporal.ChronoUnit;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Range;
+import net.runelite.client.config.Units;
 
 @ConfigGroup(IgnoreListAlerterConfig.GROUP)
 public interface IgnoreListAlerterConfig extends Config
@@ -18,6 +20,7 @@ public interface IgnoreListAlerterConfig extends Config
 		position = 1
 	)
 	@Range(max = 30)
+	@Units(Units.MINUTES)
 	default int alertTimeOut()
 	{
 		return 0;
