@@ -6,4 +6,4 @@
 4. [Ignore List Alerter](https://github.com/redrumze/zom-external-plugins/tree/IgnoreListAlert) Ignore List Alerter
 5. [Moleman Mode BETA](https://github.com/redrumze/zom-external-plugins/tree/molemanmode) Moleman Mode Plugin
 6. [AFK GOTR](https://github.com/redrumze/zom-external-plugins/tree/zom-afk-gotr) AFK GOTR even harder!
-7. [Boss Kicker](https://github.com/redrumze/zom-external-plugins/whisperer-kicker) Kick a boss awake!
+7. [Boss Kicker](https://github.com/redrumze/zom-external-plugins/tree/whisperer-kicker) Kick a boss awake!
