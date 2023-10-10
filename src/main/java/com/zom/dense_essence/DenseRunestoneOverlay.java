@@ -4,8 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import javax.inject.Inject;
-
-import net.runelite.api.*;
+import net.runelite.api.Client;
+import net.runelite.api.GameObject;
+import net.runelite.api.Point;
+import net.runelite.api.Skill;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.ui.overlay.Overlay;
@@ -43,12 +45,13 @@ public class DenseRunestoneOverlay extends Overlay
 		boolean southStoneMineable = client.getVarbitValue(4928) == 0;
 		GameObject northStone = plugin.getDenseRunestoneNorth();
 		GameObject southStone = plugin.getDenseRunestoneSouth();
+		GameObject soulAltar = plugin.getSoulAltar();
+		GameObject bloodAltar = plugin.getBloodAltar();
 		LocalPoint playerLocation = client.getLocalPlayer().getLocalLocation();
-		ItemContainer inventoryContainer = client.getItemContainer(InventoryID.INVENTORY);
 
 		if (northStone != null)
 		{
-			if (plugin.getLocalPointRunestoneNorth().distanceTo(playerLocation) < MAX_DISTANCE)
+			if (northStone.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE)
 			{
 				renderStone(graphics, northStone, northStoneMineable);
 			}
@@ -56,24 +59,29 @@ public class DenseRunestoneOverlay extends Overlay
 
 		if (southStone != null)
 		{
-			if (plugin.getLocalPointRunestoneSouth().distanceTo(playerLocation) < MAX_DISTANCE)
+			if (southStone.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE)
 			{
 				renderStone(graphics, southStone, southStoneMineable);
 			}
 		}
 
-		if (config.highlightAltarClickbox()) {
-			if (inventoryContainer.contains(ItemID.DARK_ESSENCE_FRAGMENTS) || inventoryContainer.contains(ItemID.DARK_ESSENCE_BLOCK)) {
-				if (plugin.getSoulAltar().getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
-					renderAltar(graphics, plugin.getSoulAltar());
+		if (config.highlightAltarClickbox() && plugin.isHasDarkEssence())
+		{
+			if (soulAltar != null)
+			{
+				if (soulAltar.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE)
+				{
+					renderAltar(graphics, soulAltar);
 				}
-
-				if (plugin.getBloodAltar().getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
-					renderAltar(graphics, plugin.getBloodAltar());
+			}
+			if (bloodAltar != null)
+			{
+				if (bloodAltar.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE)
+				{
+					renderAltar(graphics, bloodAltar);
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -87,13 +95,13 @@ public class DenseRunestoneOverlay extends Overlay
 			{
 				OverlayUtil.renderHoverableArea(
 					graphics, clickbox, mousePosition,
-					plugin.getCLICKBOX_FILL_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_HOVER_COLOR_MINABLE());
+					plugin.getClickboxFillColorMinable(), plugin.getClickboxBorderColorMinable(), plugin.getClickboxBorderHoverColorMinable());
 			}
 			else
 			{
 				OverlayUtil.renderHoverableArea(
 					graphics, clickbox, mousePosition,
-					plugin.getCLICKBOX_FILL_COLOR_DEPLETED(), plugin.getCLICKBOX_BORDER_COLOR_DEPLETED(), plugin.getCLICKBOX_BORDER_HOVER_COLOR_DEPLETED());
+					plugin.getClickboxFillColorDepleted(), plugin.getClickboxBorderColorDepleted(), plugin.getClickboxBorderHoverColorDepleted());
 			}
 		}
 		if (config.showDenseRunestoneIndicator() && minable)
@@ -107,14 +115,14 @@ public class DenseRunestoneOverlay extends Overlay
 
 	private void renderAltar(Graphics2D graphics, GameObject gameObject)
 	{
-		final net.runelite.api.Point mousePosition = client.getMouseCanvasPosition();
+		Point mousePosition = client.getMouseCanvasPosition();
 
 		OverlayUtil.renderHoverableArea(graphics, gameObject.getClickbox(), mousePosition,
-				plugin.getCLICKBOX_FILL_COLOR_MINABLE(), plugin.getCLICKBOX_BORDER_COLOR_MINABLE(),
-				plugin.getCLICKBOX_BORDER_HOVER_COLOR_MINABLE());
+			plugin.getClickboxFillColorMinable(), plugin.getClickboxBorderColorMinable(),
+			plugin.getClickboxBorderHoverColorMinable());
 
 		OverlayUtil.renderImageLocation(
-				client, graphics, gameObject.getLocalLocation(),
-				skillIconManager.getSkillImage(Skill.RUNECRAFT, false), Z_OFFSET);
+			client, graphics, gameObject.getLocalLocation(),
+			skillIconManager.getSkillImage(Skill.RUNECRAFT, false), Z_OFFSET);
 	}
 }

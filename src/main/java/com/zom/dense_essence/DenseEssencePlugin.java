@@ -3,14 +3,20 @@ package com.zom.dense_essence;
 import com.google.inject.Provides;
 import java.awt.Color;
 import javax.inject.Inject;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.Client;
+import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
+import net.runelite.api.InventoryID;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.ItemID;
+import net.runelite.api.NullObjectID;
+import net.runelite.api.ObjectID;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -39,53 +45,45 @@ public class DenseEssencePlugin extends Plugin
 	private static final int DENSE_RUNESTONE_SOUTH_ID = NullObjectID.NULL_10796;
 	private static final int DENSE_RUNESTONE_NORTH_ID = NullObjectID.NULL_8981;
 
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private GameObject denseRunestoneSouth;
 
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private GameObject denseRunestoneNorth;
 
-	@Getter(AccessLevel.PACKAGE)
-	private LocalPoint localPointRunestoneSouth;
-
-	@Getter(AccessLevel.PACKAGE)
-	private LocalPoint localPointRunestoneNorth;
-
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private GameObject soulAltar;
 
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private GameObject bloodAltar;
 
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_BORDER_COLOR_MINABLE;
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_FILL_COLOR_MINABLE;
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_BORDER_HOVER_COLOR_MINABLE;
+	@Getter
+	private Color clickboxBorderColorMinable;
+	@Getter
+	private Color clickboxFillColorMinable;
+	@Getter
+	private Color clickboxBorderHoverColorMinable;
 
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_BORDER_COLOR_DEPLETED;
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_FILL_COLOR_DEPLETED;
-	@Getter(AccessLevel.PACKAGE)
-	private Color CLICKBOX_BORDER_HOVER_COLOR_DEPLETED;
+	@Getter
+	private Color clickboxBorderColorDepleted;
+	@Getter
+	private Color clickboxFillColorDepleted;
+	@Getter
+	private Color clickboxBorderHoverColorDepleted;
+	@Getter
+	private boolean hasDarkEssence;
 
 	@Override
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(denseRunestoneOverlay);
-		CLICKBOX_BORDER_COLOR_MINABLE = config.showDenseRunestoneClickboxAvailable();
-		CLICKBOX_FILL_COLOR_MINABLE = new Color(CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
-			CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
-		CLICKBOX_BORDER_HOVER_COLOR_MINABLE = CLICKBOX_BORDER_COLOR_MINABLE.darker();
+		clickboxBorderColorMinable = config.showDenseRunestoneClickboxAvailable();
+		clickboxFillColorMinable = new Color(clickboxBorderColorMinable.getRed(), clickboxBorderColorMinable.getGreen(), clickboxBorderColorMinable.getBlue(), 50);
+		clickboxBorderHoverColorMinable = clickboxBorderColorMinable.darker();
 
-		CLICKBOX_BORDER_COLOR_DEPLETED = config.showDenseRunestoneClickboxUnavailable();
-		CLICKBOX_FILL_COLOR_DEPLETED = new Color(
-			CLICKBOX_BORDER_COLOR_DEPLETED.getRed(),
-			CLICKBOX_BORDER_COLOR_DEPLETED.getGreen(),
-			CLICKBOX_BORDER_COLOR_DEPLETED.getBlue(), 50);
-		CLICKBOX_BORDER_HOVER_COLOR_DEPLETED = CLICKBOX_BORDER_COLOR_DEPLETED.darker();
+		clickboxBorderColorDepleted = config.showDenseRunestoneClickboxUnavailable();
+		clickboxFillColorDepleted = new Color(clickboxBorderColorDepleted.getRed(), clickboxBorderColorDepleted.getGreen(), clickboxBorderColorDepleted.getBlue(), 50);
+		clickboxBorderHoverColorDepleted = clickboxBorderColorDepleted.darker();
 	}
 
 	@Subscribe
@@ -93,17 +91,13 @@ public class DenseEssencePlugin extends Plugin
 	{
 		if (event.getGroup().equals("zomDenseEssence"))
 		{
-			CLICKBOX_BORDER_COLOR_MINABLE = config.showDenseRunestoneClickboxAvailable();
-			CLICKBOX_FILL_COLOR_MINABLE = new Color(CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
-				CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
-			CLICKBOX_BORDER_HOVER_COLOR_MINABLE = CLICKBOX_BORDER_COLOR_MINABLE.darker();
+			clickboxBorderColorMinable = config.showDenseRunestoneClickboxAvailable();
+			clickboxFillColorMinable = new Color(clickboxBorderColorMinable.getRed(), clickboxBorderColorMinable.getGreen(), clickboxBorderColorMinable.getBlue(), 50);
+			clickboxBorderHoverColorMinable = clickboxBorderColorMinable.darker();
 
-			CLICKBOX_BORDER_COLOR_DEPLETED = config.showDenseRunestoneClickboxUnavailable();
-			CLICKBOX_FILL_COLOR_DEPLETED = new Color(
-				CLICKBOX_BORDER_COLOR_DEPLETED.getRed(),
-				CLICKBOX_BORDER_COLOR_DEPLETED.getGreen(),
-				CLICKBOX_BORDER_COLOR_DEPLETED.getBlue(), 50);
-			CLICKBOX_BORDER_HOVER_COLOR_DEPLETED = CLICKBOX_BORDER_COLOR_DEPLETED.darker();
+			clickboxBorderColorDepleted = config.showDenseRunestoneClickboxUnavailable();
+			clickboxFillColorDepleted = new Color(clickboxBorderColorDepleted.getRed(), clickboxBorderColorDepleted.getGreen(), clickboxBorderColorDepleted.getBlue(), 50);
+			clickboxBorderHoverColorDepleted = clickboxBorderColorDepleted.darker();
 		}
 	}
 
@@ -113,9 +107,15 @@ public class DenseEssencePlugin extends Plugin
 		overlayManager.remove(denseRunestoneOverlay);
 		denseRunestoneNorth = null;
 		denseRunestoneSouth = null;
-		CLICKBOX_FILL_COLOR_MINABLE = new Color(
-			CLICKBOX_BORDER_COLOR_MINABLE.getRed(), CLICKBOX_BORDER_COLOR_MINABLE.getGreen(),
-			CLICKBOX_BORDER_COLOR_MINABLE.getBlue(), 50);
+		hasDarkEssence = false;
+
+		clickboxFillColorMinable = null;
+		clickboxBorderColorMinable = null;
+		clickboxBorderHoverColorMinable = null;
+		clickboxBorderColorDepleted = null;
+		clickboxFillColorDepleted = null;
+		clickboxBorderHoverColorDepleted = null;
+
 	}
 
 	@Subscribe
@@ -124,11 +124,11 @@ public class DenseEssencePlugin extends Plugin
 		GameState gameState = event.getGameState();
 		switch (gameState)
 		{
+			case LOGGED_IN:
+				hasDarkEssence = checkContainer(client.getItemContainer(InventoryID.INVENTORY));
 			case LOADING:
 				denseRunestoneNorth = null;
 				denseRunestoneSouth = null;
-				localPointRunestoneNorth = null;
-				localPointRunestoneSouth = null;
 				break;
 			case CONNECTION_LOST:
 			case HOPPING:
@@ -153,11 +153,9 @@ public class DenseEssencePlugin extends Plugin
 		{
 			case DENSE_RUNESTONE_SOUTH_ID:
 				denseRunestoneSouth = obj;
-				localPointRunestoneSouth = event.getGameObject().getLocalLocation();
 				break;
 			case DENSE_RUNESTONE_NORTH_ID:
 				denseRunestoneNorth = obj;
-				localPointRunestoneNorth = event.getGameObject().getLocalLocation();
 				break;
 			case ObjectID.SOUL_ALTAR:
 				soulAltar = obj;
@@ -186,5 +184,30 @@ public class DenseEssencePlugin extends Plugin
 				bloodAltar = null;
 				break;
 		}
+	}
+
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		if (!config.highlightAltarClickbox())
+		{
+			return;
+		}
+		ItemContainer container = event.getItemContainer();
+
+		if (container == client.getItemContainer(InventoryID.INVENTORY))
+		{
+			hasDarkEssence = checkContainer(container);
+		}
+	}
+
+	private boolean checkContainer(ItemContainer inventory)
+	{
+		if (!config.highlightAltarClickbox())
+		{
+			return false;
+		}
+
+		return inventory.contains(ItemID.DARK_ESSENCE_FRAGMENTS) || inventory.contains(ItemID.DARK_ESSENCE_BLOCK);
 	}
 }
