@@ -2,6 +2,7 @@ package com.zom.dense_essence;
 
 import com.google.inject.Provides;
 import java.awt.Color;
+import java.util.Objects;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import net.runelite.api.ObjectID;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -70,8 +70,6 @@ public class DenseEssencePlugin extends Plugin
 	private Color clickboxFillColorDepleted;
 	@Getter
 	private Color clickboxBorderHoverColorDepleted;
-	@Getter
-	private boolean hasDarkEssence;
 
 	@Override
 	protected void startUp() throws Exception
@@ -107,7 +105,6 @@ public class DenseEssencePlugin extends Plugin
 		overlayManager.remove(denseRunestoneOverlay);
 		denseRunestoneNorth = null;
 		denseRunestoneSouth = null;
-		hasDarkEssence = false;
 
 		clickboxFillColorMinable = null;
 		clickboxBorderColorMinable = null;
@@ -122,18 +119,10 @@ public class DenseEssencePlugin extends Plugin
 	public void onGameStateChanged(GameStateChanged event)
 	{
 		GameState gameState = event.getGameState();
-		switch (gameState)
+		if (Objects.requireNonNull(gameState) == GameState.LOADING)
 		{
-			case LOGGED_IN:
-				hasDarkEssence = checkContainer(client.getItemContainer(InventoryID.INVENTORY));
-			case LOADING:
-				denseRunestoneNorth = null;
-				denseRunestoneSouth = null;
-				break;
-			case CONNECTION_LOST:
-			case HOPPING:
-			case LOGIN_SCREEN:
-				break;
+			denseRunestoneNorth = null;
+			denseRunestoneSouth = null;
 		}
 	}
 
@@ -186,28 +175,9 @@ public class DenseEssencePlugin extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onItemContainerChanged(ItemContainerChanged event)
+	public boolean hasDarkEssence()
 	{
-		if (!config.highlightAltarClickbox())
-		{
-			return;
-		}
-		ItemContainer container = event.getItemContainer();
-
-		if (container == client.getItemContainer(InventoryID.INVENTORY))
-		{
-			hasDarkEssence = checkContainer(container);
-		}
-	}
-
-	private boolean checkContainer(ItemContainer inventory)
-	{
-		if (!config.highlightAltarClickbox())
-		{
-			return false;
-		}
-
-		return inventory.contains(ItemID.DARK_ESSENCE_FRAGMENTS) || inventory.contains(ItemID.DARK_ESSENCE_BLOCK);
+		final ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+		return inventory != null && (inventory.contains(ItemID.DARK_ESSENCE_FRAGMENTS) || inventory.contains(ItemID.DARK_ESSENCE_BLOCK));
 	}
 }

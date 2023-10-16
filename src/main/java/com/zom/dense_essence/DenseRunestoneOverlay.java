@@ -65,7 +65,7 @@ public class DenseRunestoneOverlay extends Overlay
 			}
 		}
 
-		if (config.highlightAltarClickbox() && plugin.isHasDarkEssence())
+		if (config.highlightAltarClickbox() && plugin.hasDarkEssence())
 		{
 			if (soulAltar != null)
 			{
