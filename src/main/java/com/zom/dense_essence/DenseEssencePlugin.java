@@ -105,6 +105,8 @@ public class DenseEssencePlugin extends Plugin
 		overlayManager.remove(denseRunestoneOverlay);
 		denseRunestoneNorth = null;
 		denseRunestoneSouth = null;
+		soulAltar = null;
+		bloodAltar = null;
 
 		clickboxFillColorMinable = null;
 		clickboxBorderColorMinable = null;
@@ -119,10 +121,12 @@ public class DenseEssencePlugin extends Plugin
 	public void onGameStateChanged(GameStateChanged event)
 	{
 		GameState gameState = event.getGameState();
-		if (Objects.requireNonNull(gameState) == GameState.LOADING)
+		if (gameState == GameState.LOADING)
 		{
 			denseRunestoneNorth = null;
 			denseRunestoneSouth = null;
+			bloodAltar = null;
+			soulAltar = null;
 		}
 	}
 
