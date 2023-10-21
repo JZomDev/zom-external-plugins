@@ -138,7 +138,12 @@ public class TOAKerisCamPlugin extends Plugin
 			return;
 		}
 
-		if (client.getLocalPlayer() == null || event.getActor() != client.getLocalPlayer())
+		if (client.getLocalPlayer() == null)
+		{
+			return;
+		}
+
+		if (!config.selfie() && event.getActor() != client.getLocalPlayer())
 		{
 			return;
 		}

@@ -8,10 +8,22 @@ import net.runelite.client.config.ConfigSection;
 @ConfigGroup("toa-keris-cam")
 public interface TOAKerisCamConfig extends Config
 {
+	@ConfigItem(
+		keyName = "selfie",
+		name = "Include own use",
+		description = "Take pictures of when you Keris",
+		position = 0,
+		section = roomSection
+	)
+	default boolean selfie()
+	{
+		return false;
+	}
+
 	@ConfigSection(
 		name = "Rooms",
 		description = "Enable Keris screen shots in specific rooms",
-		position = 0,
+		position = 1,
 		closedByDefault = true
 	)
 	String roomSection = "roomSection";
@@ -20,7 +32,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "crondis",
 		name = "Crondis",
 		description = "Take pictures in the Crondis Room",
-		position = 0,
+		position = 1,
 		section = roomSection
 	)
 	default boolean crondis()
@@ -32,7 +44,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "zebak",
 		name = "Zebak",
 		description = "Take pictures in Zebak's Room",
-		position = 1,
+		position = 2,
 		section = roomSection
 	)
 	default boolean zebak()
@@ -44,7 +56,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "scabaras",
 		name = "Scabaras",
 		description = "Take pictures in the Scabaras Room",
-		position = 2,
+		position = 3,
 		section = roomSection
 	)
 	default boolean scabaras()
@@ -56,7 +68,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "kephri",
 		name = "Kephri",
 		description = "Take pictures in Kephri's Room",
-		position = 3,
+		position = 4,
 		section = roomSection
 	)
 	default boolean kephri()
@@ -68,7 +80,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "ampeken",
 		name = "Ampeken",
 		description = "Take pictures in the Ampeken Room",
-		position = 4,
+		position = 5,
 		section = roomSection
 	)
 	default boolean ampeken()
@@ -80,7 +92,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "baba",
 		name = "Baba",
 		description = "Take pictures in Baba's Room",
-		position = 5,
+		position = 6,
 		section = roomSection
 	)
 	default boolean baba()
@@ -92,7 +104,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "het",
 		name = "Het",
 		description = "Take pictures in the Het Room",
-		position = 6,
+		position = 7,
 		section = roomSection
 	)
 	default boolean het()
@@ -104,7 +116,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "akkha",
 		name = "Akkha",
 		description = "Take pictures in Akkha's Room",
-		position = 7,
+		position = 8,
 		section = roomSection
 	)
 	default boolean akkha()
@@ -116,7 +128,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "wardens",
 		name = "Wardens",
 		description = "Take pictures at Wardens",
-		position = 8,
+		position = 9,
 		section = roomSection
 	)
 	default boolean wardens()
@@ -128,7 +140,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "includeFrame",
 		name = "Include Client Frame",
 		description = "Configures whether or not the client frame is included in screenshots",
-		position = 1
+		position = 5
 	)
 	default boolean includeFrame()
 	{
@@ -139,7 +151,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "displayDate",
 		name = "Display Date",
 		description = "Configures whether or not the report button shows the date the screenshot was taken",
-		position = 2
+		position = 6
 	)
 	default boolean displayDate()
 	{
@@ -150,7 +162,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "notifyWhenTaken",
 		name = "Notify When Taken",
 		description = "Configures whether or not you are notified when a screenshot has been taken",
-		position = 3
+		position = 7
 	)
 	default boolean notifyWhenTaken()
 	{
@@ -161,7 +173,7 @@ public interface TOAKerisCamConfig extends Config
 		keyName = "copyScreenshot",
 		name = "Copy",
 		description = "Configures whether or not screenshots are placed into your clipboard",
-		position = 4
+		position = 8
 	)
 	default boolean copyToClipboard()
 	{
