@@ -22,19 +22,19 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 
-public class TOAShamerOverlay extends Overlay
+public class TOAKerisCamOverlay extends Overlay
 {
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM. dd, yyyy");
 	private static final int REPORT_BUTTON_X_OFFSET = 437;
 
 	private final Client client;
 	private final DrawManager drawManager;
-	private final TOAShamerPlugin plugin;
+	private final TOAKerisCamPlugin plugin;
 
 	private final Queue<Consumer<Image>> consumers = new ConcurrentLinkedQueue<>();
 
 	@Inject
-	private TOAShamerOverlay(Client client, DrawManager drawManager, TOAShamerPlugin plugin)
+	private TOAKerisCamOverlay(Client client, DrawManager drawManager, TOAKerisCamPlugin plugin)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setPriority(OverlayPriority.HIGH);

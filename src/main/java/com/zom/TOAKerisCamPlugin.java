@@ -6,10 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
@@ -46,15 +43,15 @@ import net.runelite.client.util.OSType;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Toa Keris Shamer"
+	name = "Toa Keris Cam"
 )
-public class TOAShamerPlugin extends Plugin
+public class TOAKerisCamPlugin extends Plugin
 {
 	@Inject
 	private Client client;
 
 	@Inject
-	private TOAShamerConfig config;
+	private TOAKerisCamConfig config;
 
 	@Inject
 	private DrawManager drawManager;
@@ -63,7 +60,7 @@ public class TOAShamerPlugin extends Plugin
 	private OverlayManager overlayManager;
 
 	@Inject
-	private TOAShamerOverlay screenshotOverlay;
+	private TOAKerisCamOverlay screenshotOverlay;
 
 	@Inject
 	private ScheduledExecutorService executor;
@@ -85,11 +82,9 @@ public class TOAShamerPlugin extends Plugin
 		WidgetID.RESIZABLE_VIEWPORT_OLD_SCHOOL_BOX_GROUP_ID,
 		WidgetID.RESIZABLE_VIEWPORT_BOTTOM_LINE_GROUP_ID);
 
-	public static final File RUNELITE_DIR = new File(System.getProperty("user.home"), ".runelite");
-	public static final File SCREENSHOT_DIR = new File(RUNELITE_DIR, "screenshots");
-
 	public static final String SD_KERIS = "Keris";
-	private static final DateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+	private static final int KERIS_SPEC_ANIMID = 9546;
 
 	private int clientTickCounter;
 	HashMap<String, Integer> playersKerised;
@@ -126,7 +121,7 @@ public class TOAShamerPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged e)
 	{
-		if (!e.getGroup().equals("toa-keris-shame"))
+		if (!e.getGroup().equals("toa-keris-cam"))
 		{
 			return;
 		}
@@ -153,8 +148,9 @@ public class TOAShamerPlugin extends Plugin
 			return;
 		}
 
-		if (event.getActor().getAnimation() == 9546 && !playersKerised.containsKey(event.getActor().getName()))
+		if (event.getActor().getAnimation() == KERIS_SPEC_ANIMID && !playersKerised.containsKey(event.getActor().getName()))
 		{
+			// 30 client ticks later capture the screenshot for player
 			playersKerised.put(event.getActor().getName(), clientTickCounter + 30);
 		}
 	}
@@ -172,6 +168,7 @@ public class TOAShamerPlugin extends Plugin
 			return;
 		}
 
+		// only enable/disable screenshots between regions but checked on game tick
 		if (currentRegion != previousRegion)
 		{
 			switch (currentRegion)
@@ -203,6 +200,9 @@ public class TOAShamerPlugin extends Plugin
 				case 15184:
 				case 15696:
 					enabled = config.wardens();
+					break;
+				case 14160:
+					enabled = true; // nexus room, who kerises here lol
 					break;
 				default:
 					enabled = false;
@@ -316,8 +316,8 @@ public class TOAShamerPlugin extends Plugin
 	}
 
 	@Provides
-	TOAShamerConfig provideConfig(ConfigManager configManager)
+	TOAKerisCamConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(TOAShamerConfig.class);
+		return configManager.getConfig(TOAKerisCamConfig.class);
 	}
 }

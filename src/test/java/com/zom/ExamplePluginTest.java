@@ -7,7 +7,7 @@ public class ExamplePluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(TOAShamerPlugin.class);
+		ExternalPluginManager.loadBuiltin(TOAKerisCamPlugin.class);
 		RuneLite.main(args);
 	}
 }

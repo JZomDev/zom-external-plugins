@@ -5,8 +5,8 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
 
-@ConfigGroup("toa-keris-shame")
-public interface TOAShamerConfig extends Config
+@ConfigGroup("toa-keris-cam")
+public interface TOAKerisCamConfig extends Config
 {
 	@ConfigSection(
 		name = "Rooms",

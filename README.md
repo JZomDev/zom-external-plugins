@@ -1,4 +1,4 @@
-# TOA Keris Shamer
+# TOA Keris Cam
 
 Take pictures of people who use the Keris of the sun in TOA.
 
