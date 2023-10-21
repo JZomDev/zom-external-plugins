@@ -1,28 +1,20 @@
 package com.zom;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
-import java.awt.datatransfer.Clipboard;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
-import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import lombok.AccessLevel;
@@ -38,19 +30,19 @@ import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.WidgetID;
-import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.config.RuneScapeProfileType;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.ImageCapture;
+import net.runelite.client.util.ImageUploadStyle;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.OSType;
-import net.runelite.client.util.Text;
 
 @Slf4j
 @PluginDescriptor(
@@ -86,7 +78,7 @@ public class TOAShamerPlugin extends Plugin
 	private ClientUI clientUi;
 
 	@Inject
-	private Notifier notifier;
+	private ImageCapture imageCapture;
 
 	private static final Set<Integer> REPORT_BUTTON_TLIS = ImmutableSet.of(
 		WidgetID.FIXED_VIEWPORT_GROUP_ID,
@@ -129,6 +121,18 @@ public class TOAShamerPlugin extends Plugin
 		clientTickCounter = 0;
 		playersKerised = null;
 		overlayManager.remove(screenshotOverlay);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
+	{
+		if (!e.getGroup().equals("toa-keris-shame"))
+		{
+			return;
+		}
+
+		// set region to -1 because it will retrigger onGameTick's check to enable
+		previousRegion = -1;
 	}
 
 	@Subscribe
@@ -308,96 +312,7 @@ public class TOAShamerPlugin extends Plugin
 			graphics.dispose();
 		}
 
-		takeScreenshot(screenshot, fileName, subDir, config.notifyWhenTaken(), config.copyToClipboard());
-	}
-
-	/**
-	 * Saves a screenshot of the client window to the screenshot folder as a PNG,
-	 * and optionally uploads it to an image-hosting service.
-	 *
-	 * @param screenshot BufferedImage to capture.
-	 * @param fileName   Filename to use, without file extension.
-	 * @param subDir     Directory within the player screenshots dir to store the captured screenshot to.
-	 * @param notify     Send a notification to the system tray when the image is captured.
-	 * @param copyImage  which whether to place image in clipboard or not.
-	 */
-	public void takeScreenshot(BufferedImage screenshot, String fileName, @Nullable String subDir, boolean notify, boolean copyImage)
-	{
-		if (client.getGameState() == GameState.LOGIN_SCREEN)
-		{
-			// Prevent the screenshot from being captured
-			log.info("Login screenshot prevented");
-			return;
-		}
-
-		File playerFolder;
-		if (client.getLocalPlayer() != null && client.getLocalPlayer().getName() != null)
-		{
-			String playerDir = client.getLocalPlayer().getName();
-			RuneScapeProfileType profileType = RuneScapeProfileType.getCurrent(client);
-			if (profileType != RuneScapeProfileType.STANDARD)
-			{
-				playerDir += "-" + Text.titleCase(profileType);
-			}
-
-			if (!Strings.isNullOrEmpty(subDir))
-			{
-				playerDir += File.separator + subDir;
-			}
-
-			playerFolder = new File(SCREENSHOT_DIR, playerDir);
-		}
-		else
-		{
-			playerFolder = SCREENSHOT_DIR;
-		}
-
-		playerFolder.mkdirs();
-
-		fileName += (fileName.isEmpty() ? "" : " ") + format(new Date());
-
-		try
-		{
-			File screenshotFile = new File(playerFolder, fileName + ".png");
-
-			// To make sure that screenshots don't get overwritten, check if file exists,
-			// and if it does create file with same name and suffix.
-			int i = 1;
-			while (screenshotFile.exists())
-			{
-				screenshotFile = new File(playerFolder, fileName + String.format("(%d)", i++) + ".png");
-			}
-
-			ImageIO.write(screenshot, "PNG", screenshotFile);
-
-			if (copyImage)
-			{
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				TOAShamerTBI transferableBufferedImage = new TOAShamerTBI(screenshot);
-				clipboard.setContents(transferableBufferedImage, null);
-
-				if (notify)
-				{
-					notifier.notify("A screenshot was saved and inserted into your clipboard!", TrayIcon.MessageType.INFO);
-				}
-			}
-			else if (notify)
-			{
-				notifier.notify("A screenshot was saved to " + screenshotFile, TrayIcon.MessageType.INFO);
-			}
-		}
-		catch (IOException ex)
-		{
-			log.warn("error writing screenshot", ex);
-		}
-	}
-
-	private static String format(Date date)
-	{
-		synchronized (TIME_FORMAT)
-		{
-			return TIME_FORMAT.format(date);
-		}
+		imageCapture.takeScreenshot(screenshot, fileName, subDir, config.notifyWhenTaken(), config.copyToClipboard() ? ImageUploadStyle.CLIPBOARD : ImageUploadStyle.NEITHER);
 	}
 
 	@Provides

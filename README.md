@@ -1,5 +1,6 @@
 # TOA Keris Shamer
-Take pictures of people who use the Keris of the sun in TOA. 
+
+Take pictures of people who use the Keris of the sun in TOA.
 
 Fun to see people who use it at Crondis or even at Scabaras
 
