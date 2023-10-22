@@ -10,10 +10,9 @@ public interface TOAKerisCamConfig extends Config
 {
 	@ConfigItem(
 		keyName = "selfie",
-		name = "Include own use",
+		name = "Include selfies",
 		description = "Take pictures of when you Keris",
-		position = 0,
-		section = roomSection
+		position = 0
 	)
 	default boolean selfie()
 	{

@@ -86,14 +86,14 @@ public class TOAKerisCamPlugin extends Plugin
 
 	private static final int KERIS_SPEC_ANIMID = 9546;
 
-	private int clientTickCounter;
-	HashMap<String, Integer> playersKerised;
-	boolean enabled;
+	private final int[] RAID_REGIONS = new int[]{15698, 15700, 14162, 14164, 15186, 15188, 14674, 14676, 15184, 15696, 14160};
 
-	int[] raidRegions = new int[]{15698, 15700, 14162, 14164, 15186, 15188, 14674, 14676, 15184, 15696};
+	private int clientTickCounter;
 
 	int currentRegion;
 	int previousRegion;
+	HashMap<String, Integer> playersKerised;
+	boolean enabled;
 
 	@Override
 	protected void startUp() throws Exception
@@ -133,6 +133,10 @@ public class TOAKerisCamPlugin extends Plugin
 	@Subscribe
 	public void onAnimationChanged(AnimationChanged event)
 	{
+		if (!enabled)
+		{
+			return;
+		}
 		if (client.getGameState() != GameState.LOGGED_IN)
 		{
 			return;
@@ -143,17 +147,17 @@ public class TOAKerisCamPlugin extends Plugin
 			return;
 		}
 
-		if (!config.selfie() && event.getActor() != client.getLocalPlayer())
+		if (event.getActor().getAnimation() != KERIS_SPEC_ANIMID)
 		{
 			return;
 		}
 
-		if (!enabled)
+		if (event.getActor() == client.getLocalPlayer() && !config.selfie())
 		{
 			return;
 		}
 
-		if (event.getActor().getAnimation() == KERIS_SPEC_ANIMID && !playersKerised.containsKey(event.getActor().getName()))
+		if (!playersKerised.containsKey(event.getActor().getName()))
 		{
 			// 30 client ticks later capture the screenshot for player
 			playersKerised.put(event.getActor().getName(), clientTickCounter + 30);
@@ -167,9 +171,10 @@ public class TOAKerisCamPlugin extends Plugin
 		currentRegion = lp == null ? -1 : WorldPoint.fromLocalInstance(client, lp).getRegionID();
 
 		// not in the raid
-		if (Arrays.stream(raidRegions).noneMatch(region -> region == currentRegion))
+		if (Arrays.stream(RAID_REGIONS).noneMatch(region -> region == currentRegion))
 		{
 			enabled = false;
+			previousRegion = currentRegion;
 			return;
 		}
 
