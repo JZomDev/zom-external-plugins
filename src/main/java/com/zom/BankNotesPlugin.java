@@ -27,6 +27,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 @PluginDescriptor(
 	name = "Bank Notes",
+	description = "Add Notes to items in your bank",
 	tags = "bank,merching,merch,item,history,price,notes"
 )
 public class BankNotesPlugin extends Plugin
