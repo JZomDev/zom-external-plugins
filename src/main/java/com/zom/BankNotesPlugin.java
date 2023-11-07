@@ -13,7 +13,8 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.api.widgets.InterfaceID;
+import net.runelite.api.widgets.WidgetUtil;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
@@ -22,7 +23,6 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import static net.runelite.client.plugins.banktags.tabs.TabInterface.FILTERED_CHARS;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 
 @Slf4j
 @PluginDescriptor(
@@ -48,9 +48,6 @@ public class BankNotesPlugin extends Plugin
 
 	@Inject
 	private ClientThread clientThread;
-
-	@Inject
-	private TooltipManager tooltipManager;
 
 	@Inject
 	private OverlayManager overlayManager;
@@ -81,7 +78,9 @@ public class BankNotesPlugin extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (addEditPriceHistory && event.getActionParam1() == WidgetInfo.BANK_ITEM_CONTAINER.getId()
+		final int groupId = WidgetUtil.componentToInterface(event.getActionParam1());
+
+		if (addEditPriceHistory && groupId == InterfaceID.BANK
 			&& event.getOption().equals("Examine"))
 		{
 			String text = "Edit Item Notes";

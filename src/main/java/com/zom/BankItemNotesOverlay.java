@@ -9,8 +9,9 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.widgets.WidgetID;
-import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.api.widgets.ComponentID;
+import net.runelite.api.widgets.InterfaceID;
+import net.runelite.api.widgets.WidgetUtil;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
@@ -19,7 +20,7 @@ import net.runelite.client.util.ColorUtil;
 
 public class BankItemNotesOverlay extends Overlay
 {
-	private static final int BANK_ITEM_WIDGETID = WidgetInfo.BANK_ITEM_CONTAINER.getPackedId();
+	private static final int BANK_ITEM_WIDGETID = ComponentID.BANK_ITEM_CONTAINER;
 	private final BankNotesPlugin plugin;
 	private final Client client;
 	private final BankItemNotesManager itemPriceHistoryManager;
@@ -54,7 +55,7 @@ public class BankItemNotesOverlay extends Overlay
 
 		final MenuEntry menuEntry = menuEntries[last];
 		final int widgetId = menuEntry.getParam1();
-		final int groupId = WidgetInfo.TO_GROUP(widgetId);
+		final int groupId = WidgetUtil.componentToInterface(widgetId);
 
 		addTooltip(menuEntry, groupId);
 		return null;
@@ -62,16 +63,14 @@ public class BankItemNotesOverlay extends Overlay
 
 	private void addTooltip(MenuEntry menuEntry, int groupId)
 	{
-		// Item tooltip values
-		switch (groupId)
+		if (groupId == InterfaceID.BANK)
 		{
-			case WidgetID.BANK_GROUP_ID:
+			final String text = makeValueTooltip(menuEntry);
+			if (text != null)
+			{
 				// Make tooltip
-				final String text = makeValueTooltip(menuEntry);
-				if (text != null)
-				{
-					tooltipManager.add(new Tooltip(ColorUtil.prependColorTag(text, new Color(238, 238, 238))));
-				}
+				tooltipManager.add(new Tooltip(ColorUtil.prependColorTag(text, new Color(238, 238, 238))));
+			}
 		}
 	}
 
