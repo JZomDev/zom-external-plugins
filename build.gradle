@@ -25,7 +25,7 @@ dependencies {
 	}
 }
 
-group = 'com.example'
+group = 'com.zom'
 version = '1.0'
 sourceCompatibility = '1.8'
 
