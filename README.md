@@ -7,3 +7,7 @@
 5. [Moleman Mode BETA](https://github.com/redrumze/zom-external-plugins/tree/molemanmode) Moleman Mode Plugin
 6. [AFK GOTR](https://github.com/redrumze/zom-external-plugins/tree/zom-afk-gotr) AFK GOTR even harder!
 7. [Boss Kicker](https://github.com/redrumze/zom-external-plugins/tree/whisperer-kicker) Kick a boss awake!
+8. [Bank Notes](https://github.com/redrumze/zom-external-plugins/tree/Bank_Item_Notes_plugin) Add notes to items that are in your bank
+
+
+![image](https://github.com/JZomDev/zom-external-plugins/assets/14265490/3160987e-1ff9-41a9-8c27-802f618160ff)
