@@ -7,7 +7,7 @@ public class ExamplePluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(CombatLevelTextHidingPlugin.class);
+		ExternalPluginManager.loadBuiltin(CombatLevelMutingPlugin.class);
 		RuneLite.main(args);
 	}
 }

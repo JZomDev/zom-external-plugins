@@ -6,7 +6,7 @@ import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Range;
 
 @ConfigGroup("cmblvltexthiding")
-public interface CombatLevelTextHidingConfig extends Config
+public interface CombatLevelMutingConfig extends Config
 {
 	@Range(min = 3, max = 126)
 	@ConfigItem(
@@ -17,5 +17,15 @@ public interface CombatLevelTextHidingConfig extends Config
 	default int combatLevelTextHide()
 	{
 		return 3;
+	}
+
+	@ConfigItem(
+		keyName = "combatLevelHidingType",
+		name = "Hiding Type",
+		description = "Type of messages to hide"
+	)
+	default CombatLevelMutingType combatLevelHidingType()
+	{
+		return CombatLevelMutingType.BOTH;
 	}
 }

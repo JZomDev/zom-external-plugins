@@ -22,13 +22,13 @@ import net.runelite.client.util.Text;
 	name = "Combat Level Muting",
 	tags = "mute,chat,filter,noob,annoy,spam,bot"
 )
-public class CombatLevelTextHidingPlugin extends Plugin
+public class CombatLevelMutingPlugin extends Plugin
 {
 	@Inject
 	private Client client;
 
 	@Inject
-	private CombatLevelTextHidingConfig config;
+	private CombatLevelMutingConfig config;
 
 	HashMap<String, Integer> playerToLevelMap;
 
@@ -47,9 +47,9 @@ public class CombatLevelTextHidingPlugin extends Plugin
 	}
 
 	@Provides
-	CombatLevelTextHidingConfig provideConfig(ConfigManager configManager)
+	CombatLevelMutingConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(CombatLevelTextHidingConfig.class);
+		return configManager.getConfig(CombatLevelMutingConfig.class);
 	}
 
 	@Subscribe
@@ -67,6 +67,7 @@ public class CombatLevelTextHidingPlugin extends Plugin
 	@Subscribe
 	public void onScriptCallbackEvent(ScriptCallbackEvent event)
 	{
+		if (config.combatLevelHidingType() == CombatLevelMutingType.OVERHEAD) return;
 		if (!"chatFilterCheck".equals(event.getEventName()))
 		{
 			return;
@@ -88,6 +89,7 @@ public class CombatLevelTextHidingPlugin extends Plugin
 		{
 			case PUBLICCHAT:
 			case AUTOTYPER:
+			case MODCHAT:
 				if (shouldFilterPlayerMessage(playerName))
 				{
 					blockMessage = true;
@@ -104,6 +106,8 @@ public class CombatLevelTextHidingPlugin extends Plugin
 	@Subscribe
 	public void onOverheadTextChanged(OverheadTextChanged event)
 	{
+		if (config.combatLevelHidingType() == CombatLevelMutingType.CHATBOX) return;
+
 		String playerName = getGoodName(event.getActor().getName());
 		if (shouldFilterPlayerMessage(playerName))
 		{
@@ -113,7 +117,7 @@ public class CombatLevelTextHidingPlugin extends Plugin
 
 	private String getGoodName(String name)
 	{
-		return Text.toJagexName(name).toLowerCase();
+		return Text.removeTags(Text.toJagexName(name).toLowerCase());
 	}
 
 	private boolean shouldFilterPlayerMessage(String playerName)
