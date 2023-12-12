@@ -67,7 +67,11 @@ public class CombatLevelMutingPlugin extends Plugin
 	@Subscribe
 	public void onScriptCallbackEvent(ScriptCallbackEvent event)
 	{
-		if (config.combatLevelHidingType() == CombatLevelMutingType.OVERHEAD) return;
+		if (config.combatLevelHidingType() == CombatLevelMutingType.OVERHEAD)
+		{
+			return;
+		}
+
 		if (!"chatFilterCheck".equals(event.getEventName()))
 		{
 			return;
@@ -84,7 +88,7 @@ public class CombatLevelMutingPlugin extends Plugin
 		final String playerName = getGoodName(messageNode.getName());
 		boolean blockMessage = false;
 
-		// Only filter public chat and private messages
+		// Only filter public chat
 		switch (chatMessageType)
 		{
 			case PUBLICCHAT:
@@ -106,7 +110,10 @@ public class CombatLevelMutingPlugin extends Plugin
 	@Subscribe
 	public void onOverheadTextChanged(OverheadTextChanged event)
 	{
-		if (config.combatLevelHidingType() == CombatLevelMutingType.CHATBOX) return;
+		if (config.combatLevelHidingType() == CombatLevelMutingType.CHATBOX)
+		{
+			return;
+		}
 
 		String playerName = getGoodName(event.getActor().getName());
 		if (shouldFilterPlayerMessage(playerName))
