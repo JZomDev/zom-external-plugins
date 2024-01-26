@@ -2,24 +2,19 @@ package com.zom;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import javax.inject.Inject;
-import javax.swing.SwingUtilities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Point;
 import net.runelite.api.SpriteID;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
@@ -37,9 +32,7 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ImageCapture;
-import net.runelite.client.util.ImageUploadStyle;
 import net.runelite.client.util.ImageUtil;
-import net.runelite.client.util.OSType;
 
 @Slf4j
 @PluginDescriptor(
@@ -258,7 +251,7 @@ public class TOAKerisCamPlugin extends Plugin
 		Consumer<Image> imageCallback = (img) ->
 		{
 			// This callback is on the game thread, move to executor thread
-			executor.submit(() -> takeScreenshot(fileName, subDir, img));
+			executor.submit(() -> saveScreenshot(fileName, subDir, img));
 		};
 
 		if (config.displayDate() && REPORT_BUTTON_TLIS.contains(client.getTopLevelInterfaceId()))
@@ -271,12 +264,7 @@ public class TOAKerisCamPlugin extends Plugin
 		}
 	}
 
-	private static int getScaledValue(final double scale, final int value)
-	{
-		return (int) (value * scale + .5);
-	}
-
-	private void takeScreenshot(String fileName, String subDir, Image image)
+	private void saveScreenshot(String fileName, String subDir, Image image)
 	{
 		final BufferedImage screenshot;
 		if (!config.includeFrame())
@@ -286,43 +274,10 @@ public class TOAKerisCamPlugin extends Plugin
 		}
 		else
 		{
-			// create a new image, paint the client ui to it, and then draw the screenshot to that
-			final AffineTransform transform = OSType.getOSType() == OSType.MacOS ? new AffineTransform() :
-				clientUi.getGraphicsConfiguration().getDefaultTransform();
-
-			// scaled client dimensions
-			int clientWidth = getScaledValue(transform.getScaleX(), clientUi.getWidth());
-			int clientHeight = getScaledValue(transform.getScaleY(), clientUi.getHeight());
-
-			screenshot = new BufferedImage(clientWidth, clientHeight, BufferedImage.TYPE_INT_ARGB);
-
-			Graphics2D graphics = (Graphics2D) screenshot.getGraphics();
-			AffineTransform originalTransform = graphics.getTransform();
-			// scale g2d for the paint() call
-			graphics.setTransform(transform);
-
-			// Draw the client frame onto the screenshot
-			try
-			{
-				SwingUtilities.invokeAndWait(() -> clientUi.paint(graphics));
-			}
-			catch (InterruptedException | InvocationTargetException e)
-			{
-				log.warn("unable to paint client UI on screenshot", e);
-			}
-
-			// Find the position of the canvas inside the frame
-			final Point canvasOffset = clientUi.getCanvasOffset();
-			final int gameOffsetX = getScaledValue(transform.getScaleX(), canvasOffset.getX());
-			final int gameOffsetY = getScaledValue(transform.getScaleY(), canvasOffset.getY());
-
-			// Draw the original screenshot onto the new screenshot
-			graphics.setTransform(originalTransform); // the original screenshot is already scaled
-			graphics.drawImage(image, gameOffsetX, gameOffsetY, null);
-			graphics.dispose();
+			screenshot = imageCapture.addClientFrame(image);
 		}
 
-		imageCapture.takeScreenshot(screenshot, fileName, subDir, config.notifyWhenTaken(), config.copyToClipboard() ? ImageUploadStyle.CLIPBOARD : ImageUploadStyle.NEITHER);
+		imageCapture.saveScreenshot(screenshot, fileName, subDir, config.notifyWhenTaken(), config.copyToClipboard());
 	}
 
 	@Provides
