@@ -21,7 +21,7 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.widgets.WidgetID;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -71,9 +71,9 @@ public class TOAKerisCamPlugin extends Plugin
 	private ImageCapture imageCapture;
 
 	private static final Set<Integer> REPORT_BUTTON_TLIS = ImmutableSet.of(
-		WidgetID.FIXED_VIEWPORT_GROUP_ID,
-		WidgetID.RESIZABLE_VIEWPORT_OLD_SCHOOL_BOX_GROUP_ID,
-		WidgetID.RESIZABLE_VIEWPORT_BOTTOM_LINE_GROUP_ID);
+		InterfaceID.FIXED_VIEWPORT,
+		InterfaceID.RESIZABLE_VIEWPORT,
+		InterfaceID.RESIZABLE_VIEWPORT_BOTTOM_LINE);
 
 	public static final String SD_KERIS = "Keris";
 
