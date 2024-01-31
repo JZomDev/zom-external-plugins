@@ -24,7 +24,7 @@ public interface BossKickerConfig extends Config
 	@ConfigItem(
 		keyName = "wakeUpOptions",
 		name = "Wake up options",
-		description = "List of wake up options in a comma delimieted format"
+		description = "List of wake up options in a comma delimited format"
 	)
 	default String bossWakeUpOptions()
 	{
