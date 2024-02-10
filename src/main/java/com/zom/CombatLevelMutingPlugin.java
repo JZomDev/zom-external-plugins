@@ -64,7 +64,7 @@ public class CombatLevelMutingPlugin extends Plugin
 		}
 	}
 
-	@Subscribe
+	@Subscribe(priority = -1)
 	public void onScriptCallbackEvent(ScriptCallbackEvent event)
 	{
 		if (config.combatLevelHidingType() == CombatLevelMutingType.OVERHEAD)
@@ -107,10 +107,15 @@ public class CombatLevelMutingPlugin extends Plugin
 		}
 	}
 
-	@Subscribe
+	@Subscribe(priority = -1)
 	public void onOverheadTextChanged(OverheadTextChanged event)
 	{
 		if (config.combatLevelHidingType() == CombatLevelMutingType.CHATBOX)
+		{
+			return;
+		}
+
+		if (!(event.getActor() instanceof Player) || event.getActor().getName() == null)
 		{
 			return;
 		}
