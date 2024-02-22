@@ -24,7 +24,6 @@
  */
 package com.zom.profiles;
 
-import com.google.gson.Gson;
 import com.zom.profiles.ui.Button;
 import com.zom.profiles.ui.PasswordField;
 import com.zom.profiles.ui.TextField;
@@ -34,14 +33,10 @@ import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.client.config.ConfigManager;
-import net.runelite.client.config.ProfileManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
 
@@ -52,12 +47,8 @@ class ProfilesPanel extends PluginPanel
 	private static final String ACCOUNT_USERNAME = "Account Username";
 	private static final String ACCOUNT_LABEL = "Account Label";
 
-	private final Client client;
-	private ProfilesConfig profilesConfig;
-	private ConfigManager configManager;
-	private ProfileManager profileManager;
-	private ScheduledExecutorService executor;
-	private ProfilesStorage profilesStorage;
+	private final ProfilesPlugin plugin;
+	private final ProfilesConfig config;
 
 	private final TextField txtAccountLabel = new TextField(ACCOUNT_LABEL);
 	private final PasswordField txtAccountLogin;
@@ -65,15 +56,11 @@ class ProfilesPanel extends PluginPanel
 	private final GridBagConstraints c;
 
 	@Inject
-	public ProfilesPanel(Client client, ProfilesConfig config, ConfigManager configManager, ProfileManager profileManager, ScheduledExecutorService	executor, ProfilesStorage profilesStorage)
+	public ProfilesPanel(ProfilesPlugin plugin)
 	{
 		super();
-		this.client = client;
-		this.profilesConfig = config;
-		this.configManager = configManager;
-		this.profileManager = profileManager;
-		this.executor = executor;
-		this.profilesStorage = profilesStorage;
+		this.plugin = plugin;
+		this.config = plugin.getConfig();
 
 		setBorder(new EmptyBorder(18, 10, 0, 10));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -105,11 +92,11 @@ class ProfilesPanel extends PluginPanel
 			{
 				return;
 			}
-			Profile profile = new Profile(labelText, loginText);
+			Profile profile = new Profile(plugin, labelText, loginText);
 			this.addProfile(profile);
 			try
 			{
-				profilesStorage.saveProfiles();
+				plugin.saveProfiles();
 			}
 			catch (IOException ex)
 			{
@@ -141,20 +128,21 @@ class ProfilesPanel extends PluginPanel
 		c.gridy = 0;
 		c.insets = new Insets(0, 0, 5, 0);
 
-		Profile.getProfiles().forEach(this::addProfile);
+		plugin.getProfiles().forEach(this::addProfile);
 	}
 
 	void redrawProfiles()
 	{
-		txtAccountLogin.setObfuscate(profilesConfig.isStreamerMode());
+		txtAccountLogin.setObfuscate(config.isStreamerMode());
 		profilesPanel.removeAll();
 		c.gridy = 0;
-		Profile.getProfiles().forEach(this::addProfile);
+		plugin.getProfiles().forEach(this::addProfile);
 	}
 
 	private void addProfile(Profile profile)
 	{
-		ProfilePanel profilePanel = new ProfilePanel(client, profile, profilesConfig, this, configManager, profileManager, executor, profilesStorage);
+		ProfilePanel profilePanel = new ProfilePanel(plugin, profile, this);
+
 		c.gridy++;
 		profilesPanel.add(profilePanel, c);
 

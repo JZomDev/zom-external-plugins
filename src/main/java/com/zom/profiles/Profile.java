@@ -24,23 +24,19 @@
  */
 package com.zom.profiles;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 
 @Getter
 public class Profile
 {
-	@Getter
-	private static final List<Profile> profiles = new ArrayList<>();
 
 	private final String label;
 	private final String login;
 
-	public Profile(String label, String login)
+	public Profile(ProfilesPlugin plugin, String label, String login)
 	{
 		this.label = label;
 		this.login = login;
-		profiles.add(this);
+		plugin.getProfiles().add(this);
 	}
 }

@@ -67,14 +67,13 @@ class ProfilePanel extends JPanel
 	private final ProfileManager profileManager;
 	private final ScheduledExecutorService executor;
 
-
-	ProfilePanel(Client client, Profile profile, ProfilesConfig config, ProfilesPanel parent, ConfigManager configManager, ProfileManager profileManager, ScheduledExecutorService executor, ProfilesStorage profilesStorage)
+	ProfilePanel(ProfilesPlugin plugin, Profile profile, ProfilesPanel parent)
 	{
-		this.client = client;
-		this.config = config;
-		this.configManager = configManager;
-		this.profileManager = profileManager;
-		this.executor = executor;
+		this.client = plugin.getClient();
+		this.config = plugin.getConfig();
+		this.configManager = plugin.getConfigManager();
+		this.profileManager = plugin.getProfileManager();
+		this.executor = plugin.getExecutorService();
 
 		String loginText = profile.getLogin();
 		String profileLabel = profile.getLabel();
@@ -105,9 +104,9 @@ class ProfilePanel extends JPanel
 			public void mousePressed(MouseEvent e)
 			{
 				panel.getParent().remove(panel);
-				Profile.getProfiles().removeIf(p -> p.getLabel().equals(profile.getLabel())
+				plugin.getProfiles().removeIf(p -> p.getLabel().equals(profile.getLabel())
 					&& p.getLogin().equals(profile.getLogin()));
-				profilesStorage.saveProfiles();
+				plugin.saveProfiles();
 				parent.repaint();
 			}
 

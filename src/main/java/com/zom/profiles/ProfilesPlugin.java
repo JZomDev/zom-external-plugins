@@ -25,12 +25,26 @@
 package com.zom.profiles;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.client.RuneLite;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.ProfileManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -47,6 +61,7 @@ import net.runelite.client.util.ImageUtil;
 )
 public class ProfilesPlugin extends Plugin
 {
+	final static String CONFIG_GROUP = "profiles";
 
 	@Inject
 	private Client client;
@@ -64,14 +79,15 @@ public class ProfilesPlugin extends Plugin
 	private ProfileManager profileManager;
 
 	@Inject
-	ProfilesStorage profilesStorage;
-
-	@Inject
 	private ScheduledExecutorService executorService;
+
+	@Getter
+	private List<Profile> profiles = new ArrayList<>();
 
 	@Inject
 	private Gson gson;
 
+	private File PROFILES_DIR;
 	private ProfilesPanel panel;
 	private NavigationButton navButton;
 
@@ -84,9 +100,12 @@ public class ProfilesPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		profilesStorage.loadProfiles();
 
-		panel = new ProfilesPanel(client, config, configManager, profileManager, executorService, profilesStorage);
+		PROFILES_DIR = new File(RuneLite.RUNELITE_DIR, "profiles");
+		PROFILES_DIR.mkdirs();
+
+		loadProfiles();
+		panel = new ProfilesPanel(this);
 
 		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "profiles_icon.png");
 
@@ -109,10 +128,64 @@ public class ProfilesPlugin extends Plugin
 	@Subscribe
 	void onConfigChanged(ConfigChanged event)
 	{
-		if (event.getGroup().equals("profiles"))
+		if (event.getGroup().equals(CONFIG_GROUP))
 		{
-			panel.redrawProfiles();
+			if (event.getKey().equals("streamerMode"))
+			{
+				panel.redrawProfiles();
+			}
 		}
 	}
 
+	void saveProfiles() throws IOException
+	{
+		File file = new File(PROFILES_DIR, "profiles.json");
+
+		Writer writer = new FileWriter(file);
+		gson.toJson(profiles, writer);
+		writer.flush();
+		writer.close();
+	}
+
+	void loadProfiles() throws IOException
+	{
+		File file = new File(PROFILES_DIR, "profiles.json");
+		if (!file.exists())
+		{
+			try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(file), StandardCharsets.UTF_8)))
+			{
+				writer.write("[]");
+			}
+		}
+
+		profiles = gson.fromJson(new FileReader(file), new TypeToken<List<Profile>>()
+		{
+		}.getType());
+	}
+
+	public ProfilesConfig getConfig()
+	{
+		return config;
+	}
+
+	public ConfigManager getConfigManager()
+	{
+		return configManager;
+	}
+
+	public Client getClient()
+	{
+		return client;
+	}
+
+	public ProfileManager getProfileManager()
+	{
+		return profileManager;
+	}
+
+	public ScheduledExecutorService getExecutorService()
+	{
+		return executorService;
+	}
 }
