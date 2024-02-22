@@ -1,11 +1,9 @@
-# Zom Runelite Plugin Hub plugins
+# Profiles Panel
 
-1. [Left Click Dropper](https://github.com/JZomDev/zom-external-plugins/tree/leftclick-dropper) Allows left click dropping. 
-2. [NMZ Utilities](https://github.com/redrumze/zom-external-plugins/tree/nmz_util) Helpful Nightmare Zone utilties.
-3. [Dense Runecrafting](https://github.com/redrumze/zom-external-plugins/tree/dense_essence) Dense Runestone highlghter.
-4. [Ignore List Alerter](https://github.com/redrumze/zom-external-plugins/tree/IgnoreListAlert) Ignore List Alerter
-5. [Moleman Mode BETA](https://github.com/redrumze/zom-external-plugins/tree/molemanmode) Moleman Mode Plugin
-6. [AFK GOTR](https://github.com/redrumze/zom-external-plugins/tree/zom-afk-gotr) AFK GOTR even harder!
-7. [Boss Kicker](https://github.com/redrumze/zom-external-plugins/tree/whisperer-kicker) Kick a boss awake!
-8. [Bank Notes](https://github.com/redrumze/zom-external-plugins/tree/Bank_Item_Notes_plugin) Add notes to items that are in your bank
-9. [Combat Level Muting](https://github.com/JZomDev/zom-external-plugins/tree/combat_level_muting) Mute specific demographics of players based on combat level
+The profiles panel allows you to store your usernames/login emails and enter them into the login screen with a single click.
+
+Each login you store can be given an alias to make it easy to associate with an account.
+
+Enabling streamer mode hides the logins on the profiles panel, showing only the alias for each account.
+
+Passwords are **not** stored by this plugin.
