@@ -73,12 +73,12 @@ public class ConQolPlugin extends Plugin
 											if (onKeyListener[4] instanceof String)
 											{
 												String onOp = onKeyListener[4].toString();
-												int conMenuAsKeyCodeInput = config.input().getNumber() + 48;
+												int conMenuAsKeyCodeInput = config.input() + 48;
 												char c = (char) conMenuAsKeyCodeInput;
 												String input = String.valueOf(c);
 												if (onOp.equals(input))
 												{
-													int conMenuAsKeyCodeOutput = config.output().getNumber() + 48;
+													int conMenuAsKeyCodeOutput = config.output() + 48;
 													onKeyListener[4] = String.valueOf((char) conMenuAsKeyCodeOutput);
 
 													// set the widget found to not undo it in the next loop
@@ -108,12 +108,12 @@ public class ConQolPlugin extends Plugin
 											{
 												String onOp = onKeyListener[4].toString();
 
-												int conMenuAsKeyCodeOutput = config.output().getNumber() + 48;
+												int conMenuAsKeyCodeOutput = config.output() + 48;
 												char c = (char) conMenuAsKeyCodeOutput;
 												String output = String.valueOf(c);
 												if (onOp.equals(output))
 												{
-													int conMenuAsKeyCodeInput = config.input().getNumber() + 48;
+													int conMenuAsKeyCodeInput = config.input() + 48;
 
 													onKeyListener[4] = String.valueOf((char) conMenuAsKeyCodeInput);
 												}
