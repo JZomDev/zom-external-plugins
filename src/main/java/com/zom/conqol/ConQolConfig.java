@@ -11,7 +11,7 @@ public interface ConQolConfig extends Config
 	@Range(min = 1, max = 9)
 	@ConfigItem(
 		keyName = "input",
-		name = "input",
+		name = "Input Key",
 		description = "What key is used"
 	)
 	default int input()
@@ -22,7 +22,7 @@ public interface ConQolConfig extends Config
 	@Range(min = 1, max = 9)
 	@ConfigItem(
 		keyName = "output",
-		name = "output",
+		name = "Output Key",
 		description = "What key it should become"
 	)
 	default int output()
