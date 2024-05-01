@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Jordan Zomerlei <https://github.com/JZomerlei>
+ * Copyright (c) 2019, Zom <https://github.com/JZomDev>
  * All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.inject.Provides;
 import java.util.HashSet;
-import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -57,7 +56,7 @@ public class ZomLeftClickDropper extends Plugin
 	private ZomLeftClickDropperConfig config;
 
 	private final ArrayListMultimap<String, Integer> optionIndexes = ArrayListMultimap.create();
-	private List<String> itemList;
+	private HashSet<String> itemList = new HashSet<>();
 
 	private HashSet<String> releaseItems;
 
@@ -94,7 +93,7 @@ public class ZomLeftClickDropper extends Plugin
 	{
 		try
 		{
-			if (itemList == null || menuEntry == null|| itemList.size() == 0)
+			if (itemList == null || menuEntry == null || itemList.isEmpty())
 			{
 				return;
 			}
@@ -191,7 +190,8 @@ public class ZomLeftClickDropper extends Plugin
 	@Override
 	protected void startUp()
 	{
-		itemList = CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase());
+		itemList.clear();
+		itemList.addAll(CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase()));
 		releaseItems = new HashSet<>();
 		releaseItems.add("black salamander");
 		releaseItems.add("orange salamander");
@@ -203,7 +203,7 @@ public class ZomLeftClickDropper extends Plugin
 	protected void shutDown()
 	{
 		releaseItems = null;
-		itemList = null;
+		itemList.clear();
 	}
 
 	@Subscribe
@@ -211,7 +211,8 @@ public class ZomLeftClickDropper extends Plugin
 	{
 		if (event.getGroup().equals("leftclickdrop"))
 		{
-			itemList = CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase());
+			itemList.clear();
+			itemList.addAll(CONFIG_SPLITTER.splitToList(config.itemList().toLowerCase()));
 		}
 	}
 }
