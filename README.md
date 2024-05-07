@@ -9,3 +9,5 @@
 7. [Boss Kicker](https://github.com/redrumze/zom-external-plugins/tree/whisperer-kicker) Kick a boss awake!
 8. [Bank Notes](https://github.com/redrumze/zom-external-plugins/tree/Bank_Item_Notes_plugin) Add notes to items that are in your bank
 9. [Combat Level Muting](https://github.com/JZomDev/zom-external-plugins/tree/combat_level_muting) Mute specific demographics of players based on combat level
+10. [Construction QOL](https://github.com/JZomDev/zom-external-plugins/tree/combat_level_muting) Adds swaps to the Construction Menu
+11. [Vardorvis Pillar Hider](https://github.com/JZomDev/zom-external-plugins/tree/vardorvis_pillar_hider) Hides Vardorvis Pillars
