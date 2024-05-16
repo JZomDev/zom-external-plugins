@@ -1,28 +1,17 @@
 package com.zom.conqol;
 
 import com.google.inject.Provides;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.events.ClientTick;
-import net.runelite.api.events.ScriptPostFired;
-import net.runelite.api.events.ScriptPreFired;
-import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.input.KeyListener;
-import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
@@ -39,21 +28,18 @@ public class ConQolPlugin extends Plugin
 	@Inject
 	private ConQolConfig config;
 
-	private int clientTickCounter = 0;
-
 	private final int CONSTRUCTION_WIDGET = 458;
+	private final int DIGIT_OFFSET = 48;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		clientTickCounter = 0;
 		log.info("Construction QOL plugin has started!");
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		clientTickCounter = 0;
 		log.info("Construction QOL plugin has shutdown!");
 	}
 
@@ -64,83 +50,31 @@ public class ConQolPlugin extends Plugin
 		{
 			return;
 		}
-		//
 
-		Widget furnitureCreationMenuWidget123 = client.getWidget(458, 3);
-		if (furnitureCreationMenuWidget123 != null)
+		// index 3 is the specific window containing the constructable items
+		Widget furnitureCreationMenuWidget = client.getWidget(CONSTRUCTION_WIDGET, 3);
+		if (furnitureCreationMenuWidget != null)
 		{
-			log.info("{} 123 furnitureCreationMenuWidget {}", clientTickCounter,furnitureCreationMenuWidget123.getId());
-
-			for (Widget constuctableItemWidget : furnitureCreationMenuWidget123.getStaticChildren())
+			clientThread.invokeLater(() ->
 			{
-
-				log.info("{} 123 constuctableItemWidget {}",clientTickCounter, constuctableItemWidget.getId());
-				Object[] listener = constuctableItemWidget.getOnKeyListener();
-
-				if (listener != null)
-				{
-					log.info("{} 123 constuctableItemWidget keycode {}",clientTickCounter, listener[4]);
-				}
-			}
-		}
-
-
-		this.clientThread.invokeLater(() ->
-		{
-			Widget furnitureCreationMenuWidget = client.getWidget(458, 3);
-			int i = 1;
-			int keyCode = 48;
-			if (furnitureCreationMenuWidget != null)
-			{
-				log.info("{} 321 furnitureCreationMenuWidget {}",clientTickCounter, furnitureCreationMenuWidget.getId());
-
+				int i = 1;
 				for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
 				{
 
-					log.info("{} 321 constuctableItemWidget {}", clientTickCounter,  constuctableItemWidget.getId());
-					Object[] listener = constuctableItemWidget.getOnKeyListener();
-
-					if (listener != null)
+					String name = constuctableItemWidget.getName();
+					if (name == null || name.isEmpty())
 					{
-						log.info("{} 321 constuctableItemWidget keycode {}",clientTickCounter, listener[4]);
+						continue;
 					}
 
-
-					String name = constuctableItemWidget.getName();
-					if (name == null || name.isEmpty()) continue;
-
-					char c = (char) (keyCode + i);
-					new ConstructionMenu()
+					new ConstructionMenuItem()
 						.constructionWidget(constuctableItemWidget)
-						.hotKey(c)
-						.build();
+						.hotKey(DIGIT_OFFSET + i)
+						.checkHotKeySwap();
 					i++;
 				}
-			}
-		});
-	}
-
-	@Subscribe
-	void onClientTick(ClientTick event)
-	{
-		Widget furnitureCreationMenuWidget = client.getWidget(458, 3);
-		if (furnitureCreationMenuWidget != null)
-		{
-//			log.info("furnitureCreationMenuWidget {}", furnitureCreationMenuWidget.getId());
-
-			for (Widget constructionWidget : furnitureCreationMenuWidget.getStaticChildren())
-			{
-				log.info("{} constuctableItemWidget {}", clientTickCounter, constructionWidget.getId());
-				Object[] listener = constructionWidget.getOnKeyListener();
-
-				if (listener != null)
-				{
-					log.info("{} constuctableItemWidget keycode {}", clientTickCounter, listener[4]);
-				}
-			}
+			});
 		}
-
-		clientTickCounter++;
 	}
 
 	@Provides
@@ -151,22 +85,25 @@ public class ConQolPlugin extends Plugin
 
 	@NoArgsConstructor
 	@Accessors(fluent = true, chain = true)
-	class ConstructionMenu
+	class ConstructionMenuItem
 	{
 		@Setter
 		Widget constructionWidget;
 		@Setter
-		char hotKey;
+		int hotKey;
 
-		public void build()
+		public void checkHotKeySwap()
 		{
-			if ((int) hotKey == config.input() + 48)
+			int inputKeyCode = config.input() + DIGIT_OFFSET;
+			int outputKeyCode = config.output() + DIGIT_OFFSET;
+			if (hotKey == inputKeyCode)
 			{
-				setOnKeyListener(config.output() + 48);
-			} else if ((int) hotKey == config.output() + 48)
+				hotKey = outputKeyCode;
+			} else if (hotKey == outputKeyCode)
 			{
-				setOnKeyListener(config.input() + 48);
+				hotKey = inputKeyCode;
 			}
+			setOnKeyListener(hotKey);
 		}
 
 		void setOnKeyListener(int keyCode)
@@ -174,9 +111,11 @@ public class ConQolPlugin extends Plugin
 			Object[] listener = constructionWidget.getOnKeyListener();
 
 			if (listener == null)
+			{
 				return;
+			}
 
-			listener[4] = String.valueOf((char) keyCode);;
+			listener[4] = String.valueOf((char) keyCode);
 			constructionWidget.setOnKeyListener(listener);
 			constructionWidget.revalidate();
 		}
