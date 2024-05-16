@@ -15,6 +15,8 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.ScriptPreFired;
 import net.runelite.api.events.WidgetClosed;
+import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.JavaScriptCallback;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -28,89 +30,117 @@ import net.runelite.client.plugins.PluginDescriptor;
 @PluginDescriptor(
 	name = "Construction QOL"
 )
-public class ConQolPlugin extends Plugin implements KeyListener
+public class ConQolPlugin extends Plugin
 {
 	@Inject
 	ClientThread clientThread;
 	@Inject
 	private Client client;
 	@Inject
-	private KeyManager keyManager;
-	@Inject
 	private ConQolConfig config;
 
+	private int clientTickCounter = 0;
+
 	private final int CONSTRUCTION_WIDGET = 458;
-	ArrayList<ConstructionMenu> constructionMenus = new ArrayList<>();
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		keyManager.registerKeyListener(this);
+		clientTickCounter = 0;
 		log.info("Construction QOL plugin has started!");
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		keyManager.unregisterKeyListener(this);
+		clientTickCounter = 0;
 		log.info("Construction QOL plugin has shutdown!");
 	}
 
 	@Subscribe
-	void onScriptPreFired(ScriptPreFired ev)
+	void onWidgetLoaded(WidgetLoaded event)
 	{
-		switch (ev.getScriptId())
+		if (event.getGroupId() != CONSTRUCTION_WIDGET)
 		{
-			// build menu script
-			case ScriptID.WIDGET_CLICKER_STATIC:
+			return;
+		}
+		//
+
+		Widget furnitureCreationMenuWidget123 = client.getWidget(458, 3);
+		if (furnitureCreationMenuWidget123 != null)
+		{
+			log.info("{} 123 furnitureCreationMenuWidget {}", clientTickCounter,furnitureCreationMenuWidget123.getId());
+
+			for (Widget constuctableItemWidget : furnitureCreationMenuWidget123.getStaticChildren())
 			{
-				Object[] obj = ev.getScriptEvent().getArguments();
-//				log.info("{}", ev.getScriptId());
-				for (int i = 0; i < obj.length; i++)
+
+				log.info("{} 123 constuctableItemWidget {}",clientTickCounter, constuctableItemWidget.getId());
+				Object[] listener = constuctableItemWidget.getOnKeyListener();
+
+				if (listener != null)
 				{
-//					log.info("{} is type {}", obj[i], obj[i].getClass());
+					log.info("{} 123 constuctableItemWidget keycode {}",clientTickCounter, listener[4]);
 				}
-				break;
-			}
-			case ScriptID.OTHER:
-			{
-				Object[] obj = ev.getScriptEvent().getArguments();
-//				log.info("{}", ev.getScriptId());
-				for (int i = 0; i < obj.length; i++)
-				{
-//					log.info("{} is type {}", obj[i], obj[i].getClass());
-				}
-				break;
 			}
 		}
+
+
+		this.clientThread.invokeLater(() ->
+		{
+			Widget furnitureCreationMenuWidget = client.getWidget(458, 3);
+			int i = 1;
+			int keyCode = 48;
+			if (furnitureCreationMenuWidget != null)
+			{
+				log.info("{} 321 furnitureCreationMenuWidget {}",clientTickCounter, furnitureCreationMenuWidget.getId());
+
+				for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
+				{
+
+					log.info("{} 321 constuctableItemWidget {}", clientTickCounter,  constuctableItemWidget.getId());
+					Object[] listener = constuctableItemWidget.getOnKeyListener();
+
+					if (listener != null)
+					{
+						log.info("{} 321 constuctableItemWidget keycode {}",clientTickCounter, listener[4]);
+					}
+
+
+					String name = constuctableItemWidget.getName();
+					if (name == null || name.isEmpty()) continue;
+
+					char c = (char) (keyCode + i);
+					new ConstructionMenu()
+						.constructionWidget(constuctableItemWidget)
+						.hotKey(c)
+						.build();
+					i++;
+				}
+			}
+		});
 	}
 
 	@Subscribe
-	void onScriptPostFired(ScriptPostFired ev)
+	void onClientTick(ClientTick event)
 	{
-		switch (ev.getScriptId())
+		Widget furnitureCreationMenuWidget = client.getWidget(458, 3);
+		if (furnitureCreationMenuWidget != null)
 		{
-			// build menu script
-			case ScriptID.MENU_SETUP:
+//			log.info("furnitureCreationMenuWidget {}", furnitureCreationMenuWidget.getId());
+
+			for (Widget constructionWidget : furnitureCreationMenuWidget.getStaticChildren())
 			{
-				new ConstructionMenu()
-					.constructionWidget(client.getScriptActiveWidget())
-					.opWidget(client.getScriptActiveWidget())
-					.resumeWidget(client.getScriptActiveWidget())
-					.keyListenerWidget(client.getScriptActiveWidget())
-					.build();
-				break;
+				log.info("{} constuctableItemWidget {}", clientTickCounter, constructionWidget.getId());
+				Object[] listener = constructionWidget.getOnKeyListener();
+
+				if (listener != null)
+				{
+					log.info("{} constuctableItemWidget keycode {}", clientTickCounter, listener[4]);
+				}
 			}
 		}
-	}
 
-	@Subscribe
-	void onWidgetClosed(WidgetClosed ev)
-	{
-		if (ev.getGroupId() == CONSTRUCTION_WIDGET)
-		{
-			constructionMenus.clear();
-		}
+		clientTickCounter++;
 	}
 
 	@Provides
@@ -126,114 +156,29 @@ public class ConQolPlugin extends Plugin implements KeyListener
 		@Setter
 		Widget constructionWidget;
 		@Setter
-		Widget resumeWidget;
-		@Setter
-		Widget opWidget;
-		@Setter
-		Widget keyListenerWidget;
-		@Setter
-		int spot = -1;
-		@Setter
-		int newSpot = -1;
+		char hotKey;
 
 		public void build()
 		{
-			if (constructionMenus.size() + 1 == config.input())
+			if ((int) hotKey == config.input() + 48)
 			{
-				clearKeyListener();
-				spot = config.input();
-				newSpot = config.output();
-			}
-
-			if (constructionMenus.size() + 1 == config.output())
+				setOnKeyListener(config.output() + 48);
+			} else if ((int) hotKey == config.output() + 48)
 			{
-				clearKeyListener();
-				spot = config.output();
-				newSpot = config.input();
-			}
-
-			ArrayList<ConstructionMenu> change = new ArrayList<>(constructionMenus);
-			change.add(this);
-			constructionMenus = change;
-		}
-
-		void clearKeyListener()
-		{
-			clientThread.invokeLater(() -> {
-				keyListenerWidget.setOnKeyListener((Object[]) null);
-			});
-		}
-
-		void onTrigger()
-		{
-			resume(resumeWidget);
-		}
-
-		private void resume(Widget w)
-		{
-			assert w.getId() == w.getParentId();
-			Widget parent = w.getParent();
-			if (parent != null)
-			{
-//				log.info("Parent's widgetid: " + parent.getId());
-				Widget parentParent = parent.getParent();
-				if (parentParent != null)
-				{
-//					log.info("Parent's parent widgetid: " + parentParent.getId());
-				}
-			}
-			if (spot == -1) return;
-			int wId = w.getId();
-			int wIndex = w.getIndex();
-			Widget parentParent = parent.getParent();
-//			log.info("wId {}", wId);
-//			log.info("parentParent {}", parentParent.getId());
-//			log.info("wIndex {}", wIndex);
-			// we are abusing this cs2 to just do a cc_find + cc_resume_pausebutton for us
-//			client.runScript(ScriptID.WIDGET_CLICKER_DYNAMIC, parentParent.getId(), wIndex);
-			client.runScript(ScriptID.WIDGET_CLICKER_STATIC, -2147483639, newSpot, -2147483645, String.valueOf(spot), "", 0);
-//			client.runScript(ScriptID.OTHER, -2147483644, newSpot, 8117 ,-2147483645, 4);
-		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e)
-	{
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		if (constructionMenus.isEmpty())
-		{
-			return;
-		}
-
-		for (ConstructionMenu menu : constructionMenus)
-		{
-			if (e.getKeyCode() == 48 + config.input())
-			{
-				e.setKeyCode( config.output() + 48);
-				log.info("Key code {}", e.getKeyCode());
-				if (menu.spot != -1 && menu.spot == config.input())
-				{
-					clientThread.invokeLater(() -> menu.onTrigger());
-				}
-			}
-			else if (e.getKeyCode() == 48 + config.output() + 1251251)
-			{
-				if (menu.spot != -1)
-				{
-					clientThread.invokeLater(() -> menu.onTrigger());
-				}
+				setOnKeyListener(config.input() + 48);
 			}
 		}
-	}
 
-	@Override
-	public void keyReleased(KeyEvent e)
-	{
+		void setOnKeyListener(int keyCode)
+		{
+			Object[] listener = constructionWidget.getOnKeyListener();
 
+			if (listener == null)
+				return;
+
+			listener[4] = String.valueOf((char) keyCode);;
+			constructionWidget.setOnKeyListener(listener);
+			constructionWidget.revalidate();
+		}
 	}
 }
