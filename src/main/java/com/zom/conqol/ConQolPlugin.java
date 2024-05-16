@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
@@ -31,16 +33,20 @@ public class ConQolPlugin extends Plugin
 	private final int CONSTRUCTION_WIDGET = 458;
 	private final int DIGIT_OFFSET = 48;
 
+	private boolean doSwap = false;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		log.info("Construction QOL plugin has started!");
+		doSwap = false;
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
 		log.info("Construction QOL plugin has shutdown!");
+		doSwap = true;
 	}
 
 	@Subscribe
@@ -50,31 +56,48 @@ public class ConQolPlugin extends Plugin
 		{
 			return;
 		}
+		doSwap = true;
+	}
 
+	@Subscribe
+	void onWidgetClosed(WidgetClosed event)
+	{
+		if (event.getGroupId() != CONSTRUCTION_WIDGET)
+		{
+			return;
+		}
+		doSwap = false;
+	}
+
+	@Subscribe
+	void onClientTick(ClientTick e)
+	{
+		if (!doSwap)
+		{
+			return;
+		}
 		// index 3 is the specific window containing the constructable items
 		Widget furnitureCreationMenuWidget = client.getWidget(CONSTRUCTION_WIDGET, 3);
 		if (furnitureCreationMenuWidget != null)
 		{
-			clientThread.invokeLater(() ->
+			int i = 1;
+			for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
 			{
-				int i = 1;
-				for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
+
+				String name = constuctableItemWidget.getName();
+				if (name == null || name.isEmpty())
 				{
-
-					String name = constuctableItemWidget.getName();
-					if (name == null || name.isEmpty())
-					{
-						continue;
-					}
-
-					new ConstructionMenuItem()
-						.constructionWidget(constuctableItemWidget)
-						.hotKey(DIGIT_OFFSET + i)
-						.checkHotKeySwap();
-					i++;
+					continue;
 				}
-			});
+
+				new ConstructionMenuItem()
+					.constructionWidget(constuctableItemWidget)
+					.hotKey(DIGIT_OFFSET + i)
+					.checkHotKeySwap();
+				i++;
+			}
 		}
+		doSwap = false;
 	}
 
 	@Provides
