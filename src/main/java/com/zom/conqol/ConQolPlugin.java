@@ -38,14 +38,12 @@ public class ConQolPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Construction QOL plugin has started!");
 		doSwap = false;
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		log.info("Construction QOL plugin has shutdown!");
 		doSwap = true;
 	}
 
