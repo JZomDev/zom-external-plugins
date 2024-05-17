@@ -1,6 +1,7 @@
 package com.zom;
 
 import com.google.inject.Provides;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,8 @@ public class BossKicker extends Plugin
 	private LocalPoint supportedKick;
 	private NPC genericNPC;
 
-	List<String> kickOptions;
-	List<String> bossesToKick;
+	List<String> kickOptions = new ArrayList<>();
+	List<String> bossesToKick = new ArrayList<>();
 
 	@Override
 	public void startUp()
@@ -47,8 +48,8 @@ public class BossKicker extends Plugin
 	@Override
 	public void shutDown()
 	{
-		kickOptions.clear();
-		bossesToKick.clear();
+		kickOptions = null;
+		bossesToKick = null;
 	}
 
 	@Subscribe
@@ -74,14 +75,18 @@ public class BossKicker extends Plugin
 		if (kickOptions.size() != bossesToKick.size()) {
 			log.info("Bosses to kick and kick options are not equal in length");
 
-			bossesToKick.clear();
-			kickOptions.clear();
+			bossesToKick = null;
+			kickOptions = null;
 		}
 	}
 
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked e)
 	{
+		if (kickOptions != null && bossesToKick != null)
+		{
+			return;
+		}
 		// set the supportedKick value to a non null when you interact with the NPC that is supported
 		String target = Text.removeFormattingTags(e.getMenuTarget());
 		int index = bossesToKick.indexOf(target);
