@@ -83,7 +83,7 @@ public class VardorvisPillarOverlay extends Overlay
 				continue;
 			}
 
-			Color tileColor = config.boarderColor();
+			Color tileColor = config.borderColor();
 
 			drawTile(graphics, worldPoint, tileColor, stroke);
 		}

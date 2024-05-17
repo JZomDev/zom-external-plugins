@@ -49,11 +49,11 @@ public interface VardorvisPillarHiderConfig extends Config
 
 	@ConfigItem(
 		position = 2,
-		keyName = "boarderColor",
-		name = "Boarder color",
+		keyName = "borderColor",
+		name = "Border color",
 		description = "Fill color where the pillars used to be"
 	)
-	default Color boarderColor()
+	default Color borderColor()
 	{
 		return new Color(0x64FFFF00, true);
 	}
