@@ -7,7 +7,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.events.ScriptPostFired;
+import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.WidgetClosed;
+import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -28,42 +30,72 @@ public class ConQolPlugin extends Plugin
 	@Inject
 	private ConQolConfig config;
 
-	private int counter = 0;
+	private final int CONSTRUCTION_WIDGET = 458;
+	private final int DIGIT_OFFSET = 48;
+
+	private boolean doSwap = false;
+
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Construction QOL plugin has started!");
-		counter = 1;
+		doSwap = false;
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		log.info("Construction QOL plugin has shutdown!");
-		counter = 1;
+		doSwap = true;
 	}
 
 	@Subscribe
-	void onScriptPostFired(ScriptPostFired ev)
+	void onWidgetLoaded(WidgetLoaded event)
 	{
-		switch (ev.getScriptId())
+		if (event.getGroupId() != CONSTRUCTION_WIDGET)
 		{
-			// build menu script
-			case 1404:
+			return;
+		}
+		doSwap = true;
+	}
+
+	@Subscribe
+	void onWidgetClosed(WidgetClosed event)
+	{
+		if (event.getGroupId() != CONSTRUCTION_WIDGET)
+		{
+			return;
+		}
+		doSwap = false;
+	}
+
+	@Subscribe
+	void onClientTick(ClientTick e)
+	{
+		if (!doSwap)
+		{
+			return;
+		}
+		// index 3 is the specific window containing the constructable items
+		Widget furnitureCreationMenuWidget = client.getWidget(CONSTRUCTION_WIDGET, 3);
+		if (furnitureCreationMenuWidget != null)
+		{
+			int i = 1;
+			for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
 			{
-				new ConstructionMenu()
-					.constructionWidget(client.getScriptActiveWidget())
-					.spot(counter)
-					.checkForSwap();
-				counter++;
-				break;
-			}
-			// reset counter to 1
-			case 1406:
-			{
-				counter = 1;
+
+				String name = constuctableItemWidget.getName();
+				if (name == null || name.isEmpty())
+				{
+					continue;
+				}
+
+				new ConstructionMenuItem()
+					.constructionWidget(constuctableItemWidget)
+					.hotKey(DIGIT_OFFSET + i)
+					.checkHotKeySwap();
+				i++;
 			}
 		}
+		doSwap = false;
 	}
 
 	@Provides
@@ -74,53 +106,39 @@ public class ConQolPlugin extends Plugin
 
 	@NoArgsConstructor
 	@Accessors(fluent = true, chain = true)
-	class ConstructionMenu
+	class ConstructionMenuItem
 	{
 		@Setter
 		Widget constructionWidget;
 		@Setter
-		int spot;
-		public void checkForSwap()
+		int hotKey;
+
+		public void checkHotKeySwap()
 		{
-			if (spot == config.input())
+			int inputKeyCode = config.input() + DIGIT_OFFSET;
+			int outputKeyCode = config.output() + DIGIT_OFFSET;
+			if (hotKey == inputKeyCode)
 			{
-				int conMenuAsKeyCodeOutput = config.output() + 48;
-				String output = String.valueOf((char) conMenuAsKeyCodeOutput);
-
-				clientThread.invokeLater(() -> {
-					int id = constructionWidget.getId();
-					swapOnKeyListener(id, output);
-				});
-			}
-			else if (spot == config.output())
+				hotKey = outputKeyCode;
+			} else if (hotKey == outputKeyCode)
 			{
-				int conMenuAsKeyCodeInput = config.input() + 48;
-				String input = String.valueOf((char) conMenuAsKeyCodeInput);
-
-				clientThread.invokeLater(() -> {
-					int id = constructionWidget.getId();
-					swapOnKeyListener(id, input);
-				});
+				hotKey = inputKeyCode;
 			}
+			setOnKeyListener(hotKey);
 		}
 
-		void swapOnKeyListener(int widgetId, String str)
+		void setOnKeyListener(int keyCode)
 		{
-			Widget w = client.getWidget(widgetId);
+			Object[] listener = constructionWidget.getOnKeyListener();
 
-			if (w == null) return;
-			Object[] onKeyListener = w.getOnKeyListener();
-			if (onKeyListener == null)
+			if (listener == null)
 			{
-				// it should only be null when the hot key listener for the item isn't populated due to not having all amterials
-				log.debug("swap was null for {}", widgetId);
 				return;
 			}
 
-			onKeyListener[4] = str;
-			// replace hotkey listener from output to the input
-			w.setOnKeyListener(onKeyListener);
-			w.revalidate();
+			listener[4] = String.valueOf((char) keyCode);
+			constructionWidget.setOnKeyListener(listener);
+			constructionWidget.revalidate();
 		}
 	}
 }
