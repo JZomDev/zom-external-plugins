@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import static net.runelite.api.Varbits.IN_RAID;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
@@ -29,7 +30,6 @@ public class ConQolPlugin extends Plugin
 	private ConQolConfig config;
 
 	private final int CONSTRUCTION_WIDGET = 458;
-	private final int BUILDING_MODE_VARBIT = 2176;
 	private final int DIGIT_OFFSET = 48;
 
 	private boolean doSwap = false;
@@ -75,7 +75,8 @@ public class ConQolPlugin extends Plugin
 		}
 		// index 3 is the specific window containing the constructable items
 		Widget furnitureCreationMenuWidget = client.getWidget(CONSTRUCTION_WIDGET, 3);
-		if (furnitureCreationMenuWidget != null && client.getVarbitValue(BUILDING_MODE_VARBIT) == 1)
+		// don't swap when in COX raid
+		if (furnitureCreationMenuWidget != null && client.getVarbitValue(IN_RAID) != 1)
 		{
 			int i = 1;
 			for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
