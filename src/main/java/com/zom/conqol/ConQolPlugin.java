@@ -24,13 +24,12 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class ConQolPlugin extends Plugin
 {
 	@Inject
-	ClientThread clientThread;
-	@Inject
 	private Client client;
 	@Inject
 	private ConQolConfig config;
 
 	private final int CONSTRUCTION_WIDGET = 458;
+	private final int BUILDING_MODE_VARBIT = 2176;
 	private final int DIGIT_OFFSET = 48;
 
 	private boolean doSwap = false;
@@ -76,7 +75,7 @@ public class ConQolPlugin extends Plugin
 		}
 		// index 3 is the specific window containing the constructable items
 		Widget furnitureCreationMenuWidget = client.getWidget(CONSTRUCTION_WIDGET, 3);
-		if (furnitureCreationMenuWidget != null)
+		if (furnitureCreationMenuWidget != null && client.getVarbitValue(BUILDING_MODE_VARBIT) == 1)
 		{
 			int i = 1;
 			for (Widget constuctableItemWidget : furnitureCreationMenuWidget.getStaticChildren())
