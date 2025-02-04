@@ -177,7 +177,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// allow for second notification
-		if (activeGuardians.size() == 0 && getSum() < 150 && alwaysNotify)
+		if (activeGuardians.size() == 0 && getSum() < 300 && alwaysNotify)
 		{
 			hasBeenNotified = false;
 		}
@@ -206,7 +206,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// send notification
-		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 150 && !hasGuardianStone() && postAFK && (!hasCell() || alertWithCell))
+		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 300 && !hasGuardianStone() && postAFK && (!hasCell() || alertWithCell))
 		{
 			notifier.notify("Go craft runes at available altar!");
 			hasBeenNotified = true;
@@ -260,7 +260,7 @@ public class AFKGuardiansPlugin extends Plugin
 		if (gameObject.getId() == PORTAL)
 		{
 			if (config.portalNotify()
-					&& getSum() < 150
+					&& getSum() < 300
 					&& checkInMinigame()
 					&& (minPortalNotificationTime == null || Instant.now().isAfter(minPortalNotificationTime)))
 			{
@@ -278,12 +278,12 @@ public class AFKGuardiansPlugin extends Plugin
 		setCurrentElementalRewardPoints(client.getVarbitValue(13686));
 		setCurrentCatalyticRewardPoints(client.getVarbitValue(13685));
 
-		if (getSum() < 150 && alwaysNotify)
+		if (getSum() < 300 && alwaysNotify)
 		{
 			hasBeenNotified = false;
 		}
 
-		if (getSum() >= 150 && config.hideInfoBox())
+		if (getSum() >= 300 && config.hideInfoBox())
 		{
 			disableInfoBox();
 		}
@@ -322,13 +322,13 @@ public class AFKGuardiansPlugin extends Plugin
 				@Override
 				public String getText()
 				{
-					return getSum() + "/150";
+					return getSum() + "/300";
 				}
 
 				@Override
 				public Color getTextColor()
 				{
-					return getSum() < 150 ? Color.RED : Color.GREEN;
+					return getSum() < 300 ? Color.RED : Color.GREEN;
 				}
 			};
 			infoBoxManager.addInfoBox(goodToAFKInfoBox);
