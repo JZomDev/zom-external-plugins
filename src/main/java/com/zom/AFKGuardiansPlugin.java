@@ -78,6 +78,7 @@ public class AFKGuardiansPlugin extends Plugin
 	private final Set<GameObject> guardians = new HashSet<>();
 	private static final int GUARDIAN_ACTIVE_ANIM = 9363;
 	private static final int PORTAL = 43729;
+	private final int POINTS_NEEDED = 300;
 
 	// white tier guardians
 	public static final int AIR_GUARDIAN = 43701, MIND_GUARDIAN = 43705, BODY_GUARDIAN = 43709;
@@ -177,7 +178,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// allow for second notification
-		if (activeGuardians.size() == 0 && getSum() < 300 && alwaysNotify)
+		if (activeGuardians.size() == 0 && getSum() < POINTS_NEEDED && alwaysNotify)
 		{
 			hasBeenNotified = false;
 		}
@@ -206,7 +207,7 @@ public class AFKGuardiansPlugin extends Plugin
 		}
 
 		// send notification
-		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < 300 && !hasGuardianStone() && postAFK && (!hasCell() || alertWithCell))
+		if (activeGuardians.size() > 0 && !hasBeenNotified && getSum() < POINTS_NEEDED && !hasGuardianStone() && postAFK && (!hasCell() || alertWithCell))
 		{
 			notifier.notify("Go craft runes at available altar!");
 			hasBeenNotified = true;
@@ -260,7 +261,7 @@ public class AFKGuardiansPlugin extends Plugin
 		if (gameObject.getId() == PORTAL)
 		{
 			if (config.portalNotify()
-					&& getSum() < 300
+					&& getSum() < POINTS_NEEDED
 					&& checkInMinigame()
 					&& (minPortalNotificationTime == null || Instant.now().isAfter(minPortalNotificationTime)))
 			{
@@ -278,12 +279,12 @@ public class AFKGuardiansPlugin extends Plugin
 		setCurrentElementalRewardPoints(client.getVarbitValue(13686));
 		setCurrentCatalyticRewardPoints(client.getVarbitValue(13685));
 
-		if (getSum() < 300 && alwaysNotify)
+		if (getSum() < POINTS_NEEDED && alwaysNotify)
 		{
 			hasBeenNotified = false;
 		}
 
-		if (getSum() >= 300 && config.hideInfoBox())
+		if (getSum() >= POINTS_NEEDED && config.hideInfoBox())
 		{
 			disableInfoBox();
 		}
@@ -322,13 +323,13 @@ public class AFKGuardiansPlugin extends Plugin
 				@Override
 				public String getText()
 				{
-					return getSum() + "/300";
+					return getSum() + "/" + POINTS_NEEDED;
 				}
 
 				@Override
 				public Color getTextColor()
 				{
-					return getSum() < 300 ? Color.RED : Color.GREEN;
+					return getSum() < POINTS_NEEDED ? Color.RED : Color.GREEN;
 				}
 			};
 			infoBoxManager.addInfoBox(goodToAFKInfoBox);
