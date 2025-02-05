@@ -53,8 +53,8 @@ public interface AFKGuardiansConfig extends Config
 
 	@ConfigItem(
 		keyName = "hideInfoBox",
-		name = "Hide info box when above 150",
-		description = "Hide the info box when over 150 points",
+		name = "Hide info box when above 300",
+		description = "Hide the info box when over 300 points",
 		position = 4
 	)
 	default boolean hideInfoBox()
@@ -75,8 +75,8 @@ public interface AFKGuardiansConfig extends Config
 
 	@ConfigItem(
 		keyName = "additionalNotify",
-		name = "Notify when below 150, again.",
-		description = "Notifies when specific color is up & below 150",
+		name = "Notify when below 300, again.",
+		description = "Notifies when specific color is up & below 300",
 		position = 6
 	)
 	default boolean additionalNotify()
@@ -87,8 +87,8 @@ public interface AFKGuardiansConfig extends Config
 	@Range(min = -1, max = 99)
 	@ConfigItem(
 		keyName = "additionalPercent",
-		name = "Notify when below 150 at a certain %",
-		description = "Notifies when at a specific % when color is up & below 150",
+		name = "Notify when below 300 at a certain %",
+		description = "Notifies when at a specific % when color is up & below 300",
 		position = 7
 	)
 	default int additionalPercent()
@@ -109,8 +109,8 @@ public interface AFKGuardiansConfig extends Config
 
 	@ConfigItem(
 			keyName = "portalNotify",
-			name = "Notify on portal when below 150",
-			description = "Send notification when a portal spawns and you are below 150",
+			name = "Notify on portal when below 300",
+			description = "Send notification when a portal spawns and you are below 300",
 			position = 9
 	)
 	default boolean portalNotify() { return false; }
