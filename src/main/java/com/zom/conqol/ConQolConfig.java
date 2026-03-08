@@ -12,7 +12,8 @@ public interface ConQolConfig extends Config
 	@ConfigItem(
 		keyName = "input",
 		name = "Input Key",
-		description = "What key is used"
+		description = "What key is used",
+		position = 1
 	)
 	default int input()
 	{
@@ -23,10 +24,22 @@ public interface ConQolConfig extends Config
 	@ConfigItem(
 		keyName = "output",
 		name = "Output Key",
-		description = "What key it should become"
+		description = "What key it should become",
+		position = 2
 	)
 	default int output()
 	{
 		return 3;
+	}
+
+	@ConfigItem(
+		keyName = "swapLogBasket",
+		name = "Log Basket Swap",
+		description = "Swap the log basket empty option at a sawmill operator to the left click option",
+		position = 3
+	)
+	default boolean swapLogBasket()
+	{
+		return true;
 	}
 }
