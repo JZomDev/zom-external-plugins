@@ -20,6 +20,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
+import net.runelite.api.Player;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameObjectSpawned;
@@ -371,7 +372,12 @@ public class AFKGuardiansPlugin extends Plugin
 
 	private boolean atAltar()
 	{
-		WorldPoint playerLoc = client.getLocalPlayer().getWorldLocation();
+		Player me = client.getLocalPlayer();
+		if (me == null)
+		{
+			return false;
+		}
+		WorldPoint playerLoc = me.getWorldLocation();
 		for (int altarRegion : altarsArr)
 		{
 			if (altarRegion == playerLoc.getRegionID())
