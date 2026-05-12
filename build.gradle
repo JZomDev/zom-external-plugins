@@ -26,7 +26,6 @@ dependencies {
 }
 
 group = 'com.zom'
-version = '1.5.1'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
