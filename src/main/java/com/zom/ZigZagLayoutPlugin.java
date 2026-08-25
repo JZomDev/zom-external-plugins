@@ -3,12 +3,17 @@ package com.zom;
 import com.google.common.collect.ImmutableSet;
 
 import javax.inject.Inject;
+
+import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
+import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemVariationMapping;
 import net.runelite.client.plugins.Plugin;
@@ -36,6 +41,9 @@ public class ZigZagLayoutPlugin extends Plugin
     LayoutManager layoutManager;
 
 	@Inject
+	ZigZagLayoutConfig config;
+
+	@Inject
 	private ItemManager itemManager;
 
 	private static final Set<Integer> DIZANAS_QUIVER_IDS = ImmutableSet.<Integer>builder()
@@ -47,6 +55,20 @@ public class ZigZagLayoutPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
+		register();
+	}
+
+	@Override
+	protected void shutDown() throws Exception
+	{
+		layoutManager.unregisterAutoLayout("ZigZag");
+	}
+
+	private void register()
+	{
+		// remove if applicable
+		layoutManager.unregisterAutoLayout("ZigZag");
+		// add layout
 		layoutManager.registerAutoLayout(this, "ZigZag", new AutoLayout() {
 			@Override
 			public net.runelite.client.plugins.banktags.tabs.Layout generateLayout(net.runelite.client.plugins.banktags.tabs.Layout previous) {
@@ -82,22 +104,29 @@ public class ZigZagLayoutPlugin extends Plugin
 
 					// first pass to set up size, because some spots can be naked
 					ArrayList<Integer> format2 = new ArrayList<>();
-                    for (int j : format)
+					for (int j : format)
 					{
-                        Item item = e.getItem(j);
-                        if (item != null)
+						Item item = e.getItem(j);
+						if (item != null)
 						{
 							format2.add(itemManager.canonicalize(item.getId()));
-                        }
-                    }
+						}
+					}
 
-					for (int pos = 0; pos < format2.size(); ++pos)
+					for (int pos = 0; pos < 16; ++pos)
 					{
 						int lPos = (pos % 2 == 0)
 								? pos / 2
 								: 8 + (pos / 2);
 
-						l.setItemAtPos(format2.get(pos), lPos);
+						if (pos < format2.size())
+						{
+							l.setItemAtPos(format2.get(pos), lPos);
+						}
+						else
+						{
+							l.setItemAtPos(-1, lPos);
+						}
 					}
 
 					// calculate quiver spot
@@ -106,13 +135,14 @@ public class ZigZagLayoutPlugin extends Plugin
 							: 8 + (format2.size() / 2);
 				}
 
-
+				int lastItem = -1;
 				if (i != null)
 				{
 					int base = 16;
 					int secondRow = 16;;
-					for (int pos = 0; pos < i.size(); ++pos)
+					for (int pos = 0; pos < 32; ++pos)
 					{
+
 						int lpos;
 						if (pos < secondRow)
 						{
@@ -137,6 +167,10 @@ public class ZigZagLayoutPlugin extends Plugin
 						if (item != null)
 						{
 							l.setItemAtPos(itemManager.canonicalize(item.getId()), lpos);
+							if (lpos > lastItem)
+							{
+								lastItem = lpos;
+							}
 						}
 						else
 						{
@@ -153,23 +187,60 @@ public class ZigZagLayoutPlugin extends Plugin
 					};
 					final EnumComposition runepouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
 
-					int lpos = 48;
-					for (int idx = 0; idx < RUNEPOUCH_RUNES.length; ++idx, ++lpos)
+					if (config.runePouchPlacement() != RunePouchPlacement.TOP)
 					{
-						int runeId = client.getVarbitValue(RUNEPOUCH_RUNES[idx]);
-						if (runeId > 0)
+						int lpos = RunePouchPlacement.DEFAULT == config.runePouchPlacement() ? 48 : ((lastItem / 8) * 8 + 8);
+						for (int idx = 0; idx < RUNEPOUCH_RUNES.length; ++idx, ++lpos)
 						{
-							int itemId = runepouchEnum.getIntValue(runeId);
+							int runeId = client.getVarbitValue(RUNEPOUCH_RUNES[idx]);
+							if (runeId > 0)
+							{
+								int itemId = runepouchEnum.getIntValue(runeId);
 
+								int old = l.getItemAtPos(lpos);
+								if (old != -1)
+								{
+									removed.add(old);
+								}
+
+								l.setItemAtPos(itemId, lpos);
+							}
+						}
+						// blank the rest of the row
+						for (int idx = 0; idx < 4; ++idx, ++lpos)
+						{
 							int old = l.getItemAtPos(lpos);
 							if (old != -1)
 							{
 								removed.add(old);
 							}
 
-							l.setItemAtPos(itemId, lpos);
+							l.setItemAtPos(-1, lpos);
 						}
 					}
+
+					if (config.runePouchPlacement() == RunePouchPlacement.TOP)
+					{
+						// top right of the bank
+						int[] spots = {6, 7, 14, 15};
+						for (int idx = 0; idx < RUNEPOUCH_RUNES.length; ++idx)
+						{
+							int runeId = client.getVarbitValue(RUNEPOUCH_RUNES[idx]);
+							if (runeId > 0)
+							{
+								int itemId = runepouchEnum.getIntValue(runeId);
+
+								int old = l.getItemAtPos(spots[idx]);
+								if (old != -1)
+								{
+									removed.add(old);
+								}
+
+								l.setItemAtPos(itemId, spots[idx]);
+							}
+						}
+					}
+
 				}
 
 				// quiver
@@ -212,9 +283,18 @@ public class ZigZagLayoutPlugin extends Plugin
 		});
 	}
 
-	@Override
-	protected void shutDown() throws Exception
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
 	{
-		layoutManager.unregisterAutoLayout("ZigZag");
+		if (e.getGroup().equals(ZigZagLayoutConfig.CONFIG_GROUP))
+		{
+			register();
+		}
+	}
+
+	@Provides
+	ZigZagLayoutConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(ZigZagLayoutConfig.class);
 	}
 }
